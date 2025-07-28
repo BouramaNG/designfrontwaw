@@ -265,7 +265,7 @@ const IoTPage = ({ onNavigate }: IoTPageProps) => {
                 <img
                   src="https://pub.mdpi-res.com/sensors/sensors-22-09271/article_deploy/html/images/sensors-22-09271-g001.png?1669873792"
                   alt="Écosystème IoT complet - Smart City, Agriculture, Industrie"
-                  className="w-full h-auto rounded-lg shadow-lg"
+                  className="w-1/2 h-auto mx-auto rounded-lg shadow-lg"
                 />
                 <div className="text-center mt-6">
                   <h3 className="text-xl font-bold text-waw-dark mb-2">Écosystème IoT Intégré</h3>
