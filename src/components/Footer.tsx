@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { QRCodeSVG } from 'qrcode.react';
 import {
   Smartphone,
   Cloud,
@@ -93,6 +94,7 @@ const Footer = ({ onNavigate }: FooterProps) => {
               viewport={{ once: true }}
               className="lg:col-span-2"
             >
+ 
               {/* Logo */}
               <div className="flex items-center space-x-3 mb-6">
                 <div className="w-12 h-12 bg-gradient-to-br from-waw-yellow to-waw-yellow-dark rounded-xl flex items-center justify-center shadow-lg">
@@ -216,12 +218,14 @@ const Footer = ({ onNavigate }: FooterProps) => {
               Recevez les dernières actualités sur nos solutions télécoms et innovations technologiques.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder="votre@email.com"
-                className="flex-1 px-4 py-3 bg-white/10 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-waw-yellow focus:border-waw-yellow transition-colors"
-              />
+            <div className="flex flex-col sm:flex-row gap-8 max-w-3xl mx-auto items-center justify-center">
+              <div className="flex-1">
+                <input
+                  type="email"
+                  placeholder="votre@email.com"
+                  className="flex-1 px-4 py-3 bg-white/10 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-waw-yellow focus:border-waw-yellow transition-colors"
+                />
+              </div>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -229,6 +233,21 @@ const Footer = ({ onNavigate }: FooterProps) => {
               >
                 S'abonner
               </motion.button>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                viewport={{ once: true }}
+                className="flex flex-col items-center"
+              >
+                <QRCodeSVG
+                  value="https://play.google.com/store/apps/details?id=com.wawtravel.app&pcampaignid=web_share"
+                  size={120}
+                  level="H"
+                  includeMargin={true}
+                />
+                <p className="mt-2 text-sm text-waw-yellow">Téléchargez notre application</p>
+              </motion.div>
             </div>
           </div>
         </motion.div>

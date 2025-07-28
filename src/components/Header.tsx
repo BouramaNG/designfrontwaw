@@ -22,6 +22,7 @@ const Header = ({ currentPage, onNavigate }: HeaderProps) => {
 
   const navItems = [
     { name: 'Accueil', page: 'home' as PageType, icon: Globe },
+    { name: 'Accueil 2', page: 'home2' as PageType, icon: Globe },
     { name: 'Connectivité', page: 'connectivite' as PageType, icon: Network },
     { name: 'Cloud', page: 'cloud' as PageType, icon: Cloud },
     { name: 'eSIM Travel', page: 'travel' as PageType, icon: Smartphone },

@@ -15,8 +15,9 @@ import ESimPage from './pages/ESimPage';
 import IoTPage from './pages/IoTPage';
 import ContactPage from './pages/ContactPage';
 import PlanDetailsPage from './pages/PlanDetailsPage';
+import HomePage2 from './pages/HomePage2';
 
-export type PageType = 'home' | 'connectivite' | 'cloud' | 'travel' | 'iot' | 'about' | 'contact' | 'plan-details';
+export type PageType = 'home' | 'home2' | 'connectivite' | 'cloud' | 'travel' | 'iot' | 'about' | 'contact' | 'plan-details';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<PageType>('home');
@@ -47,6 +48,8 @@ function App() {
         return <ESimPage onNavigate={setCurrentPage} onNavigateWithPlan={navigateToPage} />;
       case 'iot':
         return <IoTPage onNavigate={setCurrentPage} />;
+      case 'home2':
+        return <HomePage2 onNavigate={setCurrentPage} />;
       case 'plan-details':
         return <PlanDetailsPage onNavigate={setCurrentPage} planId={selectedPlanId} />;
       case 'contact':
