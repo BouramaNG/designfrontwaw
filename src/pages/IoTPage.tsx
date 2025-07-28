@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, Variants, Transition, easeOut, easeInOut, Easing } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import {
   Cpu,
@@ -36,6 +36,44 @@ interface IoTPageProps {
   onNavigate: (page: PageType) => void;
 }
 
+const animationConfig: Record<string, Transition> = {
+  default: {
+    duration: 0.5,
+    ease: [0.42, 0, 0.58, 1] as Easing
+  },
+  slow: {
+    duration: 0.8,
+    ease: [0.42, 0, 0.58, 1] as Easing
+  },
+  fast: {
+    duration: 0.3,
+    ease: [0.42, 0, 0.58, 1] as Easing
+  }
+};
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: { 
+    opacity: 1,
+    transition: {
+      duration: 0.5,
+      ease: [0.42, 0, 0.58, 1] as Easing
+    }
+  }
+};
+
+const itemVariants: Variants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: { 
+    y: 0,
+    opacity: 1,
+    transition: {
+      duration: 0.5,
+      ease: [0.42, 0, 0.58, 1] as Easing
+    }
+  }
+};
+
 const IoTPage = ({ onNavigate }: IoTPageProps) => {
   const [heroRef, heroInView] = useInView({
     triggerOnce: true,
@@ -62,7 +100,7 @@ const IoTPage = ({ onNavigate }: IoTPageProps) => {
     threshold: 0.1,
   });
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -73,7 +111,7 @@ const IoTPage = ({ onNavigate }: IoTPageProps) => {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { y: 50, opacity: 0 },
     visible: {
       y: 0,
@@ -122,7 +160,7 @@ const IoTPage = ({ onNavigate }: IoTPageProps) => {
               duration: 4,
               repeat: Number.POSITIVE_INFINITY,
               delay: item.delay,
-              ease: 'easeInOut',
+              ease: [0.42, 0, 0.58, 1] as Easing,
             }}
           >
             <div className="w-16 h-16 bg-waw-yellow/20 rounded-full flex items-center justify-center backdrop-blur-sm">
@@ -264,7 +302,7 @@ const IoTPage = ({ onNavigate }: IoTPageProps) => {
                 <motion.div
                   key={solution.title}
                   variants={itemVariants}
-                  whileHover={{ scale: 1.05, y: -10 }}
+                  whileHover={{ scale: 1.05 as const, y: -10 }}
                   className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:shadow-2xl transition-all group"
                 >
                   <div className={`w-16 h-16 bg-gradient-to-br ${solution.color} rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
@@ -366,7 +404,7 @@ const IoTPage = ({ onNavigate }: IoTPageProps) => {
                 <motion.div
                   key={sector.title}
                   variants={itemVariants}
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: 1.02 as const }}
                   className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all"
                 >
                   {sector.image && (
@@ -392,7 +430,7 @@ const IoTPage = ({ onNavigate }: IoTPageProps) => {
                     <ul className="space-y-2">
                       {sector.applications.map((app, idx) => (
                         <li key={idx} className="flex items-center space-x-2">
-                          <CheckCircle size={14} className="text-green-500 flex-shrink-0" />
+                          <CheckCircle size={14 as const} className="text-green-500 flex-shrink-0" />
                           <span className="text-sm text-gray-700">{app}</span>
                         </li>
                       ))}
@@ -471,7 +509,7 @@ const IoTPage = ({ onNavigate }: IoTPageProps) => {
                 <motion.div
                   key={benefit.title}
                   variants={itemVariants}
-                  whileHover={{ scale: 1.05, y: -10 }}
+                  whileHover={{ scale: 1.05 as const, y: -10 }}
                   className="text-center group"
                 >
                   <div className={`w-20 h-20 bg-gradient-to-br ${benefit.color} rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform shadow-lg`}>
@@ -520,8 +558,8 @@ const IoTPage = ({ onNavigate }: IoTPageProps) => {
 
               <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12">
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ scale: 1.05 as const }}
+                  whileTap={{ scale: 0.95 as const }}
                   onClick={() => openWhatsApp('Bonjour, je souhaite une consultation IoT gratuite')}
                   className="flex items-center space-x-3 bg-waw-dark hover:bg-gray-800 text-white font-bold px-8 py-4 rounded-xl transition-colors shadow-lg"
                 >
@@ -531,7 +569,7 @@ const IoTPage = ({ onNavigate }: IoTPageProps) => {
                 </motion.button>
 
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
+                  whileHover={{ scale: 1.05 as const }}
                   onClick={() => onNavigate('contact')}
                   className="flex items-center space-x-3 bg-transparent border-2 border-waw-dark text-waw-dark hover:bg-waw-dark hover:text-white font-bold px-8 py-4 rounded-xl transition-colors"
                 >
