@@ -22,6 +22,8 @@ import {
   Wifi,
   Building
 } from 'lucide-react';
+import VpsPlans from '../components/VpsPlans';
+import WebHostingPlans from '../components/WebHostingPlans';
 import type { PageType } from '../App';
 
 interface CloudPageProps {
@@ -736,6 +738,12 @@ const CloudPage = ({ onNavigate }: CloudPageProps) => {
           </motion.div>
         </div>
       </section>
+
+      {/* Section VPS Plans */}
+      <VpsPlans />
+
+      {/* Section Web Hosting Plans */}
+      <WebHostingPlans />
 
       {/* Section 4 - Support & Contact */}
       <section className="section-padding bg-gradient-to-r from-waw-dark to-gray-800 text-white relative overflow-hidden">
