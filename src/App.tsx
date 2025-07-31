@@ -20,7 +20,7 @@ import HomePage2 from './pages/HomePage2';
 export type PageType = 'home' | 'home2' | 'connectivite' | 'cloud' | 'travel' | 'iot' | 'about' | 'contact' | 'plan-details';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState<PageType>('home');
+  const [currentPage, setCurrentPage] = useState<PageType>('home2');
   const [selectedPlanId, setSelectedPlanId] = useState<string | undefined>(undefined);
 
   const openWhatsApp = (message: string) => {
@@ -55,15 +55,7 @@ function App() {
       case 'contact':
         return <ContactPage onNavigate={setCurrentPage} />;
       default:
-        return (
-          <>
-            <Hero />
-            <ESIMSection onNavigateWithPlan={navigateToPage} />
-            <ServicesSection />
-            <AboutSection />
-            <ContactSection />
-          </>
-        );
+        return <HomePage2 onNavigate={setCurrentPage} />;
     }
   };
 

@@ -32,39 +32,77 @@ interface HomePage2Props {
 
 const HomePage2 = ({ onNavigate }: HomePage2Props) => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [showConsultationModal, setShowConsultationModal] = useState(false);
   const [heroRef, heroInView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const [statsRef, statsInView] = useInView({ triggerOnce: true, threshold: 0.3 });
   const [servicesRef, servicesInView] = useInView({ triggerOnce: true, threshold: 0.2 });
   const [contactRef, contactInView] = useInView({ triggerOnce: true, threshold: 0.2 });
-  const [testimonialsRef, testimonialsInView] = useInView({ triggerOnce: true, threshold: 0.2 });
+
+  const handleWhatsAppConsultation = () => {
+    setShowConsultationModal(false);
+    const phoneNumber = '221769291717';
+    const message = encodeURIComponent('Bonjour, je souhaite être contacté par un conseiller WAW TELECOM pour discuter de mes besoins en télécommunications.');
+    window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+  };
+
+  const handleEmailConsultation = () => {
+    setShowConsultationModal(false);
+    const subject = encodeURIComponent('Demande de consultation - WAW TELECOM');
+    const body = encodeURIComponent(`Bonjour,
+
+Je souhaite être contacté par un conseiller WAW TELECOM pour discuter de mes besoins en télécommunications.
+
+Informations de contact:
+- Nom:
+- Entreprise:
+- Téléphone:
+- Meilleur moment pour vous contacter:
+
+Services qui m'intéressent:
+□ Connectivité Entreprise
+□ Solutions Cloud
+□ eSIM Travel
+□ Infrastructure Réseau
+
+Message:
+
+
+Cordialement,`);
+
+    window.open(`mailto:serviceclient@wawtelecom.com?subject=${subject}&body=${body}`, '_blank');
+  };
+
+  const openConsultationModal = () => {
+    setShowConsultationModal(true);
+  };
 
   const heroSlides = [
     {
       title: "🚀 Innovation Télécom",
       subtitle: "L'efficacité dans la synergie",
       description: "Tout fonctionne mieux quand tout fonctionne ensemble. Accompagnons votre transformation numérique avec nos solutions eSIM, connectivité et cloud.",
-      image: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=800&h=600&fit=crop",
+      image: "https://imageio.forbes.com/specials-images/imageserve/5f8d4bc46738826921f51465/0x0.jpg?format=jpg&height=900&width=1600&fit=bounds",
       stats: "50+ Pays couverts"
     },
     {
       title: "🌍 Connectivité Globale",
       subtitle: "Votre passerelle vers le monde",
       description: "Restez connecté où que vous soyez avec notre réseau mondial. eSIM Travel, solutions d'entreprise et support 24/7 pour une expérience sans frontières.",
-      image: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=800&h=600&fit=crop",
+      image: "https://wawtelecom.com/Services-Synapsys-04.jpg",
       stats: "24/7 Support client"
     },
     {
       title: "☁️ Solutions Cloud",
       subtitle: "L'infrastructure de demain",
       description: "Optimisez vos performances avec nos solutions cloud intelligentes. Sécurité, évolutivité et innovation pour propulser votre entreprise vers l'avenir.",
-      image: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=800&h=600&fit=crop",
+      image: "https://wawtelecom.com/cloudwaw.jpg",
       stats: "99.9% Disponibilité"
     },
     {
       title: "🤝 Équipe Experte",
       subtitle: "L'humain au cœur de la technologie",
       description: "Notre équipe de spécialistes vous accompagne à chaque étape. Conseil personnalisé, formation et support technique pour maximiser votre réussite.",
-      image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=600&fit=crop",
+      image: "https://www.lemoci.com/wp-content/uploads/2022/03/Entreprise-africaine-julief514-iStock.jpg",
       stats: "15+ Années d'expérience"
     }
   ];
@@ -74,55 +112,33 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
       icon: Smartphone,
       title: "eSIM Travel",
       description: "Voyagez connecté dans plus de 50 pays avec nos cartes eSIM. Activation instantanée, tarifs transparents.",
-      image: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=400&h=300&fit=crop",
+      image: "https://wawtelecom.com/esim3.jpg",
       features: ["Activation en 2 minutes", "50+ destinations", "Données illimitées"]
     },
     {
       icon: Wifi,
       title: "Connectivité Enterprise",
       description: "Solutions réseau haute performance pour entreprises. Fibre optique, SD-WAN, sécurité avancée.",
-      image: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop",
+      image: "https://wawtelecom.com/ssdwan.jpg",
       features: ["Fibre dédiée", "99.9% SLA", "Support 24/7"]
     },
     {
       icon: Cloud,
       title: "Services Cloud",
       description: "Infrastructure cloud scalable et sécurisée. Migration, hébergement, sauvegarde et monitoring.",
-      image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&h=300&fit=crop",
+      image: "https://wawtelecom.com/cloudwaw.jpg",
       features: ["Multi-cloud", "Sécurité ISO 27001", "Backup automatique"]
     },
     {
       icon: Cpu,
       title: "Solutions IoT",
       description: "Connectez vos objets intelligents avec nos solutions IoT. Agriculture, industrie, santé et smart city.",
-      image: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=300&fit=crop",
+      image: "https://tse2.mm.bing.net/th/id/OIP.oImQCErImb0pTF-wkRmnowHaD4?rs=1&pid=ImgDetMain&o=7&rm=3",
       features: ["Capteurs intelligents", "Monitoring temps réel", "Analytics avancées"]
     }
   ];
 
-  const testimonials = [
-    {
-      name: "Fatou Diagne",
-      position: "Directrice IT, Sonatel Business",
-      content: "WAW Telecom a transformé notre infrastructure. Leur accompagnement humain fait toute la différence.",
-      image: "https://images.unsplash.com/photo-1494790108755-2616b612b29c?w=100&h=100&fit=crop&crop=face",
-      rating: 5
-    },
-    {
-      name: "Moussa Kane",
-      position: "CEO, StartupSenegal",
-      content: "Solutions innovantes et équipe exceptionnelle. Nos voyageurs sont toujours connectés grâce à leurs eSIM.",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
-      rating: 5
-    },
-    {
-      name: "Aminata Sow",
-      position: "Responsable Voyages, Air Senegal",
-      content: "Le support 24/7 et la qualité du réseau WAW sont incomparables. Une vraie expérience client premium.",
-      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
-      rating: 5
-    }
-  ];
+
 
   // Auto-slide pour le hero
   useEffect(() => {
@@ -472,137 +488,80 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   type="submit"
-                  className="w-full bg-waw-yellow hover:bg-waw-yellow-dark text-waw-dark px-8 py-4 rounded-xl font-semibold text-lg flex items-center justify-center space-x-2 transition-all"
+                  className="w-full bg-waw-yellow hover:bg-waw-yellow-dark text-waw-dark px-8 py-4 rounded-xl font-semibold transition-all"
                 >
-                  <Send size={20} />
-                  <span>Envoyer le message</span>
+                  Envoyer
                 </motion.button>
               </form>
             </motion.div>
 
-            {/* Localisation à droite */}
+            {/* Informations de contact */}
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               animate={contactInView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.2 }}
               className="space-y-8"
             >
-              {/* Informations de contact */}
-              <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20">
-                <h3 className="text-2xl font-bold text-white mb-6">Nos bureaux</h3>
+              <h3 className="text-2xl font-bold text-white mb-6">Nos coordonnées</h3>
 
-                <div className="space-y-6">
-                  <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-waw-yellow rounded-2xl flex items-center justify-center flex-shrink-0">
-                      <MapPin size={24} className="text-waw-dark" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-white mb-1">Adresse</h4>
-                      <p className="text-gray-300">Ngor Almadies, 56 Route de Ngor<br />Dakar, Sénégal</p>
-                    </div>
+              <div className="space-y-6">
+                <div className="flex items-start space-x-4">
+                  <Building className="w-10 h-10 text-waw-yellow" />
+                  <div>
+                    <h4 className="font-semibold text-white mb-1">Adresse</h4>
+                    <p className="text-gray-400">
+                      28, Boulevard Léopold Sédar Senghor<br />
+                      10000 Dakar, Sénégal
+                    </p>
                   </div>
+                </div>
 
-                  <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-waw-yellow rounded-2xl flex items-center justify-center flex-shrink-0">
-                      <Phone size={24} className="text-waw-dark" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-white mb-1">Téléphone</h4>
-                      <p className="text-gray-300">+221 33 860 19 29<br />+221 76 929 17 17</p>
-                    </div>
+                <div className="flex items-start space-x-4">
+                  <Phone className="w-10 h-10 text-waw-yellow" />
+                  <div>
+                    <h4 className="font-semibold text-white mb-1">Téléphone</h4>
+                    <p className="text-gray-400">+221 76 929 17 17</p>
                   </div>
+                </div>
 
-                  <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-waw-yellow rounded-2xl flex items-center justify-center flex-shrink-0">
-                      <Mail size={24} className="text-waw-dark" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-white mb-1">Email</h4>
-                      <p className="text-gray-300">contact@wawtelecom.com</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-waw-yellow rounded-2xl flex items-center justify-center flex-shrink-0">
-                      <Clock size={24} className="text-waw-dark" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-white mb-1">Horaires</h4>
-                      <p className="text-gray-300">Lun - Ven: 8h00 - 18h00<br />Sam: 9h00 - 13h00</p>
-                    </div>
+                <div className="flex items-start space-x-4">
+                  <Mail className="w-10 h-10 text-waw-yellow" />
+                  <div>
+                    <h4 className="font-semibold text-white mb-1">Email</h4>
+                    <p className="text-gray-400">serviceclient@wawtelecom.com</p>
                   </div>
                 </div>
               </div>
 
-              {/* Map */}
-              <div className="bg-white/10 backdrop-blur-md rounded-3xl p-2 border border-white/20">
-                <div className="rounded-2xl overflow-hidden h-64">
-                  <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3858.9234567!2d-17.4567890!3d14.7456789!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTTCsDQ0JzQ0LjQiTiAxN8KwMjcnMjQuNCJX!5e0!3m2!1sfr!2ssn!4v1234567890"
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0 }}
-                    allowFullScreen
-                    loading="lazy"
-                    title="WAW Telecom - Localisation"
-                  />
-                </div>
+              <div className="flex space-x-4">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => window.open('https://wa.me/221769291717', '_blank')}
+                  className="p-4 rounded-xl bg-white/5 backdrop-blur-sm text-waw-yellow hover:bg-waw-yellow hover:text-white transition-all"
+                >
+                  <MessageCircle size={24} />
+                </motion.button>
+
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => window.open('mailto:serviceclient@wawtelecom.com', '_blank')}
+                  className="p-4 rounded-xl bg-white/5 backdrop-blur-sm text-waw-yellow hover:bg-waw-yellow hover:text-white transition-all"
+                >
+                  <Mail size={24} />
+                </motion.button>
+
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => window.open('https://www.linkedin.com/company/waw-telecom/', '_blank')}
+                  className="p-4 rounded-xl bg-white/5 backdrop-blur-sm text-waw-yellow hover:bg-waw-yellow hover:text-white transition-all"
+                >
+                  <Building size={24} />
+                </motion.button>
               </div>
             </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section Témoignages Humains */}
-      <section ref={testimonialsRef} className="py-20 bg-waw-dark text-white">
-        <div className="container-custom">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={testimonialsInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-display font-bold mb-6">
-              Ce que disent nos clients
-            </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Leurs témoignages reflètent notre engagement envers l'excellence et l'humain
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={testimonial.name}
-                initial={{ opacity: 0, y: 30 }}
-                animate={testimonialsInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ scale: 1.05 }}
-                className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/10"
-              >
-                <div className="flex items-center space-x-1 mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} size={20} className="text-waw-yellow fill-current" />
-                  ))}
-                </div>
-
-                <p className="text-gray-300 mb-6 italic leading-relaxed">
-                  "{testimonial.content}"
-                </p>
-
-                <div className="flex items-center space-x-4">
-                  <img
-                    src={testimonial.image}
-                    alt={testimonial.name}
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                  <div>
-                    <div className="font-semibold text-white">{testimonial.name}</div>
-                    <div className="text-sm text-gray-400">{testimonial.position}</div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
           </div>
         </div>
       </section>
@@ -625,7 +584,7 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <motion.button
-                onClick={() => onNavigate('contact')}
+                onClick={openConsultationModal}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="bg-waw-dark hover:bg-gray-800 text-white px-8 py-4 rounded-2xl font-semibold text-lg flex items-center justify-center space-x-2 transition-all"
@@ -647,6 +606,72 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
           </motion.div>
         </div>
       </section>
+
+      {/* Modal de Consultation */}
+      {showConsultationModal && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={() => setShowConsultationModal(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-waw-yellow rounded-full flex items-center justify-center mx-auto mb-4">
+                <MessageCircle size={32} className="text-waw-dark" />
+              </div>
+              <h3 className="text-2xl font-bold text-waw-dark mb-2">Comment préférez-vous être contacté ?</h3>
+              <p className="text-gray-600">Choisissez votre moyen de communication préféré</p>
+            </div>
+
+            <div className="space-y-4">
+              {/* Option WhatsApp */}
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={handleWhatsAppConsultation}
+                className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-6 rounded-xl transition-colors flex items-center justify-center space-x-3"
+              >
+                <MessageCircle size={24} />
+                <div className="text-left">
+                  <div className="font-bold">WhatsApp</div>
+                  <div className="text-sm opacity-90">+221 76 929 17 17</div>
+                </div>
+              </motion.button>
+
+              {/* Option Email */}
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={handleEmailConsultation}
+                className="w-full bg-waw-yellow hover:bg-waw-yellow-dark text-waw-dark font-bold py-4 px-6 rounded-xl transition-colors flex items-center justify-center space-x-3"
+              >
+                <Mail size={24} />
+                <div className="text-left">
+                  <div className="font-bold">Email</div>
+                  <div className="text-sm opacity-90">serviceclient@wawtelecom.com</div>
+                </div>
+              </motion.button>
+            </div>
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowConsultationModal(false)}
+              className="w-full mt-4 text-gray-500 hover:text-gray-700 font-medium py-2"
+            >
+              Annuler
+            </motion.button>
+          </motion.div>
+        </motion.div>
+      )}
     </div>
   );
 };

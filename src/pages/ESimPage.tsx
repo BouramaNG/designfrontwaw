@@ -82,7 +82,7 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
   };
 
   const stats = [
-    { icon: Globe, value: '200+', label: 'Pays couverts', color: 'text-waw-yellow' },
+    { icon: Globe, value: 'Nos destinations', label: 'Pays couverts', color: 'text-waw-yellow' },
     { icon: Zap, value: '24h', label: 'Activation immédiate', color: 'text-waw-yellow' },
     { icon: Shield, value: '5G', label: 'Technologie avancée', color: 'text-waw-yellow' },
     { icon: Users, value: '50K+', label: 'Clients satisfaits', color: 'text-waw-yellow' }
@@ -96,8 +96,8 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
     },
     {
       icon: Globe,
-      title: 'Couverture Mondiale',
-      description: 'Plus de 200 pays et territoires couverts avec des partenaires locaux'
+      title: 'Nos destinations',
+      description: 'Couverture optimisée pour vos destinations'
     },
     {
       icon: CreditCard,
@@ -224,13 +224,13 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
   const howItWorks = [
     {
       step: '1',
-      title: 'Choisissez votre destination',
-      description: 'Sélectionnez le pays où vous voyagez parmi nos 200+ destinations',
+      title: 'Choisissez votre destination et forfait',
+      description: 'Sélectionnez votre pays et forfait parmi nos offres optimisées',
       icon: MapPin
     },
     {
       step: '2',
-      title: 'Payez avec Wave ou Orange Money',
+      title: 'Payez avec Wave, Orange Money ou Free Money',
       description: 'Paiement sécurisé avec vos solutions mobiles préférées',
       icon: CreditCard
     },
