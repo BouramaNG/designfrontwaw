@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { MessageCircle } from 'lucide-react';
 import Header from './components/Header';
-import Hero from './components/Hero';
+
 import ESIMSection from './components/eSIMSection';
 import ServicesSection from './components/ServicesSection';
 import AboutSection from './components/AboutSection';
