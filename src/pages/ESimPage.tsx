@@ -125,97 +125,85 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
   const destinations = [
     {
       country: 'France',
-      flag: '🇫🇷',
-      price: '€8.95',
-      data: '5GB',
+      flag: '/flags/fr.svg',
+      price: '600 FCFA',
       duration: '30 jours',
       popular: true
     },
     {
       country: 'États-Unis',
-      flag: '🇺🇸',
-      price: '€12.95',
-      data: '10GB',
+      flag: '/flags/us.svg',
+      price: '800 FCFA',
       duration: '30 jours',
-      popular: false
+      popular: true
     },
     {
       country: 'Royaume-Uni',
-      flag: '🇬🇧',
-      price: '€9.95',
-      data: '5GB',
+      flag: '/flags/gb.svg',
+      price: '700 FCFA',
       duration: '30 jours',
-      popular: false
+      popular: true
     },
     {
       country: 'Allemagne',
-      flag: '🇩🇪',
-      price: '€8.95',
-      data: '5GB',
+      flag: '/flags/de.svg',
+      price: '650 FCFA',
       duration: '30 jours',
-      popular: false
+      popular: true
     },
     {
       country: 'Espagne',
-      flag: '🇪🇸',
-      price: '€8.95',
-      data: '5GB',
+      flag: '/flags/es.svg',
+      price: '650 FCFA',
       duration: '30 jours',
-      popular: false
+      popular: true
     },
     {
       country: 'Italie',
-      flag: '🇮🇹',
-      price: '€8.95',
-      data: '5GB',
+      flag: '/flags/it.svg',
+      price: '650 FCFA',
       duration: '30 jours',
-      popular: false
+      popular: true
     },
     {
       country: 'Japon',
-      flag: '🇯🇵',
-      price: '€15.95',
-      data: '8GB',
+      flag: '/flags/jp.svg',
+      price: '1000 FCFA',
       duration: '30 jours',
-      popular: false
+      popular: true
     },
     {
       country: 'Canada',
-      flag: '🇨🇦',
-      price: '€12.95',
-      data: '10GB',
+      flag: '/flags/ca.svg',
+      price: '800 FCFA',
       duration: '30 jours',
-      popular: false
+      popular: true
     },
     {
       country: 'Australie',
-      flag: '🇦🇺',
-      price: '€16.95',
-      data: '12GB',
+      flag: '/flags/au.svg',
+      price: '1200 FCFA',
       duration: '30 jours',
-      popular: false
+      popular: true
     },
     {
       country: 'Brésil',
-      flag: '🇧🇷',
-      price: '€13.95',
-      data: '8GB',
+      flag: '/flags/br.svg',
+      price: '900 FCFA',
       duration: '30 jours',
       popular: false
     },
     {
       country: 'Turquie',
-      flag: '🇹🇷',
-      price: '€10.95',
-      data: '6GB',
+      flag: '/flags/tr.svg',
+      price: '750 FCFA',
       duration: '30 jours',
       popular: false
     },
     {
       country: 'Maroc',
-      flag: '🇲🇦',
-      price: '€11.95',
-      data: '5GB',
+      flag: '/flags/ma.svg',
+      price: '850 FCFA',
       duration: '30 jours',
       popular: false
     }
@@ -624,17 +612,15 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
                 )}
 
                 <div className="text-center">
-                  <div className="text-4xl mb-3">{destination.flag}</div>
+                  <div className="mb-3">
+                  <img src={destination.flag} alt={destination.country} className="w-12 h-12 rounded-full mx-auto" />
+                </div>
                   <h3 className="text-lg font-bold text-waw-dark mb-2">{destination.country}</h3>
 
                   <div className="space-y-2 mb-4">
                     <div className="flex items-center justify-between text-sm text-gray-600">
                       <span>À partir de</span>
                       <span className="font-bold text-waw-dark">{destination.price}</span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm text-gray-600">
-                      <span>Données</span>
-                      <span>{destination.data}</span>
                     </div>
                     <div className="flex items-center justify-between text-sm text-gray-600">
                       <span>Validité</span>

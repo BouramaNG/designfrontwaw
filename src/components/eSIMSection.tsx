@@ -34,39 +34,39 @@ export default function ESIMSection({ onNavigateWithPlan }: ESIMSectionProps) {
   const [selectedPlan, setSelectedPlan] = useState<ESIMPlan | null>(null);
   const [showOrderModal, setShowOrderModal] = useState(false);
 
-  // Function to convert country names to flag emojis
+  // Function to get flag image path
   const getCountryFlag = (countryName: string): string => {
     const countryFlags: { [key: string]: string } = {
-      'France': '🇫🇷',
-      'Allemagne': '🇩🇪',
-      'Espagne': '🇪🇸',
-      'Italie': '🇮🇹',
-      'Belgique': '🇧🇪',
-      'États-Unis': '🇺🇸',
-      'USA': '🇺🇸',
-      'Porto Rico': '🇵🇷',
-      'Arabie Saoudite': '🇸🇦',
-      'La Mecque': '🇸🇦',
-      'Médine': '🇸🇦',
-      'Maroc': '🇲🇦',
-      'Tunisie': '🇹🇳',
-      'Côte d\'Ivoire': '🇨🇮',
-      'Ghana': '🇬🇭',
-      'Nigeria': '🇳🇬',
-      'Royaume-Uni': '🇬🇧',
-      'UK': '🇬🇧',
-      'Canada': '🇨🇦',
-      'Japon': '🇯🇵',
-      'Australie': '🇦🇺',
-      'Brésil': '🇧🇷',
-      'Turquie': '🇹🇷',
-      'Europe': '🇪🇺',
-      'Afrique': '🌍',
-      'Amérique du Nord': '🌎',
-      'Moyen-Orient': '🕌'
+      'France': '/flags/fr.svg',
+      'Allemagne': '/flags/de.svg',
+      'Espagne': '/flags/es.svg',
+      'Italie': '/flags/it.svg',
+      'Belgique': '/flags/be.svg',
+      'États-Unis': '/flags/us.svg',
+      'USA': '/flags/us.svg',
+      'Porto Rico': '/flags/pr.svg',
+      'Arabie Saoudite': '/flags/sa.svg',
+      'La Mecque': '/flags/sa.svg',
+      'Médine': '/flags/sa.svg',
+      'Maroc': '/flags/ma.svg',
+      'Tunisie': '/flags/tn.svg',
+      'Côte d\'Ivoire': '/flags/ci.svg',
+      'Ghana': '/flags/gh.svg',
+      'Nigeria': '/flags/ng.svg',
+      'Royaume-Uni': '/flags/gb.svg',
+      'UK': '/flags/gb.svg',
+      'Canada': '/flags/ca.svg',
+      'Japon': '/flags/jp.svg',
+      'Australie': '/flags/au.svg',
+      'Brésil': '/flags/br.svg',
+      'Turquie': '/flags/tr.svg',
+      'Europe': '/flags/eu.svg',
+      'Afrique': '/flags/af.svg',
+      'Amérique du Nord': '/flags/na.svg',
+      'Moyen-Orient': '/flags/me.svg'
     };
 
-    return countryFlags[countryName] || '🌐';
+    return countryFlags[countryName] || '/flags/world.svg';
   };
 
   // Format price function
@@ -206,7 +206,10 @@ export default function ESIMSection({ onNavigateWithPlan }: ESIMSectionProps) {
 
                     <div className="text-center mb-6">
                       <h3 className="text-xl font-bold text-waw-dark mb-2">{plan.name}</h3>
-                      <p className="text-gray-600 mb-4">{plan.country}</p>
+                      <div className="flex items-center justify-center gap-2 mb-4">
+                        <img src={getCountryFlag(plan.country)} alt={plan.country} className="w-8 h-8 rounded-full" />
+                        <p className="text-gray-600">{plan.country}</p>
+                      </div>
 
                       <div className="text-center mb-4">
                         {plan.originalPrice && plan.discount ? (
@@ -267,12 +270,12 @@ export default function ESIMSection({ onNavigateWithPlan }: ESIMSectionProps) {
                     {/* Coverage preview */}
                     <div className="mt-4 p-3 bg-gray-50 rounded-lg">
                       <p className="text-xs text-gray-500 mb-1">Couverture:</p>
-                      <div className="flex flex-wrap gap-1">
+                      <div className="flex flex-wrap gap-2">
                         {plan.coverage.slice(0, 3).map((country) => (
-                          <span key={country} className="text-xs bg-white px-2 py-1 rounded flex items-center space-x-1">
-                            <span>{getCountryFlag(country)}</span>
-                            <span>{country}</span>
-                          </span>
+                          <div key={country} className="flex items-center gap-2 p-2 bg-white rounded-full border border-gray-200">
+                            <img src={getCountryFlag(country)} alt={country} className="w-6 h-6 rounded-full" />
+                            <span className="text-sm text-gray-600">{country}</span>
+                          </div>
                         ))}
                         {plan.coverage.length > 3 && (
                           <span className="text-xs text-gray-500">

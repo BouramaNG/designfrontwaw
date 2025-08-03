@@ -15,9 +15,11 @@ import ESimPage from './pages/ESimPage';
 import IoTPage from './pages/IoTPage';
 import ContactPage from './pages/ContactPage';
 import PlanDetailsPage from './pages/PlanDetailsPage';
+import CheckoutPage from './pages/CheckoutPage';
+import ConfirmationPage from './pages/ConfirmationPage';
 import HomePage2 from './pages/HomePage2';
 
-export type PageType = 'home' | 'home2' | 'connectivite' | 'cloud' | 'travel' | 'iot' | 'about' | 'contact' | 'plan-details';
+export type PageType = 'home' | 'home2' | 'connectivite' | 'cloud' | 'travel' | 'iot' | 'about' | 'contact' | 'plan-details' | 'checkout' | 'confirmation';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<PageType>('home2');
@@ -51,7 +53,16 @@ function App() {
       case 'home2':
         return <HomePage2 onNavigate={setCurrentPage} />;
       case 'plan-details':
-        return <PlanDetailsPage onNavigate={setCurrentPage} planId={selectedPlanId} />;
+        return <PlanDetailsPage onNavigate={setCurrentPage} navigateToPage={navigateToPage} planId={selectedPlanId} />;
+      case 'checkout':
+        return <CheckoutPage onNavigate={setCurrentPage} selectedPlan={{
+          data: selectedPlanId || '1GB',
+          price: 1000,
+          description: 'Forfait standard',
+          country: 'Sénégal'
+        }} />;
+      case 'confirmation':
+        return <ConfirmationPage onNavigate={setCurrentPage} />;
       case 'contact':
         return <ContactPage onNavigate={setCurrentPage} />;
       default:

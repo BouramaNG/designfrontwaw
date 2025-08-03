@@ -22,12 +22,45 @@ import {
 import type { PageType } from '../App';
 import type { ESIMPlan } from '../types/esim';
 
+interface Network {
+  name: string;
+  technology: string;
+  coverage: string;
+}
+
+interface TechnicalDetails {
+  hotspot: string;
+  speedLimit: string;
+  activation: string;
+  validity: string;
+}
+
+interface Plan {
+  id: number;
+  data: string;
+  price: number;
+  originalPrice?: number | null;
+  popular: boolean;
+  description: string;
+}
+
+interface PlanDetails {
+  id: string;
+  country: string;
+  flag: string;
+  description: string;
+  networks: Network[];
+  technicalDetails: TechnicalDetails;
+  plans: Plan[];
+}
+
 interface PlanDetailsPageProps {
   onNavigate: (page: PageType) => void;
+  navigateToPage: (page: PageType, planId?: string) => void;
   planId?: string;
 }
 
-const PlanDetailsPage = ({ onNavigate, planId }: PlanDetailsPageProps) => {
+const PlanDetailsPage = ({ onNavigate, navigateToPage, planId }: PlanDetailsPageProps) => {
   const [heroRef, heroInView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -46,34 +79,34 @@ const PlanDetailsPage = ({ onNavigate, planId }: PlanDetailsPageProps) => {
   // Fonction pour obtenir les drapeaux
   const getCountryFlag = (countryName: string): string => {
     const countryFlags: { [key: string]: string } = {
-      'France': '🇫🇷',
-      'Allemagne': '🇩🇪',
-      'Espagne': '🇪🇸',
-      'Italie': '🇮🇹',
-      'Belgique': '🇧🇪',
-      'États-Unis': '🇺🇸',
-      'USA': '🇺🇸',
-      'Porto Rico': '🇵🇷',
-      'Arabie Saoudite': '🇸🇦',
-      'La Mecque': '🇸🇦',
-      'Médine': '🇸🇦',
-      'Maroc': '🇲🇦',
-      'Tunisie': '🇹🇳',
-      'Côte d\'Ivoire': '🇨🇮',
-      'Ghana': '🇬🇭',
-      'Nigeria': '🇳🇬',
-      'Royaume-Uni': '🇬🇧',
-      'UK': '🇬🇧',
-      'Canada': '🇨🇦',
-      'Japon': '🇯🇵',
-      'Australie': '🇦🇺',
-      'Brésil': '🇧🇷',
-      'Turquie': '🇹🇷',
-      'Europe': '🇪🇺',
-      'Afrique': '🌍'
+      'France': '/flags/fr.svg',
+      'Allemagne': '/flags/de.svg',
+      'Espagne': '/flags/es.svg',
+      'Italie': '/flags/it.svg',
+      'Belgique': '/flags/be.svg',
+      'États-Unis': '/flags/us.svg',
+      'USA': '/flags/us.svg',
+      'Porto Rico': '/flags/pr.svg',
+      'Arabie Saoudite': '/flags/sa.svg',
+      'La Mecque': '/flags/sa.svg',
+      'Médine': '/flags/sa.svg',
+      'Maroc': '/flags/ma.svg',
+      'Tunisie': '/flags/tn.svg',
+      'Côte d\'Ivoire': '/flags/ci.svg',
+      'Ghana': '/flags/gh.svg',
+      'Nigeria': '/flags/ng.svg',
+      'Royaume-Uni': '/flags/gb.svg',
+      'UK': '/flags/gb.svg',
+      'Canada': '/flags/ca.svg',
+      'Japon': '/flags/jp.svg',
+      'Australie': '/flags/au.svg',
+      'Brésil': '/flags/br.svg',
+      'Turquie': '/flags/tr.svg',
+      'Europe': '/flags/eu.svg',
+      'Afrique': '/flags/af.svg'
     };
 
-    return countryFlags[countryName] || '🌐';
+    return countryFlags[countryName] || '/flags/world.svg';
   };
 
   // Format price function
@@ -81,31 +114,297 @@ const PlanDetailsPage = ({ onNavigate, planId }: PlanDetailsPageProps) => {
     return new Intl.NumberFormat('fr-FR').format(price);
   };
 
-  // Plan de démonstration (normalement récupéré via API avec planId)
-  const planDetails = {
-    id: 'usa-esim-demo',
-    country: 'États-Unis',
-    flag: '🇺🇸',
-    description: 'Restez connecté aux États-Unis avec notre eSIM haute performance. Couverture 5G nationale, activation instantanée.',
-    networks: [
-      { name: 'Verizon', technology: '5G', coverage: '99%' },
-      { name: 'AT&T', technology: '5G', coverage: '98%' },
-      { name: 'T-Mobile', technology: '5G', coverage: '97%' }
-    ],
-    technicalDetails: {
-      hotspot: 'Illimité',
-      speedLimit: 'Aucune limitation',
-      activation: 'Instantanée à l\'arrivée',
-      validity: '30 jours'
-    },
-    plans: [
-      { id: 1, data: '500MB', price: 1500, originalPrice: null, popular: false, description: 'Parfait pour les courts séjours' },
-      { id: 2, data: '1GB', price: 2500, originalPrice: null, popular: false, description: 'Idéal pour usage modéré' },
-      { id: 3, data: '3GB', price: 6500, originalPrice: 8000, popular: true, description: 'Le plus populaire' },
-      { id: 4, data: '5GB', price: 9500, originalPrice: 12000, popular: false, description: 'Pour les gros utilisateurs' },
-      { id: 5, data: '10GB', price: 16500, originalPrice: 20000, popular: false, description: 'Usage intensif' }
-    ]
+  // Fonction de mapping entre nom de pays et ID de plan
+  const getPlanIdFromCountry = (country: string): string => {
+    const countryIdMap: { [key: string]: string } = {
+      'France': 'france-esim-demo',
+      'États-Unis': 'usa-esim-demo',
+      'USA': 'usa-esim-demo',
+      'Royaume-Uni': 'uk-esim-demo',
+      'Allemagne': 'de-esim-demo',
+      'Espagne': 'es-esim-demo',
+      'Italie': 'it-esim-demo',
+      'Japon': 'jp-esim-demo',
+      'Canada': 'ca-esim-demo',
+      'Australie': 'au-esim-demo',
+      'Brésil': 'br-esim-demo',
+      'Turquie': 'tr-esim-demo',
+      'Maroc': 'ma-esim-demo'
+    };
+
+    return countryIdMap[country] || 'usa-esim-demo';
   };
+
+  // Plans par destination
+  const plansByCountry: Record<string, PlanDetails> = {
+    'usa-esim-demo': {
+      id: 'usa-esim-demo',
+      country: 'États-Unis',
+      flag: '/flags/us.svg',
+      description: 'Restez connecté aux États-Unis avec notre eSIM haute performance. Couverture 5G nationale, activation instantanée.',
+      networks: [
+        { name: 'Verizon', technology: '5G', coverage: '99%' },
+        { name: 'AT&T', technology: '5G', coverage: '98%' },
+        { name: 'T-Mobile', technology: '5G', coverage: '97%' }
+      ],
+      technicalDetails: {
+        hotspot: 'Illimité',
+        speedLimit: 'Aucune limitation',
+        activation: 'Instantanée à l\'arrivée',
+        validity: '30 jours'
+      },
+      plans: [
+        { id: 1, data: '1GB', price: 2500, originalPrice: null, popular: false, description: 'Idéal pour usage modéré' },
+        { id: 2, data: '3GB', price: 6500, originalPrice: 8000, popular: true, description: 'Le plus populaire' },
+        { id: 3, data: '10GB', price: 16500, originalPrice: 20000, popular: false, description: 'Usage intensif' }
+      ]
+    },
+    'france-esim-demo': {
+      id: 'france-esim-demo',
+      country: 'France',
+      flag: '/flags/fr.svg',
+      description: 'Connectivité 4G/5G nationale avec notre eSIM pour la France.',
+      networks: [
+        { name: 'Orange', technology: '5G', coverage: '98%' },
+        { name: 'SFR', technology: '5G', coverage: '97%' },
+        { name: 'Bouygues', technology: '5G', coverage: '96%' }
+      ],
+      technicalDetails: {
+        hotspot: 'Illimité',
+        speedLimit: 'Aucune limitation',
+        activation: 'Instantanée à l\'arrivée',
+        validity: '30 jours'
+      },
+      plans: [
+        { id: 1, data: '1GB', price: 2000, originalPrice: null, popular: false, description: 'Idéal pour usage modéré' },
+        { id: 2, data: '3GB', price: 5500, originalPrice: 7000, popular: true, description: 'Le plus populaire' },
+        { id: 3, data: '10GB', price: 15000, originalPrice: 18000, popular: false, description: 'Usage intensif' }
+      ]
+    },
+    'uk-esim-demo': {
+      id: 'uk-esim-demo',
+      country: 'Royaume-Uni',
+      flag: '/flags/gb.svg',
+      description: 'Connectivité 5G nationale avec notre eSIM pour le Royaume-Uni.',
+      networks: [
+        { name: 'EE', technology: '5G', coverage: '98%' },
+        { name: 'Vodafone', technology: '5G', coverage: '97%' },
+        { name: 'Three', technology: '5G', coverage: '96%' }
+      ],
+      technicalDetails: {
+        hotspot: 'Illimité',
+        speedLimit: 'Aucune limitation',
+        activation: 'Instantanée à l\'arrivée',
+        validity: '30 jours'
+      },
+      plans: [
+        { id: 1, data: '1GB', price: 3500, originalPrice: null, popular: false, description: 'Idéal pour usage modéré' },
+        { id: 2, data: '3GB', price: 7000, originalPrice: 8500, popular: true, description: 'Le plus populaire' },
+        { id: 3, data: '10GB', price: 17500, originalPrice: 21000, popular: false, description: 'Usage intensif' }
+      ]
+    },
+    'de-esim-demo': {
+      id: 'de-esim-demo',
+      country: 'Allemagne',
+      flag: '/flags/de.svg',
+      description: 'Connectivité 5G nationale avec notre eSIM pour l\'Allemagne.',
+      networks: [
+        { name: 'Deutsche Telekom', technology: '5G', coverage: '98%' },
+        { name: 'Vodafone', technology: '5G', coverage: '97%' },
+        { name: 'O2', technology: '5G', coverage: '96%' }
+      ],
+      technicalDetails: {
+        hotspot: 'Illimité',
+        speedLimit: 'Aucune limitation',
+        activation: 'Instantanée à l\'arrivée',
+        validity: '30 jours'
+      },
+      plans: [
+        { id: 1, data: '1GB', price: 3250, originalPrice: null, popular: false, description: 'Idéal pour usage modéré' },
+        { id: 2, data: '3GB', price: 6500, originalPrice: 8000, popular: true, description: 'Le plus populaire' },
+        { id: 3, data: '10GB', price: 16250, originalPrice: 19500, popular: false, description: 'Usage intensif' }
+      ]
+    },
+    'es-esim-demo': {
+      id: 'es-esim-demo',
+      country: 'Espagne',
+      flag: '/flags/es.svg',
+      description: 'Connectivité 5G nationale avec notre eSIM pour l\'Espagne.',
+      networks: [
+        { name: 'Movistar', technology: '5G', coverage: '98%' },
+        { name: 'Vodafone', technology: '5G', coverage: '97%' },
+        { name: 'Orange', technology: '5G', coverage: '96%' }
+      ],
+      technicalDetails: {
+        hotspot: 'Illimité',
+        speedLimit: 'Aucune limitation',
+        activation: 'Instantanée à l\'arrivée',
+        validity: '30 jours'
+      },
+      plans: [
+        { id: 1, data: '1GB', price: 3250, originalPrice: null, popular: false, description: 'Idéal pour usage modéré' },
+        { id: 2, data: '3GB', price: 6500, originalPrice: 8000, popular: true, description: 'Le plus populaire' },
+        { id: 3, data: '10GB', price: 16250, originalPrice: 19500, popular: false, description: 'Usage intensif' }
+      ]
+    },
+    'it-esim-demo': {
+      id: 'it-esim-demo',
+      country: 'Italie',
+      flag: '/flags/it.svg',
+      description: 'Connectivité 5G nationale avec notre eSIM pour l\'Italie.',
+      networks: [
+        { name: 'TIM', technology: '5G', coverage: '98%' },
+        { name: 'Vodafone', technology: '5G', coverage: '97%' },
+        { name: 'Wind Tre', technology: '5G', coverage: '96%' }
+      ],
+      technicalDetails: {
+        hotspot: 'Illimité',
+        speedLimit: 'Aucune limitation',
+        activation: 'Instantanée à l\'arrivée',
+        validity: '30 jours'
+      },
+      plans: [
+        { id: 1, data: '1GB', price: 3250, originalPrice: null, popular: false, description: 'Idéal pour usage modéré' },
+        { id: 2, data: '3GB', price: 6500, originalPrice: 8000, popular: true, description: 'Le plus populaire' },
+        { id: 3, data: '10GB', price: 16250, originalPrice: 19500, popular: false, description: 'Usage intensif' }
+      ]
+    },
+    'jp-esim-demo': {
+      id: 'jp-esim-demo',
+      country: 'Japon',
+      flag: '/flags/jp.svg',
+      description: 'Connectivité 5G nationale avec notre eSIM pour le Japon.',
+      networks: [
+        { name: 'NTT Docomo', technology: '5G', coverage: '98%' },
+        { name: 'KDDI', technology: '5G', coverage: '97%' },
+        { name: 'SoftBank', technology: '5G', coverage: '96%' }
+      ],
+      technicalDetails: {
+        hotspot: 'Illimité',
+        speedLimit: 'Aucune limitation',
+        activation: 'Instantanée à l\'arrivée',
+        validity: '30 jours'
+      },
+      plans: [
+        { id: 1, data: '1GB', price: 5000, originalPrice: null, popular: false, description: 'Idéal pour usage modéré' },
+        { id: 2, data: '3GB', price: 10000, originalPrice: 12000, popular: true, description: 'Le plus populaire' },
+        { id: 3, data: '10GB', price: 25000, originalPrice: 30000, popular: false, description: 'Usage intensif' }
+      ]
+    },
+    'ca-esim-demo': {
+      id: 'ca-esim-demo',
+      country: 'Canada',
+      flag: '/flags/ca.svg',
+      description: 'Connectivité 5G nationale avec notre eSIM pour le Canada.',
+      networks: [
+        { name: 'Bell', technology: '5G', coverage: '98%' },
+        { name: 'Telus', technology: '5G', coverage: '97%' },
+        { name: 'Rogers', technology: '5G', coverage: '96%' }
+      ],
+      technicalDetails: {
+        hotspot: 'Illimité',
+        speedLimit: 'Aucune limitation',
+        activation: 'Instantanée à l\'arrivée',
+        validity: '30 jours'
+      },
+      plans: [
+        { id: 1, data: '1GB', price: 4000, originalPrice: null, popular: false, description: 'Idéal pour usage modéré' },
+        { id: 2, data: '3GB', price: 8000, originalPrice: 9500, popular: true, description: 'Le plus populaire' },
+        { id: 3, data: '10GB', price: 20000, originalPrice: 24000, popular: false, description: 'Usage intensif' }
+      ]
+    },
+    'au-esim-demo': {
+      id: 'au-esim-demo',
+      country: 'Australie',
+      flag: '/flags/au.svg',
+      description: 'Connectivité 5G nationale avec notre eSIM pour l\'Australie.',
+      networks: [
+        { name: 'Telstra', technology: '5G', coverage: '98%' },
+        { name: 'Optus', technology: '5G', coverage: '97%' },
+        { name: 'Vodafone', technology: '5G', coverage: '96%' }
+      ],
+      technicalDetails: {
+        hotspot: 'Illimité',
+        speedLimit: 'Aucune limitation',
+        activation: 'Instantanée à l\'arrivée',
+        validity: '30 jours'
+      },
+      plans: [
+        { id: 1, data: '1GB', price: 6000, originalPrice: null, popular: false, description: 'Idéal pour usage modéré' },
+        { id: 2, data: '3GB', price: 12000, originalPrice: 14500, popular: true, description: 'Le plus populaire' },
+        { id: 3, data: '10GB', price: 30000, originalPrice: 36000, popular: false, description: 'Usage intensif' }
+      ]
+    },
+    'br-esim-demo': {
+      id: 'br-esim-demo',
+      country: 'Brésil',
+      flag: '/flags/br.svg',
+      description: 'Connectivité 4G/5G nationale avec notre eSIM pour le Brésil.',
+      networks: [
+        { name: 'Claro', technology: '5G', coverage: '98%' },
+        { name: 'Vivo', technology: '5G', coverage: '97%' },
+        { name: 'Oi', technology: '4G', coverage: '96%' }
+      ],
+      technicalDetails: {
+        hotspot: 'Illimité',
+        speedLimit: 'Aucune limitation',
+        activation: 'Instantanée à l\'arrivée',
+        validity: '30 jours'
+      },
+      plans: [
+        { id: 1, data: '1GB', price: 4500, originalPrice: null, popular: false, description: 'Idéal pour usage modéré' },
+        { id: 2, data: '3GB', price: 9000, originalPrice: 10500, popular: true, description: 'Le plus populaire' },
+        { id: 3, data: '10GB', price: 22500, originalPrice: 27000, popular: false, description: 'Usage intensif' }
+      ]
+    },
+    'tr-esim-demo': {
+      id: 'tr-esim-demo',
+      country: 'Turquie',
+      flag: '/flags/tr.svg',
+      description: 'Connectivité 4G/5G nationale avec notre eSIM pour la Turquie.',
+      networks: [
+        { name: 'Turkcell', technology: '5G', coverage: '98%' },
+        { name: 'Vodafone', technology: '5G', coverage: '97%' },
+        { name: 'Turk Telekom', technology: '4G', coverage: '96%' }
+      ],
+      technicalDetails: {
+        hotspot: 'Illimité',
+        speedLimit: 'Aucune limitation',
+        activation: 'Instantanée à l\'arrivée',
+        validity: '30 jours'
+      },
+      plans: [
+        { id: 1, data: '1GB', price: 3750, originalPrice: null, popular: false, description: 'Idéal pour usage modéré' },
+        { id: 2, data: '3GB', price: 7500, originalPrice: 9000, popular: true, description: 'Le plus populaire' },
+        { id: 3, data: '10GB', price: 18750, originalPrice: 22500, popular: false, description: 'Usage intensif' }
+      ]
+    },
+    'ma-esim-demo': {
+      id: 'ma-esim-demo',
+      country: 'Maroc',
+      flag: '/flags/ma.svg',
+      description: 'Connectivité 4G/5G nationale avec notre eSIM pour le Maroc.',
+      networks: [
+        { name: 'IAM', technology: '5G', coverage: '98%' },
+        { name: 'Maroc Telecom', technology: '5G', coverage: '97%' },
+        { name: 'Inwi', technology: '4G', coverage: '96%' }
+      ],
+      technicalDetails: {
+        hotspot: 'Illimité',
+        speedLimit: 'Aucune limitation',
+        activation: 'Instantanée à l\'arrivée',
+        validity: '30 jours'
+      },
+      plans: [
+        { id: 1, data: '1GB', price: 4250, originalPrice: null, popular: false, description: 'Idéal pour usage modéré' },
+        { id: 2, data: '3GB', price: 8500, originalPrice: 10000, popular: true, description: 'Le plus populaire' },
+        { id: 3, data: '10GB', price: 21250, originalPrice: 25500, popular: false, description: 'Usage intensif' }
+      ]
+    }
+  };
+
+  // Récupérer les détails du plan en fonction du nom du pays
+  const planDetails = plansByCountry[getPlanIdFromCountry(planId || 'États-Unis')] || plansByCountry['usa-esim-demo'];
 
   const howItWorks = [
     {
@@ -224,7 +523,11 @@ const PlanDetailsPage = ({ onNavigate, planId }: PlanDetailsPageProps) => {
               </motion.span>
 
               <div className="flex items-center space-x-4">
-                <span className="text-6xl">{planDetails.flag}</span>
+                <img
+                  src={planDetails.flag}
+                  alt={`${planDetails.country} flag`}
+                  className="w-12 h-12"
+                />
                 <div>
                   <h1 className="text-5xl lg:text-6xl font-display font-bold leading-tight">
                     eSIM{' '}
@@ -294,52 +597,6 @@ const PlanDetailsPage = ({ onNavigate, planId }: PlanDetailsPageProps) => {
         </div>
       </section>
 
-      {/* Networks Section */}
-      <section className="section-padding bg-gray-50">
-        <div className="container-custom">
-          <motion.div
-            ref={section1Ref}
-            initial={{ opacity: 0, y: 20 }}
-            animate={section1InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="text-center mb-12">
-              <h2 className="text-3xl lg:text-4xl font-display font-bold text-waw-dark mb-4">
-                Réseaux disponibles
-              </h2>
-              <p className="text-xl text-gray-600">
-                Connexion automatique aux meilleurs réseaux locaux
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-6 mb-12">
-              {planDetails.networks.map((network, index) => (
-                <motion.div
-                  key={network.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={section1InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 text-center"
-                >
-                  <div className="w-16 h-16 bg-gradient-to-br from-waw-yellow to-waw-yellow-dark rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Signal size={24} className="text-waw-dark" />
-                  </div>
-                  <h3 className="font-bold text-xl text-waw-dark mb-2">{network.name}</h3>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-center space-x-2">
-                      <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold">
-                        {network.technology}
-                      </span>
-                    </div>
-                    <p className="text-gray-600">Couverture {network.coverage}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
       {/* Plans Section */}
       <section className="section-padding bg-white">
         <div className="container-custom">
@@ -349,101 +606,137 @@ const PlanDetailsPage = ({ onNavigate, planId }: PlanDetailsPageProps) => {
             animate={section2InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.8 }}
           >
-            <div className="text-center mb-12">
-              <h2 className="text-3xl lg:text-4xl font-display font-bold text-waw-dark mb-4">
-                Choisissez votre forfait
-              </h2>
-              <p className="text-xl text-gray-600">
-                Plans flexibles pour tous vos besoins de voyage
-              </p>
-            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+              {/* Left Column - Plan Details */}
+              <div className="space-y-8">
+                <div className="text-center mb-12">
+                  <h2 className="text-3xl lg:text-4xl font-display font-bold text-waw-dark mb-4">
+                    Choisissez votre forfait
+                  </h2>
+                  <p className="text-xl text-gray-600">
+                    Plans flexibles pour tous vos besoins de voyage
+                  </p>
+                </div>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-6 max-w-7xl mx-auto">
-              {planDetails.plans.map((plan, index) => (
-                <motion.div
-                  key={plan.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={section2InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                  transition={{ delay: index * 0.1 }}
-                  className={`relative bg-white rounded-2xl p-6 shadow-lg border-2 transition-all hover:shadow-2xl ${
-                    plan.popular ? 'border-waw-yellow scale-105' : 'border-gray-200'
-                  }`}
-                >
-                  {plan.popular && (
-                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                      <span className="bg-waw-yellow text-waw-dark px-4 py-1 rounded-full text-sm font-bold flex items-center">
-                        <Star size={12} className="mr-1" />
-                        Populaire
-                      </span>
-                    </div>
-                  )}
+                {/* Country Image */}
+                <div className="relative h-64 mb-8">
+                  <img
+                    src="https://thumbs.dreamstime.com/b/palmarin-senegal-october-unidentified-fisherman-running-water-to-traditional-painted-wooden-fishing-boats-palmarin-senegal-118636235.jpg"
+                    alt={planDetails.country}
+                    className="w-full h-full object-cover rounded-xl"
+                  />
+                  <div className="absolute inset-0 bg-black/40 rounded-xl"></div>
+                </div>
 
-                  <div className="text-center">
-                    <h3 className="text-2xl font-bold text-waw-dark mb-2">{plan.data}</h3>
-                    <p className="text-gray-600 text-sm mb-4">{plan.description}</p>
-
-                    <div className="mb-6">
-                      {plan.originalPrice ? (
-                        <div>
-                          <span className="text-lg text-gray-400 line-through">
-                            {formatPrice(plan.originalPrice)} FCFA
-                          </span>
-                          <p className="text-3xl font-bold text-waw-dark">
-                            {formatPrice(plan.price)} FCFA
-                          </p>
-                        </div>
-                      ) : (
-                        <p className="text-3xl font-bold text-waw-dark">
-                          {formatPrice(plan.price)} FCFA
-                        </p>
-                      )}
-                    </div>
-
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className={`w-full py-3 rounded-lg font-semibold transition-colors ${
-                        plan.popular
-                          ? 'bg-waw-yellow text-waw-dark hover:bg-waw-yellow-dark'
-                          : 'bg-gray-100 text-waw-dark hover:bg-waw-yellow'
-                      }`}
-                    >
-                      Choisir ce plan
-                    </motion.button>
+                {/* Plan Description */}
+                <div className="space-y-6">
+                  <div className="bg-white rounded-xl p-8 shadow-lg">
+                    <h3 className="text-lg font-semibold mb-4">eSIM WAW TELECOM pour {planDetails.country}</h3>
+                    <p className="text-gray-600">{planDetails.description}</p>
                   </div>
+                </div>
+
+
+              </div>
+
+              {/* Right Column - Plans Grid */}
+              <div className="space-y-6">
+                <div className="bg-white rounded-xl p-8 shadow-lg">
+                  <h3 className="text-lg font-semibold mb-4">Plans WAW TELECOM</h3>
+                  <p className="text-gray-600 mb-6">Valables uniquement en {planDetails.country}</p>
+
+                  <div className="space-y-4">
+                    {planDetails.plans.map((plan, index) => (
+                      <div
+                        key={plan.id}
+                        className={`flex items-center justify-between p-4 rounded-lg transition-all duration-300 ${
+                          plan.popular ? 'bg-waw-yellow/10' : 'hover:bg-gray-50'
+                        }`}
+                      >
+                        <div>
+                          <h4 className="font-semibold text-waw-dark">{plan.data}</h4>
+                          <p className="text-gray-600">{plan.description}</p>
+                        </div>
+                        <div className="text-right">
+                          {plan.originalPrice ? (
+                            <div className="flex flex-col items-end">
+                              <span className="text-gray-400 line-through">
+                                {formatPrice(plan.originalPrice)} FCFA
+                              </span>
+                              <p className="text-2xl font-bold text-waw-dark">
+                                {formatPrice(plan.price)} FCFA
+                              </p>
+                            </div>
+                          ) : (
+                            <p className="text-2xl font-bold text-waw-dark">
+                              {formatPrice(plan.price)} FCFA
+                            </p>
+                          )}
+                          {plan.popular && (
+                            <div className="mt-2">
+                              <span className="bg-waw-yellow text-waw-dark px-3 py-1 rounded-full text-sm font-bold">
+                                Populaire 🔥
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Checkout Button */}
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="w-full py-4 rounded-lg font-semibold transition-colors text-sm flex items-center justify-center gap-2 bg-waw-yellow text-waw-dark hover:bg-waw-yellow-dark"
+                  onClick={() => {
+                    // Passer le plan sélectionné à la page de checkout
+                    const selectedPlan = planDetails.plans.find(plan => plan.popular) || planDetails.plans[0];
+                    navigateToPage('checkout', selectedPlan.id.toString());
+                  }}
+                >
+                  <Shield className="w-5 h-5" />
+                  Aller au paiement sécurisé
+                  <ArrowRight size={16} className="ml-2" />
                 </motion.div>
-              ))}
+
+                <div className="text-center text-gray-600 mt-4">
+                  <p>Tous vos paiements sont sécurisés avec WAW TELECOM</p>
+                </div>
+              </div>
             </div>
           </motion.div>
         </div>
       </section>
-
-      {/* How it Works */}
-      <section className="section-padding bg-gradient-to-br from-waw-yellow/5 to-waw-yellow-dark/5">
+      {/* How It Works Section */}
+      <section className="section-padding bg-gray-50">
         <div className="container-custom">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-display font-bold text-waw-dark mb-6">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-display font-bold text-waw-dark mb-4">
               Comment ça marche
             </h2>
             <p className="text-xl text-gray-600">
-              4 étapes simples pour rester connecté
+              Suivez ces étapes simples pour vous connecter
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-4xl mx-auto">
             {howItWorks.map((step, index) => (
               <motion.div
-                key={step.step}
+                key={index}
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.2 }}
-                className="text-center"
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.2 }}
+                className="bg-white rounded-2xl p-6 shadow-sm"
               >
-                <div className="w-16 h-16 bg-gradient-to-br from-waw-yellow to-waw-yellow-dark rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-waw-dark font-bold text-xl">{step.step}</span>
+                <div className="flex items-center justify-center w-12 h-12 bg-waw-yellow rounded-full mb-4">
+                  <span className="text-waw-dark font-bold text-lg">{step.step}</span>
                 </div>
-                <h3 className="text-xl font-bold text-waw-dark mb-3">{step.title}</h3>
-                <p className="text-gray-600">{step.description}</p>
+                <div className="text-center">
+                  <h3 className="text-lg font-semibold text-waw-dark mb-2">{step.title}</h3>
+                  <p className="text-gray-600">{step.description}</p>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -453,56 +746,58 @@ const PlanDetailsPage = ({ onNavigate, planId }: PlanDetailsPageProps) => {
       {/* FAQ Section */}
       <section className="section-padding bg-white">
         <div className="container-custom">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl lg:text-4xl font-display font-bold text-waw-dark mb-6">
-                Questions fréquentes
-              </h2>
-            </div>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-display font-bold text-waw-dark mb-4">
+              Questions Fréquentes
+            </h2>
+            <p className="text-xl text-gray-600">
+              Réponses à vos questions les plus courantes
+            </p>
+          </div>
 
-            <div className="space-y-6">
-              {faqItems.map((item, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="bg-gray-50 rounded-xl p-6"
-                >
-                  <h3 className="text-lg font-bold text-waw-dark mb-3">{item.question}</h3>
-                  <p className="text-gray-600">{item.answer}</p>
-                </motion.div>
-              ))}
-            </div>
+          <div className="space-y-6">
+            {faqItems.map((faq, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                className="bg-gray-50 rounded-2xl p-6"
+              >
+                <h3 className="text-lg font-semibold text-waw-dark mb-4">{faq.question}</h3>
+                <p className="text-gray-600">{faq.answer}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Other Destinations */}
+      {/* Other Destinations Section */}
       <section className="section-padding bg-gray-50">
         <div className="container-custom">
           <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-display font-bold text-waw-dark mb-6">
+            <h2 className="text-3xl lg:text-4xl font-display font-bold text-waw-dark mb-4">
               Autres destinations
             </h2>
             <p className="text-xl text-gray-600">
-              Découvrez nos forfaits eSIM pour d'autres pays
+              Explorez nos offres dans d'autres pays
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {otherDestinations.map((destination, index) => (
               <motion.div
-                key={destination.name}
+                key={index}
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ scale: 1.05, y: -5 }}
-                className="bg-white rounded-xl p-6 shadow-lg border border-gray-200 text-center cursor-pointer hover:border-waw-yellow transition-all"
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                className="bg-white rounded-2xl p-6 shadow-sm flex items-center justify-between"
               >
-                <div className="text-4xl mb-3">{destination.flag}</div>
-                <h3 className="font-bold text-waw-dark mb-2">{destination.name}</h3>
-                <p className="text-sm text-gray-600">{destination.price}</p>
+                <div>
+                  <h3 className="font-semibold text-waw-dark">{destination.name}</h3>
+                  <p className="text-gray-600">{destination.price}</p>
+                </div>
+                <div className="text-4xl">{destination.flag}</div>
               </motion.div>
             ))}
           </div>
@@ -511,12 +806,10 @@ const PlanDetailsPage = ({ onNavigate, planId }: PlanDetailsPageProps) => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => onNavigate('travel')}
-              className="bg-waw-yellow text-waw-dark font-bold px-8 py-4 rounded-lg text-lg hover:bg-waw-yellow-dark transition-colors flex items-center justify-center space-x-2 mx-auto"
+              className="inline-flex items-center px-8 py-4 bg-waw-yellow text-waw-dark rounded-lg font-semibold hover:bg-waw-yellow-dark transition-colors"
             >
-              <Globe size={20} />
-              <span>Voir toutes les destinations</span>
-              <ArrowRight size={20} />
+              Voir toutes les destinations
+              <ArrowRight size={20} className="ml-2" />
             </motion.button>
           </div>
         </div>
