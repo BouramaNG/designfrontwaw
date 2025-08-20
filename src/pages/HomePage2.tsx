@@ -88,14 +88,14 @@ Cordialement,`);
       title: "🌍 Connectivité Globale",
       subtitle: "Votre passerelle vers le monde",
       description: "Restez connecté où que vous soyez avec notre réseau mondial. eSIM Travel, solutions d'entreprise et support 24/7 pour une expérience sans frontières.",
-      image: "https://wawtelecom.com/Services-Synapsys-04.jpg",
+      image: "https://wawtelecom.com/connectivite1.jpg",
       stats: "24/7 Support client"
     },
     {
       title: "☁️ Solutions Cloud",
       subtitle: "L'infrastructure de demain",
       description: "Optimisez vos performances avec nos solutions cloud intelligentes. Sécurité, évolutivité et innovation pour propulser votre entreprise vers l'avenir.",
-      image: "https://wawtelecom.com/cloudwaw.jpg",
+      image: "https://wawtelecom.com/cloude5.webp",
       stats: "99.9% Disponibilité"
     },
     {
@@ -112,21 +112,21 @@ Cordialement,`);
       icon: Smartphone,
       title: "eSIM Travel",
       description: "Voyagez connecté dans plus de 50 pays avec nos cartes eSIM. Activation instantanée, tarifs transparents.",
-      image: "https://wawtelecom.com/esim3.jpg",
+      image: "https://wawtelecom.com/esim20.jpg",
       features: ["Activation en 2 minutes", "50+ destinations", "Données illimitées"]
     },
     {
       icon: Wifi,
       title: "Connectivité Enterprise",
       description: "Solutions réseau haute performance pour entreprises. Fibre optique, SD-WAN, sécurité avancée.",
-      image: "https://wawtelecom.com/ssdwan.jpg",
+      image: "https://wawtelecom.com/connectivite2.jpg",
       features: ["Fibre dédiée", "99.9% SLA", "Support 24/7"]
     },
     {
       icon: Cloud,
       title: "Services Cloud",
       description: "Infrastructure cloud scalable et sécurisée. Migration, hébergement, sauvegarde et monitoring.",
-      image: "https://wawtelecom.com/cloudwaw.jpg",
+      image: "https://wawtelecom.com/cloude3.webp",
       features: ["Multi-cloud", "Sécurité ISO 27001", "Backup automatique"]
     },
     {
@@ -375,7 +375,7 @@ Cordialement,`);
         {/* Background avec image */}
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&h=800&fit=crop"
+            src="https://wawtelecom.com/leguileu.png"
             alt="Bureau moderne"
             className="w-full h-full object-cover"
           />
@@ -384,7 +384,7 @@ Cordialement,`);
 
         <div className="container-custom relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={contactInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8 }}
             className="text-center mb-16"

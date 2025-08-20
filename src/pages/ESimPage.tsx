@@ -734,7 +734,7 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
                 >
                   <div className="relative bg-gradient-to-br from-waw-dark to-gray-800 rounded-3xl p-8 shadow-2xl">
                     <img
-                      src="https://ugc.same-assets.com/QDOu1p2nTx2jV3_73oS96YaWxH4cih6Q.webp"
+                      src="https://wawtelecom.com/esim23.jpg"
                       alt="Personne africaine heureuse utilisant Orange Money pour acheter une eSIM"
                       className="w-full h-96 object-cover rounded-2xl shadow-lg"
                     />
@@ -845,7 +845,7 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
                 >
                   <div className="relative bg-gradient-to-br from-waw-dark to-gray-800 rounded-3xl p-8 shadow-2xl">
                     <img
-                      src="https://ugc.same-assets.com/eFUx4jLdWtvsnZOlpDs0e7-Ux1jQUjTT.png"
+                      src="https://wawtelecom.com/esim21.jpg"
                       alt="Solutions eSIM business pour entreprises"
                       className="w-full h-96 object-cover rounded-2xl shadow-lg"
                     />
