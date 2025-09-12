@@ -83,33 +83,33 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
   const features = [
     {
       icon: Shield,
-      title: 'Sécurité Renforcée',
+      title: 'protection des données',
       description: 'Chiffrement de bout en bout et protection avancée'
     },
     {
       icon: Zap,
-      title: 'Performance Optimale',
+      title: 'conformité facilitée',
       description: 'Faible latence et haute disponibilité garanties'
     },
     {
       icon: Network,
-      title: 'Infrastructure Évolutive',
+      title: 'fiabilité et maîtrise de bout en bout',
       description: 'Solutions qui grandissent avec votre entreprise'
     },
-    {
-      icon: Clock,
-      title: 'Support 24/7',
-      description: 'Assistance technique experte en permanence'
-    }
+    // {
+    //   icon: Clock,
+    //   title: 'Support 24/7',
+    //   description: 'Assistance technique experte en permanence'
+    // }
   ];
 
   const mplsFeatures = [
-    'Qualité de Service (QoS) garantie',
-    'Interconnexion sécurisée multi-sites',
-    'Gestion centralisée du réseau',
-    'Visibilité complète des flux de données',
-    'Redondance automatique',
-    'SLA avec garantie de performance'
+    'Qualité de service (priorisation des applications)',
+    'Faible latence pour la voix, la vidéo et l/’ERP',
+    'Gestion centralisée et visibilité sur les flux',
+    // 'Visibilité complète des flux de données',
+    // 'Redondance automatique',
+    // 'SLA avec garantie de performance'
   ];
 
   const stats = [
@@ -312,16 +312,12 @@ Atouts clés : performance stable, continuité de service, offres flexibles selo
                 </motion.span>
 
                 <h2 className="text-4xl lg:text-5xl font-display font-bold text-waw-dark mb-6">
-                  Connectivité privée{' '}
-                  <span className="gradient-text">sécurisée</span>
+                Connectivité privée & {' '}
+                  <span className="gradient-text">sécurité renforcée</span>
                 </h2>
 
                 <p className="text-xl text-gray-600 leading-relaxed mb-8">
-                  Chez WAW TELECOM, nous offrons bien plus qu'une simple connexion :
-                  nous fournissons des solutions de connectivité privée qui garantissent
-                  une infrastructure sécurisée, performante et adaptée aux enjeux de l'ère numérique.
-                  Faites confiance à notre expertise pour renforcer la sécurité et l'efficacité
-                  de votre entreprise tout en répondant à vos besoins les plus stratégiques.
+                Au-delà d’une simple connexion, WAW TELECOM déploie des réseaux privés taillés pour les enjeux critiques de votre entreprise : isolation des flux, contrôle d’accès, chiffrement et supervision..
                 </p>
               </div>
 
@@ -631,17 +627,12 @@ Atouts clés : performance stable, continuité de service, offres flexibles selo
                 </motion.span>
 
                 <h2 className="text-4xl lg:text-5xl font-display font-bold text-waw-dark mb-6">
-                  WAW TELECOM : La connectivité au{' '}
-                  <span className="gradient-text">service de votre entreprise</span>
+                  WAW TELECOM : MPLS pour {' '}
+                  <span className="gradient-text">interconnexion multi-sites</span>
                 </h2>
 
                 <p className="text-xl text-gray-600 leading-relaxed mb-8">
-                  Optimisez vos performances avec nos solutions MPLS robustes,
-                  idéales pour interconnecter vos sites distants et garantir une qualité
-                  de service (QoS) optimale. Bénéficiez d'une faible latence pour vos
-                  applications critiques, d'une gestion centralisée, et d'une visibilité
-                  complète sur vos flux de données. Avec WAW TELECOM, assurez la fiabilité
-                  et l'efficacité de votre réseau, pour des communications d'entreprises sans compromis.
+                Interconnectez vos agences et data centers avec un réseau MPLS robuste, pensé pour vos applications critiques
                 </p>
               </div>
 
@@ -698,26 +689,22 @@ Atouts clés : performance stable, continuité de service, offres flexibles selo
                 </motion.span>
 
                 <h2 className="text-4xl lg:text-5xl font-display font-bold text-waw-dark mb-6">
-                  Des solutions SD-WAN pour une connectivité{' '}
-                  <span className="gradient-text">agile et performante</span>
+                agilité, performance {' '}
+                  <span className="gradient-text">maîtrise des coûts</span>
                 </h2>
 
                 <p className="text-xl text-gray-600 leading-relaxed mb-8">
-                  Avec nos solutions SD-WAN de pointe, simplifiez la gestion de votre réseau
-                  tout en améliorant ses performances. Offrez à votre entreprise une connectivité
-                  optimisée, une gestion fluide de vos applications et une réduction significative
-                  des coûts par rapport aux infrastructures réseau traditionnelles. WAW TELECOM
-                  vous accompagne vers une infrastructure plus intelligente et flexible.
+                Modernisez votre réseau avec le SD-WAN. Combinez plusieurs liens (fibre, LTE/5G, etc.), orchestrez le trafic applicatif et optimisez les coûts — sans compromis sur la sécurité
                 </p>
               </div>
 
               {/* SD-WAN Benefits */}
               <div className="grid md:grid-cols-2 gap-4">
                 {[
-                  { icon: Zap, title: 'Gestion simplifiée', desc: 'Interface centralisée intuitive' },
-                  { icon: TrendingUp, title: 'Performance optimisée', desc: 'Routage intelligent du trafic' },
-                  { icon: Shield, title: 'Sécurité renforcée', desc: 'Chiffrement bout-en-bout' },
-                  { icon: Network, title: 'Flexibilité totale', desc: 'Adaptation aux besoins métier' },
+                  { icon: Zap, title: 'déploiements rapides', desc: 'Interface centralisée intuitive' },
+                  { icon: TrendingUp, title: 'pilotage centralisé', desc: 'Routage intelligent du trafic' },
+                  { icon: Shield, title: 'performance applicative accrue', desc: 'Chiffrement bout-en-bout' },
+                  { icon: Network, title: 't budget optimisée', desc: 'Adaptation aux besoins métier' },
                 ].map((item, index) => (
                   <motion.div
                     key={item.title}

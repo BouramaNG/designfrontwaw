@@ -1,3 +1,5 @@
+// Guide step images
+
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import {
@@ -20,6 +22,9 @@ import {
   Settings,
   Star
 } from 'lucide-react';
+import { CompatibleDevicesModal } from '../components/CompatibleDevicesModal';
+import React from 'react';
+import { useState } from 'react';
 import type { PageType } from '../App';
 
 interface ESimPageProps {
@@ -28,6 +33,8 @@ interface ESimPageProps {
 }
 
 const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
+  // State for Compatible Devices Modal
+  const [modalOpen, setModalOpen] = useState(false);
   const [heroRef, heroInView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -90,34 +97,28 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
 
   const advantages = [
     {
-      icon: Zap,
-      title: 'Activation Instantanée',
-      description: 'Connectez-vous en quelques minutes sans attendre de carte physique'
-    },
-    {
+      step: '1',
       icon: Globe,
-      title: 'Nos destinations',
-      description: 'Couverture optimisée pour vos destinations'
+      title: "Connectivité mondiale instantanée",
+      description: "Accédez à Internet dans plus de 60 pays, sans changer de carte SIM. Votre liberté n'a plus de frontières."
     },
     {
+      step: '2',
       icon: CreditCard,
-      title: 'Tarifs Transparents',
-      description: 'Pas de frais cachés, tarifs fixes connus à l\'avance'
+      title: "Tarification claire & accessible",
+      description: "Des forfaits dès 1 000 FCFA, pensés pour tous. Maîtrisez votre budget, profitez d'une expérience premium."
     },
     {
-      icon: Shield,
-      title: 'Sécurité Avancée',
-      description: 'Chiffrement de niveau bancaire et protection des données'
+      step: '3',
+      icon: Zap,
+      title: "Activation ultra-rapide",
+      description: "Scannez, activez, surfez. Votre eSIM est opérationnelle en quelques secondes, où que vous soyez."
     },
     {
-      icon: Settings,
-      title: 'Gestion Flexible',
-      description: 'Contrôlez vos plans depuis notre application mobile'
-    },
-    {
-      icon: Building,
-      title: 'Solutions Business',
-      description: 'Offres dédiées pour les entreprises et équipes nomades'
+      step: '4',
+      icon: Star,
+      title: "Support humain & multilingue",
+      description: "Notre équipe WAW vous accompagne 7j/7, en français, anglais et wolof. Un service client réactif, expert et proche de vous."
     }
   ];
 
@@ -212,27 +213,27 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
   const howItWorks = [
     {
       step: '1',
-      title: 'Choisissez votre destination et forfait',
-      description: 'Sélectionnez votre pays et forfait parmi nos offres optimisées',
-      icon: MapPin
+      title: 'Vérifiez la compatibilité de votre appareil',
+      description: 'Assurez-vous que votre smartphone ou tablette prend en charge la technologie eSIM.',
+      icon: Smartphone
     },
     {
       step: '2',
-      title: 'Payez avec Wave, Orange Money ou Free Money',
-      description: 'Paiement sécurisé avec vos solutions mobiles préférées',
+      title: 'Commandez votre eSIM en ligne',
+      description: 'Sélectionnez votre forfait et finalisez votre achat en quelques clics sur notre plateforme sécurisée.',
       icon: CreditCard
     },
     {
       step: '3',
-      title: 'Recevez votre eSIM',
-      description: 'Code QR envoyé par SMS et email instantanément',
-      icon: Download
+      title: 'Recevez le QR code par e-mail',
+      description: 'Votre eSIM vous est envoyée instantanément par e-mail, prête à être activée.',
+      icon: Mail
     },
     {
       step: '4',
-      title: 'Activez et connectez-vous',
-      description: 'Scannez le QR code et profitez d\'Internet partout',
-      icon: Wifi
+      title: 'Scannez et activez votre forfait',
+      description: 'Scannez le QR code avec votre appareil et profitez immédiatement de votre connexion.',
+      icon: Download
     }
   ];
 
@@ -325,17 +326,15 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
               </motion.span>
 
               <h1 className="text-5xl lg:text-7xl font-display font-bold leading-tight">
-                Connectivité{' '}
+              Votre eSIM  dès {' '}
                 <span className="bg-gradient-to-r from-waw-yellow to-waw-yellow-dark bg-clip-text text-transparent">
-                  eSIM
+                1 000 FCFA
                 </span>{' '}
-                mondiale
+                internationale
               </h1>
 
               <p className="text-xl lg:text-2xl text-gray-300 leading-relaxed">
-                Restez connecté partout dans le monde avec nos solutions eSIM avancées.
-                Activation instantanée, couverture mondiale, tarifs transparents.
-                La révolution de la connectivité mobile pour voyageurs et entreprises.
+              Profitez d'une connectivité mobile instantanée, sans carte SIM physique, et restez connecté où que vous soyez dans le monde.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-6 pt-8">
@@ -344,11 +343,11 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
                   whileTap={{ scale: 0.95 }}
                   className="bg-waw-yellow text-waw-dark font-bold px-8 py-4 rounded-lg text-lg hover:bg-waw-yellow-dark transition-colors flex items-center justify-center space-x-2 group"
                 >
-                  <span>Commander maintenant</span>
+                  <span>Découvrir nos forfaits | Activer une eSIM</span>
                   <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                 </motion.button>
 
-                <motion.button
+                {/* <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => onNavigate('contact')}
@@ -356,7 +355,7 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
                 >
                   <Building size={20} />
                   <span>Solutions Business</span>
-                </motion.button>
+                </motion.button> */}
               </div>
             </motion.div>
 
@@ -389,7 +388,7 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
                           <div className="w-2 h-2 bg-waw-yellow rounded-full animate-pulse" />
                           <span className="text-xs text-gray-600">Réseau actif</span>
                         </div>
-                        <div className="text-xs text-gray-600">200+ pays</div>
+                        <div className="text-xs text-gray-600">Mondial</div>
                       </div>
                     </div>
                   </div>
@@ -475,7 +474,7 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
         </motion.div>
       </section>
 
-      {/* Section 1 - Avantages eSIM */}
+  {/* Section 1 - Avantages eSIM */}
       <section className="section-padding bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
         <div className="absolute inset-0">
           <motion.div
@@ -511,7 +510,7 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
 
             <h2 className="text-4xl lg:text-5xl font-display font-bold text-waw-dark mb-6">
               Pourquoi choisir l'
-              <span className="gradient-text">eSIM WAW TELECOM</span> ?
+              <span className="gradient-text">eSIM WAW Travel</span> ?
             </h2>
 
             <p className="text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
@@ -520,25 +519,69 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
             </p>
           </motion.div>
 
-          {/* Advantages Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* Advantages Steps - Modern Timeline Style */}
+          <div className="flex flex-col md:flex-row md:justify-center gap-8">
             {advantages.map((advantage, index) => (
               <motion.div
                 key={advantage.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={section1InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                transition={{ delay: 0.5 + index * 0.1 }}
-                whileHover={{ scale: 1.05, y: -5 }}
-                className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all"
+                initial={{ opacity: 0, y: 30 }}
+                animate={section1InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+                transition={{ delay: 0.5 + index * 0.15 }}
+                whileHover={{ scale: 1.07, y: -8 }}
+                className="relative bg-white rounded-3xl p-8 shadow-xl border-2 border-waw-yellow/20 hover:border-waw-yellow transition-all flex-1 flex flex-col items-center text-center min-w-[220px] max-w-xs mx-auto"
               >
-                <div className="w-16 h-16 bg-gradient-to-br from-waw-yellow to-waw-yellow-dark rounded-xl flex items-center justify-center mb-4">
-                  <advantage.icon size={24} className="text-waw-dark" />
+                <div className="absolute -top-7 left-1/2 -translate-x-1/2 w-14 h-14 bg-gradient-to-br from-waw-yellow to-waw-yellow-dark rounded-full flex items-center justify-center shadow-lg border-4 border-white z-10">
+                  <span className="text-2xl font-extrabold text-waw-dark drop-shadow-lg">{advantage.step}</span>
                 </div>
-                <h3 className="text-xl font-bold text-waw-dark mb-3">{advantage.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{advantage.description}</p>
+                <div className="w-14 h-14 mt-8 mb-4 bg-gradient-to-br from-waw-yellow/30 to-waw-yellow-dark/30 rounded-xl flex items-center justify-center">
+                  <advantage.icon size={28} className="text-waw-yellow-dark" />
+                </div>
+                <h3 className="text-lg font-bold text-waw-dark mb-2 tracking-tight">{advantage.title}</h3>
+                <p className="text-gray-600 leading-relaxed text-sm">{advantage.description}</p>
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Section Appareils Compatibles - Premium UX */}
+      <section className="section-padding bg-gradient-to-br from-white to-gray-50 relative overflow-hidden">
+        <div className="container-custom relative z-10">
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            className="text-center mb-12"
+          >
+            <motion.span
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
+              className="inline-block px-4 py-2 bg-waw-yellow/10 text-waw-yellow-dark rounded-full text-sm font-semibold mb-4"
+            >
+              📱 Appareils compatibles
+            </motion.span>
+            <h2 className="text-4xl lg:text-5xl font-display font-bold text-waw-dark mb-6">
+              Votre smartphone est-il <span className="gradient-text">compatible eSIM</span> ?
+            </h2>
+            <p className="text-xl text-gray-600 leading-relaxed max-w-2xl mx-auto">
+              Vérifiez si votre appareil prend en charge la technologie eSIM avant de commander. La majorité des modèles récents Apple, Samsung, Google Pixel et autres sont compatibles.
+            </p>
+          </motion.div>
+          <div className="flex flex-col items-center justify-center gap-6">
+            <button
+              onClick={() => setModalOpen(true)}
+              className="relative px-8 py-4 bg-gradient-to-r from-waw-yellow to-waw-yellow-dark text-waw-dark font-bold rounded-xl text-lg shadow-lg flex items-center gap-3 hover:scale-105 transition-transform border-2 border-waw-yellow/40"
+            >
+              <Smartphone size={28} className="text-waw-yellow-dark animate-bounce" />
+              <span>Voir la liste des appareils compatibles</span>
+              <span className="ml-2 text-2xl">🔍</span>
+            </button>
+            <span className="text-gray-500 text-sm">Apple 🍏, Samsung 🤖, Google Pixel, Huawei, Oppo, Xiaomi, et plus</span>
+          </div>
+          {/* Modal */}
+          <CompatibleDevicesModal open={modalOpen} onClose={() => setModalOpen(false)} />
         </div>
       </section>
 
@@ -688,12 +731,11 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
                 </motion.span>
 
                 <h2 className="text-4xl lg:text-5xl font-display font-bold text-waw-dark mb-6">
-                  Achetez votre eSIM en{' '}
-                  <span className="gradient-text">4 étapes simples</span>
+                  Comment ça marche&nbsp;?
                 </h2>
 
                 <p className="text-xl text-gray-600 leading-relaxed mb-8">
-                  Notre processus d'achat eSIM est optimisé pour l'Afrique.
+                  Notre processus d'achat eSIM est optimisé dans tout le monde .
                   Payez facilement avec Wave ou Orange Money et connectez-vous instantanément.
                 </p>
               </div>
@@ -806,169 +848,249 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
         </div>
       </section>
 
-      {/* Section 4 - Solutions Business */}
-      <section className="section-padding bg-white relative overflow-hidden">
-        <div className="absolute inset-0">
-          <motion.div
-            animate={{
-              rotate: 360,
-              scale: [1, 1.1, 1],
-            }}
-            transition={{
-              duration: 30,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: 'linear',
-            }}
-            className="absolute top-20 right-20 w-96 h-96 bg-gradient-to-r from-waw-yellow/20 to-waw-yellow-dark/20 rounded-full blur-3xl"
-          />
-        </div>
 
+
+      {/* Section Guide d’activation eSIM interactif - Tabs UX */}
+      <section className="section-padding bg-gradient-to-br from-waw-yellow/10 to-white relative overflow-hidden">
         <div className="container-custom relative z-10">
           <motion.div
-            ref={section4Ref}
             variants={containerVariants}
             initial="hidden"
-            animate={section4InView ? 'visible' : 'hidden'}
-            className="grid lg:grid-cols-2 gap-16 items-center"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            className="text-center mb-12"
           >
-            {/* Real Image Content */}
-            <motion.div variants={itemVariants} className="relative lg:order-1">
-              <div className="relative">
-                <motion.div
-                  animate={{ y: [-15, 15, -15] }}
-                  transition={{
-                    duration: 6,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: 'easeInOut',
-                  }}
-                  className="relative z-10 mx-auto"
-                >
-                  <div className="relative bg-gradient-to-br from-waw-dark to-gray-800 rounded-3xl p-8 shadow-2xl">
-                    <img
-                      src="https://wawtelecom.com/esim21.jpg"
-                      alt="Solutions eSIM business pour entreprises"
-                      className="w-full h-96 object-cover rounded-2xl shadow-lg"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-waw-dark/20 to-transparent rounded-2xl" />
-
-                    {/* Overlay Info */}
-                    <div className="absolute bottom-8 left-8 right-8 bg-white/90 backdrop-blur-sm rounded-xl p-4">
-                      <h4 className="font-bold text-lg text-gray-800 mb-2">Solutions Business</h4>
-                      <p className="text-sm text-gray-600 mb-3">Gestion centralisée et contrôle total</p>
-
-                      {/* Business Stats */}
-                      <div className="grid grid-cols-3 gap-3">
-                        <div className="text-center">
-                          <div className="text-lg font-bold text-waw-yellow">24/7</div>
-                          <div className="text-xs text-gray-600">Support</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-lg font-bold text-waw-yellow">API</div>
-                          <div className="text-xs text-gray-600">Intégration</div>
-                        </div>
-                        <div className="text-center">
-                          <div className="text-lg font-bold text-waw-yellow">-30%</div>
-                          <div className="text-xs text-gray-600">Tarifs</div>
-                        </div>
+            <motion.span
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
+              className="inline-block px-4 py-2 bg-waw-yellow/20 text-waw-yellow-dark rounded-full text-sm font-semibold mb-4"
+            >
+              🛠️ Guide d’activation eSIM
+            </motion.span>
+            <h2 className="text-4xl lg:text-5xl font-display font-bold text-waw-dark mb-6">
+              Activez votre <span className="gradient-text">WAW Travel eSIM</span>
+            </h2>
+            <p className="text-xl text-gray-600 leading-relaxed max-w-2xl mx-auto">
+              Suivez le guide interactif selon votre méthode préférée&nbsp;: <span className="font-bold text-waw-yellow-dark">Activation rapide</span>, <span className="font-bold text-waw-yellow-dark">QR Code</span> ou <span className="font-bold text-waw-yellow-dark">Activation manuelle</span>.
+            </p>
+          </motion.div>
+          {/* Onglets */}
+          {(() => {
+            const [tab, setTab] = useState('');
+            const tabList = [
+              { key: 'single', label: 'Activation rapide', icon: '🟣', desc: '1 clic (iOS 17.4+)' },
+              { key: 'qr', label: 'QR Code', icon: '🔳', desc: 'Scanner le QR' },
+              { key: 'manual', label: 'Manuelle', icon: '📱', desc: 'Code d’activation' },
+            ];
+            return (
+              <div className="max-w-3xl mx-auto">
+                <div className="flex justify-center gap-4 mb-8">
+                  {tabList.map(t => (
+                    <button
+                      key={t.key}
+                      onClick={() => setTab(t.key)}
+                      className={`flex flex-col items-center px-6 py-3 rounded-xl border-2 transition-all font-semibold text-lg shadow-sm bg-white hover:bg-waw-yellow/10 ${tab === t.key ? 'border-waw-yellow bg-waw-yellow/20 text-waw-yellow-dark scale-105' : 'border-gray-200 text-gray-500'}`}
+                    >
+                      <span className="text-2xl mb-1">{t.icon}</span>
+                      {t.label}
+                      <span className="text-xs font-normal text-gray-400">{t.desc}</span>
+                    </button>
+                  ))}
+                </div>
+                {/* Contenu du guide selon l’onglet */}
+                {tab ? (
+                  <div className="bg-white rounded-3xl shadow-xl border-2 border-waw-yellow/20 p-8 animate-fade-in">
+                    {tab === 'single' && (
+                      <div className="space-y-4 text-left">
+                        <h3 className="text-xl font-bold mb-2 flex items-center gap-2">🟣 Activation rapide (iOS 17.4+)</h3>
+                        <ul className="list-disc list-inside space-y-2 text-gray-700">
+                          <li>Assurez-vous d’être connecté à un <b>WiFi stable</b> <span className="ml-1">📶</span></li>
+                          <li>Le mode avion doit être <b>désactivé</b> <span className="ml-1">✈️❌</span></li>
+                          <li>Ouvrez l’app WAW Travel et cliquez sur <b>«&nbsp;Activer maintenant&nbsp;»</b></li>
+                          <li>Cliquez sur <b>«&nbsp;Démarrer l’activation&nbsp;»</b></li>
+                          <li>Autorisez l’accès et cliquez sur <b>«&nbsp;Continuer&nbsp;»</b></li>
+                          <li>Patientez 1 à 2 minutes, écran allumé <span className="ml-1">⏳</span></li>
+                          <li>À la fin, cliquez sur <b>«&nbsp;Continuer&nbsp;»</b> pour finaliser la configuration iOS</li>
+                          <li>Pour chaque étape (Ligne par défaut, iMessage/Facetime, Données mobiles), sélectionnez <b>Primaire</b> puis <b>Continuer</b> <span className="ml-1">📱</span></li>
+                          <li>Notez le nom attribué à votre eSIM (ex: Personnel, Voyage, Données…)</li>
+                        </ul>
                       </div>
+                    )}
+                    {tab === 'qr' && (
+                      <div className="space-y-4 text-left">
+                        <h3 className="text-xl font-bold mb-2 flex items-center gap-2">🔳 Activation par QR Code</h3>
+                        <ul className="list-disc list-inside space-y-2 text-gray-700">
+                          <li>Assurez-vous d’être connecté à un <b>WiFi stable</b> <span className="ml-1">📶</span></li>
+                          <li>Le mode avion doit être <b>désactivé</b> <span className="ml-1">✈️❌</span></li>
+                          <li>Envoyez le QR code reçu sur un autre appareil (PC, tablette, téléphone d’un ami)</li>
+                          <li>Ouvrez l’appareil photo de votre iPhone et scannez le QR code</li>
+                          <li>Cliquez sur <b>«&nbsp;Continuer&nbsp;»</b> sur l’écran d’activation eSIM</li>
+                          <li>Patientez 1 à 2 minutes, écran allumé <span className="ml-1">⏳</span></li>
+                          <li>À la fin, cliquez sur <b>«&nbsp;Continuer&nbsp;»</b> pour finaliser la configuration iOS</li>
+                          <li>Pour chaque étape (Ligne par défaut, iMessage/Facetime, Données mobiles), sélectionnez <b>Primaire</b> puis <b>Continuer</b> <span className="ml-1">📱</span></li>
+                          <li>Notez le nom attribué à votre eSIM (ex: Personnel, Voyage, Données…)</li>
+                        </ul>
+                      </div>
+                    )}
+                    {tab === 'manual' && (
+                      <div className="space-y-4 text-left">
+                        <h3 className="text-xl font-bold mb-2 flex items-center gap-2">📱 Activation manuelle</h3>
+                        <ul className="list-disc list-inside space-y-2 text-gray-700">
+                          <li>Assurez-vous d’être connecté à un <b>WiFi stable</b> <span className="ml-1">📶</span></li>
+                          <li>Le mode avion doit être <b>désactivé</b> <span className="ml-1">✈️❌</span></li>
+                          <li>Ouvrez l’app WAW Travel et cliquez sur <b>«&nbsp;Activation manuelle&nbsp;»</b></li>
+                          <li>Copiez l’adresse SMDP+ et le code d’activation fournis</li>
+                          <li>Sur votre iPhone : Réglages → Données cellulaires → Ajouter eSIM → Utiliser QR Code → Saisir manuellement</li>
+                          <li>Collez l’adresse SMDP+ puis le code d’activation</li>
+                          <li>Cliquez sur <b>Suivant</b> et patientez 1 à 2 minutes <span className="ml-1">⏳</span></li>
+                          <li>À la fin, cliquez sur <b>«&nbsp;Continuer&nbsp;»</b> pour finaliser la configuration iOS</li>
+                          <li>Pour chaque étape (Ligne par défaut, iMessage/Facetime, Données mobiles), sélectionnez <b>Primaire</b> puis <b>Continuer</b> <span className="ml-1">📱</span></li>
+                          <li>Notez le nom attribué à votre eSIM (ex: Personnel, Voyage, Données…)</li>
+                        </ul>
+                      </div>
+                    )}
+                    {/* Bloc commun : Paramétrage iOS & Data */}
+                    <div className="mt-8 border-t pt-6">
+                      <h4 className="text-lg font-bold mb-2 flex items-center gap-2">⚙️ Paramétrage iOS & Données</h4>
+                      <ul className="list-disc list-inside space-y-2 text-gray-700">
+                        <li>Ouvrez Réglages → Données cellulaires → faites défiler jusqu’à la section SIMs</li>
+                        <li>Cliquez sur votre eSIM WAW Travel (nom attribué précédemment)</li>
+                        <li>Activez <b>Itinérance des données</b> <span className="ml-1">🌍</span></li>
+                        <li>Pour votre SIM principale, désactivez <b>Itinérance des données</b> <span className="ml-1">🚫</span></li>
+                        <li>Pour les données mobiles, sélectionnez la ligne WAW Travel et activez <b>Autoriser le basculement des données</b> <span className="ml-1">🔄</span></li>
+                        <li><b>Astuce&nbsp;:</b> Pour éviter la consommation en tâche de fond, activez le <b>Mode données limitées</b> sur la eSIM WAW Travel <span className="ml-1">💡</span></li>
+                      </ul>
                     </div>
                   </div>
-                </motion.div>
-
-                {/* Business Features */}
-                <motion.div
-                  animate={{
-                    x: [0, 20, 0],
-                    y: [0, -10, 0],
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: 'easeInOut',
-                  }}
-                  className="absolute -top-10 -right-10 bg-white rounded-xl shadow-lg p-4"
-                >
-                  <div className="flex items-center space-x-2">
-                    <Users size={16} className="text-waw-yellow" />
-                    <span className="text-sm font-medium text-gray-700">Multi-utilisateurs</span>
+                ) : (
+                  <div className="bg-white rounded-3xl shadow-xl border-2 border-waw-yellow/20 p-8 animate-fade-in text-center text-gray-500 text-lg">
+                    <span>Sélectionnez une méthode d’activation ci-dessus pour afficher le guide détaillé 👆</span>
                   </div>
-                </motion.div>
-
-                <motion.div
-                  animate={{
-                    x: [0, -15, 0],
-                    y: [0, 15, 0],
-                  }}
-                  transition={{
-                    duration: 5,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: 'easeInOut',
-                    delay: 2,
-                  }}
-                  className="absolute -bottom-10 -left-10 bg-white rounded-xl shadow-lg p-4"
-                >
-                  <div className="flex items-center space-x-2">
-                    <TrendingUp size={16} className="text-waw-yellow" />
-                    <span className="text-sm font-medium text-gray-700">Analytics</span>
-                  </div>
-                </motion.div>
+                )}
               </div>
-            </motion.div>
-
-            {/* Text Content */}
-            <motion.div variants={itemVariants} className="space-y-8 lg:order-2">
-              <div>
-                <motion.span
-                  initial={{ scale: 0 }}
-                  animate={section4InView ? { scale: 1 } : { scale: 0 }}
-                  transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
-                  className="inline-block px-4 py-2 bg-waw-yellow/20 text-waw-dark rounded-full text-sm font-semibold mb-4"
-                >
-                  🏢 Solutions Business
-                </motion.span>
-
-                <h2 className="text-4xl lg:text-5xl font-display font-bold text-waw-dark mb-6">
-                  eSIM pour{' '}
-                  <span className="gradient-text">entreprises</span>
-                </h2>
-
-                <p className="text-xl text-gray-600 leading-relaxed mb-8">
-                  Équipez vos équipes nomades avec nos solutions eSIM business.
-                  Gestion centralisée, contrôle des coûts, support dédié et
-                  intégration parfaite à vos systèmes existants.
-                </p>
-              </div>
-
-              {/* Business Features */}
-              <div className="space-y-3">
-                {businessFeatures.map((feature, index) => (
-                  <motion.div
-                    key={feature}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={section4InView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-                    transition={{ delay: 0.5 + index * 0.1 }}
-                    className="flex items-center space-x-3 p-3 bg-gradient-to-r from-waw-yellow/10 to-waw-yellow-dark/10 rounded-lg border border-waw-yellow/30"
-                  >
-                    <CheckCircle size={16} className="text-waw-yellow flex-shrink-0" />
-                    <span className="text-gray-700">{feature}</span>
-                  </motion.div>
-                ))}
-              </div>
-
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => onNavigate('contact')}
-                className="btn-primary flex items-center space-x-2 group"
-              >
-                <span>Demander un devis business</span>
-                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-              </motion.button>
-            </motion.div>
-          </motion.div>
+            );
+          })()}
         </div>
       </section>
 
+      {/* Section Témoignages clients - Slider africain */}
+      <section className="section-padding bg-gradient-to-br from-white to-waw-yellow/10 relative overflow-hidden">
+        <div className="container-custom relative z-10">
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            className="text-center mb-16"
+          >
+            <motion.span
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
+              className="inline-block px-4 py-2 bg-waw-yellow/20 text-waw-yellow-dark rounded-full text-sm font-semibold mb-4"
+            >
+              ⭐ Témoignages clients
+            </motion.span>
+            <h2 className="text-4xl lg:text-5xl font-display font-bold text-waw-dark mb-6">
+              Ils ont choisi <span className="gradient-text">WAW eSIM</span>
+            </h2>
+            <p className="text-xl text-gray-600 leading-relaxed max-w-2xl mx-auto">
+              Découvrez les avis de nos clients africains satisfaits !
+            </p>
+          </motion.div>
+          {/* Slider horizontal auto défilant */}
+          {(() => {
+            // Témoignages africains
+            const testimonials = [
+              {
+                name: 'Fatou Ndiaye',
+                country: 'Sénégal',
+                flag: '/flags/sn.svg',
+                stars: 5,
+                text: 'Service rapide, activation instantanée et support très réactif. Je recommande à tous les voyageurs africains !'
+              },
+              {
+                name: 'Yao Kouassi',
+                country: 'Côte d’Ivoire',
+                flag: '/flags/ci.svg',
+                stars: 5,
+                text: 'Activation facile, connexion stable à Abidjan comme à Dakar. Merci WAW eSIM !'
+              },
+              {
+                name: 'Aminata Traoré',
+                country: 'Mali',
+                flag: '/flags/ma.svg',
+                stars: 4,
+                text: 'Très pratique pour voyager sans changer de SIM. Support WhatsApp efficace.'
+              },
+              {
+                name: 'Mohamed Camara',
+                country: 'Guinée',
+                flag: '/flags/gh.svg',
+                stars: 5,
+                text: 'J’ai utilisé WAW eSIM au Maroc et en France, tout a fonctionné parfaitement.'
+              },
+              {
+                name: 'Awa Diop',
+                country: 'Sénégal',
+                flag: '/flags/sn.svg',
+                stars: 5,
+                text: 'Installation simple, internet rapide, je recommande à mes amis !'
+              },
+              {
+                name: 'Koffi Mensah',
+                country: 'Togo',
+                flag: '/flags/gh.svg',
+                stars: 4,
+                text: 'Bon rapport qualité/prix pour les voyageurs africains.'
+              }
+            ];
+            // Auto-scroll state
+            const [offset, setOffset] = useState(0);
+            // Largeur d’une carte + gap
+            const cardWidth = 360;
+            // Scroll automatique
+            React.useEffect(() => {
+              const interval = setInterval(() => {
+                setOffset(prev => (prev + 1) % testimonials.length);
+              }, 3500);
+              return () => clearInterval(interval);
+            }, [testimonials.length]);
+            return (
+              <div className="relative w-full overflow-hidden">
+                <div
+                  className="flex gap-8 transition-transform duration-700"
+                  style={{ transform: `translateX(-${offset * cardWidth}px)` }}
+                >
+                  {testimonials.concat(testimonials[0]).map((testimonial, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3 + (i % testimonials.length) * 0.1 }}
+                      className="relative flex flex-col items-center bg-white rounded-3xl p-8 shadow-xl border-2 border-waw-yellow/20 hover:border-waw-yellow transition-all min-w-[320px] max-w-[340px]"
+                    >
+                      <div className="relative mb-4 flex flex-col items-center">
+                        <img src={testimonial.flag} alt={testimonial.country} className="w-16 h-16 rounded-full border-4 border-waw-yellow/30 shadow-lg mb-2" />
+                      </div>
+                      <div className="flex items-center mb-2">
+                        {Array.from({ length: testimonial.stars }).map((_, idx) => (
+                          <Star key={idx} size={18} className="text-waw-yellow" />
+                        ))}
+                      </div>
+                      <p className="text-gray-700 text-base italic mb-4">“{testimonial.text}”</p>
+                      <div className="font-bold text-waw-dark">{testimonial.name}</div>
+                      <div className="text-sm text-gray-500">{testimonial.country}</div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
+        </div>
+      </section>
+     
       {/* Section 5 - Support & Contact */}
       <section className="section-padding bg-gradient-to-r from-waw-dark to-gray-800 text-white relative overflow-hidden">
         {/* Background Pattern */}
@@ -1006,7 +1128,7 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
                   transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
                   className="inline-block px-6 py-3 bg-waw-yellow/20 text-waw-yellow rounded-full text-lg font-semibold mb-6"
                 >
-                  📞 Support eSIM Expert
+                  📞 Contact & Support
                 </motion.span>
 
                 <h2 className="text-4xl lg:text-6xl font-display font-bold mb-6">
@@ -1017,8 +1139,7 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
                 </h2>
 
                 <p className="text-xl text-gray-300 leading-relaxed mb-8">
-                  Nos experts eSIM vous accompagnent dans le choix de la solution
-                  parfaite. Support technique 24/7, activation rapide garantie.
+                Notre équipe est disponible pour vous guider dans le choix et l’activation de votre eSIM.
                 </p>
               </div>
 
@@ -1063,30 +1184,22 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
               </div>
 
               {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-waw-yellow text-waw-dark font-bold px-8 py-4 rounded-lg text-lg hover:bg-waw-yellow-dark transition-colors flex items-center justify-center space-x-2 group"
-                >
-                  <span>Commander votre eSIM</span>
-                  <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-                </motion.button>
-
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => onNavigate('contact')}
-                  className="border-2 border-waw-yellow text-waw-yellow font-bold px-8 py-4 rounded-lg text-lg hover:bg-waw-yellow hover:text-waw-dark transition-all flex items-center justify-center space-x-2"
-                >
-                  <Smartphone size={20} />
-                  <span>Guide d'activation</span>
-                </motion.button>
-              </div>
+            
             </motion.div>
           </motion.div>
         </div>
       </section>
+    {/* Bouton flottant WhatsApp Achat (gauche) */}
+    <a
+      href="https://wa.me/221763644946"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="fixed bottom-8 left-8 z-50 flex items-center gap-3 px-5 py-3 bg-green-500 hover:bg-green-600 text-white font-bold rounded-full shadow-lg transition-all text-base group"
+      style={{ boxShadow: '0 4px 24px 0 rgba(39, 174, 96, 0.25)' }}
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 32 32"><rect width="32" height="32" rx="16" fill="#25D366"/><path fill="#fff" d="M16 7.5A8.5 8.5 0 0 0 7.5 16c0 1.5.4 2.9 1.1 4.1l-1.2 4.4 4.5-1.2A8.5 8.5 0 1 0 16 7.5Zm4.8 12.1c-.2.6-1.1 1.1-1.5 1.2-.4.1-.9.2-1.5-.1-.3-.1-.7-.2-1.5-.5-2.6-1.1-4.3-3.7-4.4-3.9-.1-.2-1-1.3-1-2.5 0-1.1.6-1.6.8-1.8.2-.2.4-.2.6-.2.1 0 .3 0 .4.3.2.3.5 1 .6 1.1.1.1.1.2 0 .4-.1.2-.2.3-.3.5-.1.1-.2.2-.1.4.2.4.7 1.2 1.5 1.7.7.4 1.1.6 1.3.5.2-.1.3-.2.4-.4.1-.2.2-.2.4-.2.1 0 .2 0 .3 0 .1 0 .2 0 .3.2.1.2.4.9.5 1.2.1.3.2.3.1.5Z"/></svg>
+      Acheter votre eSIM avec WhatsApp
+    </a>
     </div>
   );
 };

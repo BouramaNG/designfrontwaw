@@ -468,7 +468,7 @@ Cordialement,`);
             className="text-center mb-16"
           >
             <h2 className="text-4xl font-display font-bold text-white mb-6">
-              Contactez-nous dès maintenant
+            Prêt à transformer votre connectivité ?
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
               Prêt à transformer votre entreprise ? Parlons de vos besoins et trouvons la solution parfaite ensemble.
@@ -568,7 +568,7 @@ Cordialement,`);
                   type="submit"
                   className="w-full bg-waw-yellow hover:bg-waw-yellow-dark text-waw-dark px-8 py-4 rounded-xl font-semibold transition-all"
                 >
-                  Envoyer
+                  Demander un devis
                 </motion.button>
               </form>
             </motion.div>
@@ -588,8 +588,8 @@ Cordialement,`);
                   <div>
                     <h4 className="font-semibold text-white mb-1">Adresse</h4>
                     <p className="text-gray-400">
-                      28, Boulevard Léopold Sédar Senghor<br />
-                      10000 Dakar, Sénégal
+                    56 Route de Ngor - Almadies <br />
+                    Dakar, Sénégal
                     </p>
                   </div>
                 </div>
@@ -606,7 +606,7 @@ Cordialement,`);
                   <Mail className="w-10 h-10 text-waw-yellow" />
                   <div>
                     <h4 className="font-semibold text-white mb-1">Email</h4>
-                    <p className="text-gray-400">serviceclient@wawtelecom.com</p>
+                    <p className="text-gray-400">contact@wawtelecom.com</p>
                   </div>
                 </div>
               </div>
@@ -734,7 +734,7 @@ Cordialement,`);
                 <Mail size={24} />
                 <div className="text-left">
                   <div className="font-bold">Email</div>
-                  <div className="text-sm opacity-90">serviceclient@wawtelecom.com</div>
+                  <div className="text-sm opacity-90">contact@wawtelecom.com</div>
                 </div>
               </motion.button>
             </div>

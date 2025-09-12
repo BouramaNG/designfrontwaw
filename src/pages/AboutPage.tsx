@@ -2,6 +2,8 @@ import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { useState } from 'react';
 import jsPDF from 'jspdf';
+import VisionCommerciale from '../components/VisionCommerciale';
+import NosInfrastructures from '../components/NosInfrastructures';
 import {
   Users,
   Rocket,
@@ -757,66 +759,11 @@ Un ADN local, une vision panafricaine.
         </div>
       </section>
 
-      {/* Nos Valeurs */}
-      <section className="section-padding bg-white relative overflow-hidden">
-        <div className="container-custom relative z-10">
-          <motion.div
-            ref={valuesRef}
-            variants={containerVariants}
-            initial="hidden"
-            animate={valuesInView ? 'visible' : 'hidden'}
-            className="text-center mb-16"
-          >
-            <motion.span
-              variants={itemVariants}
-              className="inline-block px-4 py-2 bg-waw-yellow/20 text-waw-dark rounded-full text-sm font-semibold mb-4"
-            >
-              ⭐ Nos Valeurs
-            </motion.span>
-
-            <motion.h2
-              variants={itemVariants}
-              className="text-4xl lg:text-5xl font-display font-bold text-waw-dark mb-6"
-            >
-              Les valeurs qui nous{' '}
-              <span className="gradient-text">définissent</span>
-            </motion.h2>
-
-            <motion.p
-              variants={itemVariants}
-              className="text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto"
-            >
-              Ces principes fondamentaux guident chacune de nos décisions
-              et façonnent notre relation avec nos clients et partenaires.
-            </motion.p>
-          </motion.div>
-
-          <div className="grid lg:grid-cols-2 gap-8">
-            {coreValues.map((value, index) => (
-              <motion.div
-                key={value.title}
-                initial={{ opacity: 0, y: 50 }}
-                animate={valuesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-                transition={{ delay: 0.5 + index * 0.2 }}
-                whileHover={{ scale: 1.02, y: -5 }}
-                className="bg-gradient-to-br from-white to-gray-50 rounded-2xl p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-all"
-              >
-                <div className="flex items-start space-x-6">
-                  <div className="text-4xl mb-4">{value.emoji}</div>
-                  <div className="flex-1">
-                    <div className="w-16 h-16 bg-gradient-to-br from-waw-yellow to-waw-yellow-dark rounded-xl flex items-center justify-center mb-4">
-                      <value.icon size={28} className="text-waw-dark" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-waw-dark mb-2">{value.title}</h3>
-                    <p className="text-waw-yellow font-semibold text-lg mb-4">{value.subtitle}</p>
-                    <p className="text-gray-600 leading-relaxed">{value.description}</p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Notre Vision Commerciale */}
+      <VisionCommerciale />
+      
+      {/* Nos Infrastructures */}
+      <NosInfrastructures />
 
       {/* Témoignages Clients */}
       <section className="section-padding bg-gradient-to-br from-waw-yellow/5 to-waw-yellow-dark/5 relative overflow-hidden">
