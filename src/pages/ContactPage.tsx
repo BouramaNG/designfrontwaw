@@ -141,13 +141,13 @@ const ContactPage = ({ onNavigate }: ContactPageProps) => {
       icon: Mail,
       title: 'Email professionnel',
       value: 'contact@wawtelecom.com',
-      description: 'Réponse sous 2h en moyenne',
+      description: 'Réponse sous 1h en moyenne',
       action: 'mailto:contact@wawtelecom.com'
     },
     {
       icon: MapPin,
       title: 'Adresse physique',
-      value: 'Ngor Almadies, Immeuble BIB\'S',
+      value: 'Ngor Almadies',
       description: '56 Route de Ngor – Dakar, Sénégal',
       action: 'https://www.google.com/maps/place/Siège+Social+WAW+TELECOM/@14.7496095,-17.5082828,17z'
     }

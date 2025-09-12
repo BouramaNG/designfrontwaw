@@ -15,7 +15,11 @@ import {
   TrendingUp
 } from 'lucide-react';
 
-const AboutSection = () => {
+interface AboutSectionProps {
+  onNavigate: (page: string) => void;
+}
+
+const AboutSection = ({ onNavigate }: AboutSectionProps) => {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -50,32 +54,32 @@ const AboutSection = () => {
 
   const timeline = [
     {
-      year: '2018',
+      year: '2016',
       title: 'Fondation de WAW TELECOM',
       description: 'Création de l\'entreprise à Dakar avec la vision de transformer les télécommunications au Sénégal.',
       icon: Building
     },
     {
-      year: '2019',
+      year: '2018',
       title: 'Premiers services cloud',
       description: 'Lancement de nos solutions cloud sécurisées pour les entreprises sénégalaises.',
       icon: Shield
     },
     {
-      year: '2021',
+      year: '2020',
       title: 'Expansion régionale',
       description: 'Extension de nos services de connectivité dans plusieurs pays d\'Afrique de l\'Ouest.',
       icon: Globe
     },
     {
-      year: '2023',
-      title: 'Innovation eSIM',
+      year: '2025',
+      title: 'eSIM & Innovation',
       description: 'Lancement révolutionnaire de nos services eSIM Travel, incluant le forfait Umrah.',
       icon: Zap
     },
     {
-      year: '2024',
-      title: 'Leadership technologique',
+      year: '2025',
+      title: 'Leader Tech',
       description: 'Position de leader dans l\'innovation télécom avec plus de 500 entreprises clientes.',
       icon: Award
     }
@@ -214,10 +218,22 @@ const AboutSection = () => {
           <motion.div variants={itemVariants} className="mb-20">
             <div className="text-center mb-12">
               <h3 className="text-3xl font-bold text-waw-dark mb-4">Notre Histoire</h3>
-              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-6">
                 Découvrez le parcours de WAW TELECOM, de startup innovante à leader
                 des télécommunications au Sénégal.
               </p>
+              <div onClick={(e) => e.stopPropagation()}>
+                <button
+                  onClick={() => onNavigate('about')}
+                  className="bg-waw-yellow hover:bg-waw-yellow-dark text-waw-dark px-6 py-3 rounded-xl font-semibold flex items-center space-x-2 transition-all mx-auto"
+                >
+                  <span>En savoir plus</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </button>
+              </div>
             </div>
 
             <div className="relative">

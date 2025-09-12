@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Smartphone, Cloud, Network, Globe, Phone, Mail, Cpu } from 'lucide-react';
+import { Menu, X, Smartphone, Cloud, Network, Globe, Phone, Mail, Cpu, Clock } from 'lucide-react';
 import type { PageType } from '../App';
 
 interface HeaderProps {
@@ -26,7 +26,7 @@ const Header = ({ currentPage, onNavigate }: HeaderProps) => {
     { name: 'Cloud', page: 'cloud' as PageType, icon: Cloud },
     { name: 'eSIM Travel', page: 'travel' as PageType, icon: Smartphone },
     { name: 'IoT', page: 'iot' as PageType, icon: Cpu },
-    { name: 'Notre Histoire', page: 'about' as PageType, icon: Phone },
+    { name: 'Notre Histoire', page: 'about' as PageType, icon: Clock },
     { name: 'Contact', page: 'contact' as PageType, icon: Mail },
   ];
 

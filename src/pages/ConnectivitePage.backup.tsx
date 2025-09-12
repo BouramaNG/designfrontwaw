@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import { useState } from 'react';
 import {
   Shield,
   Network,
@@ -18,7 +19,8 @@ import {
   Cpu,
   Wifi,
   BarChart3,
-  Settings
+  Settings,
+  MessageCircle
 } from 'lucide-react';
 import type { PageType } from '../App';
 
@@ -27,6 +29,23 @@ interface ConnectivitePageProps {
 }
 
 const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
+  const [showConsultationModal, setShowConsultationModal] = useState(false);
+
+  const openConsultationModal = () => {
+    setShowConsultationModal(true);
+  };
+
+  const handleWhatsAppConsultation = () => {
+    const phoneNumber = '221769291717';
+    const message = encodeURIComponent('Bonjour, je souhaite être contacté par un conseiller WAW TELECOM pour discuter de mes besoins en connectivité.');
+    window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+  };
+
+  const handleEmailConsultation = () => {
+    const subject = encodeURIComponent('Demande de consultation - WAW TELECOM Connectivité');
+    const body = encodeURIComponent('Bonjour,\n\nJe souhaite être contacté par un conseiller WAW TELECOM pour discuter de mes besoins en connectivité.\n\nCordialement,');
+    window.location.href = `mailto:serviceclient@wawtelecom.com?subject=${subject}&body=${body}`;
+  };
   const [heroRef, heroInView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -978,6 +997,17 @@ Atouts clés : performance stable, continuité de service, offres flexibles selo
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  onClick={openConsultationModal}
+                  className="bg-waw-yellow text-waw-dark font-bold px-8 py-4 rounded-lg text-lg hover:bg-waw-yellow-dark transition-colors flex items-center justify-center space-x-2 group"
+                >
+                  <MessageCircle size={20} />
+                  <span>Parler à un conseiller</span>
+                  <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                </motion.button>
+
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   className="border-2 border-waw-yellow text-waw-yellow font-bold px-8 py-4 rounded-lg text-lg hover:bg-waw-yellow hover:text-waw-dark transition-all flex items-center justify-center space-x-2"
                 >
                   <Network size={20} />
@@ -988,6 +1018,157 @@ Atouts clés : performance stable, continuité de service, offres flexibles selo
           </motion.div>
         </div>
       </section>
+    </div>
+  );
+
+  // Rendu de la modale de consultation
+  const renderConsultationModal = () => {
+    if (!showConsultationModal) return null;
+    
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        onClick={() => setShowConsultationModal(false)}
+      >
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.8, opacity: 0 }}
+          className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="text-center mb-6">
+            <div className="w-16 h-16 bg-waw-yellow rounded-full flex items-center justify-center mx-auto mb-4">
+              <Phone size={28} className="text-waw-dark" />
+            </div>
+            <h3 className="text-2xl font-bold text-waw-dark mb-2">Comment préférez-vous être contacté ?</h3>
+            <p className="text-gray-600">Choisissez votre moyen de communication préféré</p>
+          </div>
+
+          <div className="space-y-4">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={handleWhatsAppConsultation}
+              className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-6 rounded-xl transition-colors flex items-center justify-center space-x-3"
+            >
+              <MessageCircle size={24} />
+              <div className="text-left">
+                <div className="font-bold">WhatsApp</div>
+                <div className="text-sm opacity-90">+221 76 929 17 17</div>
+              </div>
+            </motion.button>
+
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={handleEmailConsultation}
+              className="w-full bg-waw-yellow hover:bg-waw-yellow-dark text-waw-dark font-bold py-4 px-6 rounded-xl transition-colors flex items-center justify-center space-x-3"
+            >
+              <Mail size={24} />
+              <div className="text-left">
+                <div className="font-bold">Email</div>
+                <div className="text-sm opacity-90">serviceclient@wawtelecom.com</div>
+              </div>
+            </motion.button>
+          </div>
+
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setShowConsultationModal(false)}
+            className="w-full mt-4 text-gray-500 hover:text-gray-700 font-medium py-2"
+          >
+            Annuler
+          </motion.button>
+        </motion.div>
+      </motion.div>
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-waw-dark text-white">
+      {/* Votre contenu existant ici */}
+      <div>
+        {/* Bouton pour ouvrir la modale */}
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={openConsultationModal}
+          className="bg-waw-yellow text-waw-dark font-bold px-8 py-4 rounded-lg text-lg hover:bg-waw-yellow-dark transition-colors flex items-center justify-center space-x-2 group m-4"
+        >
+          <MessageCircle size={20} />
+          <span>Parler à un conseiller</span>
+          <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+        </motion.button>
+      </div>
+
+      {/* Modal de Consultation */}
+      {showConsultationModal && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={() => setShowConsultationModal(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            className="bg-white rounded-2xl p-8 max-w-md w-full shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-waw-yellow rounded-full flex items-center justify-center mx-auto mb-4">
+                <MessageCircle size={32} className="text-waw-dark" />
+              </div>
+              <h3 className="text-2xl font-bold text-waw-dark mb-2">Comment préférez-vous être contacté ?</h3>
+              <p className="text-gray-600">Choisissez votre moyen de communication préféré</p>
+            </div>
+
+            <div className="space-y-4">
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={handleWhatsAppConsultation}
+                className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-6 rounded-xl transition-colors flex items-center justify-center space-x-3"
+              >
+                <MessageCircle size={24} />
+                <div className="text-left">
+                  <div className="font-bold">WhatsApp</div>
+                  <div className="text-sm opacity-90">+221 76 929 17 17</div>
+                </div>
+              </motion.button>
+
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={handleEmailConsultation}
+                className="w-full bg-waw-yellow hover:bg-waw-yellow-dark text-waw-dark font-bold py-4 px-6 rounded-xl transition-colors flex items-center justify-center space-x-3"
+              >
+                <Mail size={24} />
+                <div className="text-left">
+                  <div className="font-bold">Email</div>
+                  <div className="text-sm opacity-90">serviceclient@wawtelecom.com</div>
+                </div>
+              </motion.button>
+            </div>
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setShowConsultationModal(false)}
+              className="w-full mt-4 text-gray-500 hover:text-gray-700 font-medium py-2"
+            >
+              Annuler
+            </motion.button>
+          </motion.div>
+        </motion.div>
+      )}
     </div>
   );
 };

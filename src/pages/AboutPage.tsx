@@ -95,44 +95,37 @@ const AboutPage = ({ onNavigate }: AboutPageProps) => {
   // Histoire de WAW TELECOM
   const historyMilestones = [
     {
-      year: '2015',
-      title: 'Création de WAW TELECOM',
-      description: 'Fondation de l\'entreprise avec la vision de révolutionner les télécommunications au Sénégal',
+      year: '2016',
+      title: 'Fondation de WAW TELECOM',
+      description: 'Création de l\'entreprise à Dakar avec la vision de transformer les télécommunications au Sénégal',
       icon: Rocket,
       image: 'https://images.unsplash.com/photo-1556075798-4825dfaaf498?w=500&h=300&fit=crop'
     },
     {
-      year: '2017',
-      title: 'Premier déploiement fibre',
-      description: 'Installation de notre premier réseau fibre optique à Dakar, marquant notre entrée sur le marché B2B',
-      icon: Zap,
-      image: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=500&h=300&fit=crop'
-    },
-    {
-      year: '2019',
-      title: 'Expansion régionale',
-      description: 'Extension de nos services à Thiès et création de partenariats stratégiques avec les opérateurs locaux',
-      icon: Globe,
-      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=500&h=300&fit=crop'
-    },
-    {
-      year: '2021',
-      title: 'Solutions Cloud',
-      description: 'Lancement de notre datacenter et services cloud pour accompagner la transformation digitale',
+      year: '2018',
+      title: 'Premiers services cloud',
+      description: 'Lancement de nos solutions cloud sécurisées pour les entreprises sénégalaises',
       icon: Shield,
       image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=500&h=300&fit=crop'
     },
     {
-      year: '2023',
+      year: '2020',
+      title: 'Expansion régionale',
+      description: 'Extension de nos services de connectivité dans plusieurs pays d\'Afrique de l\'Ouest',
+      icon: Globe,
+      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=500&h=300&fit=crop'
+    },
+    {
+      year: '2025',
       title: 'eSIM & Innovation',
-      description: 'Introduction des solutions eSIM et partenariats internationaux pour la connectivité mondiale',
+      description: 'Lancement révolutionnaire de nos services eSIM Travel',
       icon: Phone,
       image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&h=300&fit=crop'
     },
     {
       year: '2025',
       title: 'Leader Tech',
-      description: 'Aujourd\'hui, WAW TELECOM est reconnu comme pionnier des télécoms innovantes en Afrique de l\'Ouest',
+      description: 'Position de leader dans l\'innovation télécom avec plus de 500 entreprises clientes',
       icon: Award,
       image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=500&h=300&fit=crop'
     }
@@ -575,16 +568,38 @@ Cordialement,`);
               </h1>
 
               <p className="text-xl lg:text-2xl text-gray-300 leading-relaxed max-w-4xl mx-auto">
-                Depuis 2015, WAW TELECOM révolutionne les télécommunications au Sénégal.
-                De startup ambitieuse à leader technologique, découvrez notre parcours
-                d'innovation au service de la transformation digitale africaine.
+              Depuis 2016, WAW TELECOM redéfinit les standards des télécommunications au Sénégal. Née de l’ambition de rendre la connectivité haut débit accessible, performante et locale, notre entreprise a su évoluer en combinant innovation technologique, ancrage régional et exigence de qualité.
+
+Aujourd’hui, WAW accompagne les entreprises, institutions et opérateurs vers l’avenir numérique.
+
+Un ADN local, une vision panafricaine.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8">
+              <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onNavigate('about');
+                  }}
+                  className="bg-waw-yellow text-waw-dark font-bold px-8 py-4 rounded-lg text-lg hover:bg-waw-yellow-dark transition-colors flex items-center justify-center space-x-2 group"
+                >
+                  <MessageCircle size={20} />
+                  <span>En savoir plus sur notre histoire</span>
+                  <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={openConsultationModal}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const phoneNumber = '221769291717';
+                    const message = encodeURIComponent('Bonjour, je souhaite être contacté par un conseiller WAW TELECOM pour discuter de mes besoins en télécommunications.');
+                    window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+                  }}
                   className="bg-waw-yellow text-waw-dark font-bold px-8 py-4 rounded-lg text-lg hover:bg-waw-yellow-dark transition-colors flex items-center justify-center space-x-2 group"
                 >
                   <MessageCircle size={20} />

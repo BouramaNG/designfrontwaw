@@ -77,64 +77,91 @@ Cordialement,`);
   };
 
   const heroSlides = [
+    // {
+    //   title: "🚀 Innovation Télécom",
+    //   subtitle: "L'efficacité dans la synergie",
+    //   description: "Tout fonctionne mieux quand tout fonctionne ensemble. Accompagnons votre transformation numérique avec nos solutions eSIM, connectivité et cloud.",
+    //   image: "https://imageio.forbes.com/specials-images/imageserve/5f8d4bc46738826921f51465/0x0.jpg?format=jpg&height=900&width=1600&fit=bounds",
+    //   stats: "50+ Pays couverts"
+    // },
     {
-      title: "🚀 Innovation Télécom",
-      subtitle: "L'efficacité dans la synergie",
-      description: "Tout fonctionne mieux quand tout fonctionne ensemble. Accompagnons votre transformation numérique avec nos solutions eSIM, connectivité et cloud.",
-      image: "https://imageio.forbes.com/specials-images/imageserve/5f8d4bc46738826921f51465/0x0.jpg?format=jpg&height=900&width=1600&fit=bounds",
-      stats: "50+ Pays couverts"
-    },
-    {
-      title: "🌍 Connectivité Globale",
-      subtitle: "Votre passerelle vers le monde",
-      description: "Restez connecté où que vous soyez avec notre réseau mondial. eSIM Travel, solutions d'entreprise et support 24/7 pour une expérience sans frontières.",
+      title: "La connectivité intelligente pour vos ambitions numériques",
+      subtitle: "Ensemble, façonnons l’avenir digital de votre entreprise",
+      description: "Grâce à nostechnologies de pointe (Fibre, Cloud, eSIM, IoT), nous vous connectons aumonde avec performance, sécurité et simplicité",
       image: "https://wawtelecom.com/connectivite1.jpg",
-      stats: "24/7 Support client"
+      // stats: "24/7 Support client"
     },
-    {
-      title: "☁️ Solutions Cloud",
-      subtitle: "L'infrastructure de demain",
-      description: "Optimisez vos performances avec nos solutions cloud intelligentes. Sécurité, évolutivité et innovation pour propulser votre entreprise vers l'avenir.",
-      image: "https://wawtelecom.com/cloude5.webp",
-      stats: "99.9% Disponibilité"
-    },
-    {
-      title: "🤝 Équipe Experte",
-      subtitle: "L'humain au cœur de la technologie",
-      description: "Notre équipe de spécialistes vous accompagne à chaque étape. Conseil personnalisé, formation et support technique pour maximiser votre réussite.",
-      image: "https://www.lemoci.com/wp-content/uploads/2022/03/Entreprise-africaine-julief514-iStock.jpg",
-      stats: "15+ Années d'expérience"
-    }
+    // {
+    //   title: "☁️ Solutions Cloud",
+    //   subtitle: "L'infrastructure de demain",
+    //   description: "Optimisez vos performances avec nos solutions cloud intelligentes. Sécurité, évolutivité et innovation pour propulser votre entreprise vers l'avenir.",
+    //   image: "https://wawtelecom.com/cloude5.webp",
+    //   stats: "99.9% Disponibilité"
+    // },
+    // {
+    //   title: "🤝 Équipe Experte",
+    //   subtitle: "L'humain au cœur de la technologie",
+    //   description: "Notre équipe de spécialistes vous accompagne à chaque étape. Conseil personnalisé, formation et support technique pour maximiser votre réussite.",
+    //   image: "https://www.lemoci.com/wp-content/uploads/2022/03/Entreprise-africaine-julief514-iStock.jpg",
+    //   stats: "15+ Années d'expérience"
+    // }
   ];
 
   const services = [
     {
-      icon: Smartphone,
-      title: "eSIM Travel",
-      description: "Voyagez connecté dans plus de 50 pays avec nos cartes eSIM. Activation instantanée, tarifs transparents.",
-      image: "https://wawtelecom.com/esim20.jpg",
-      features: ["Activation en 2 minutes", "50+ destinations", "Données illimitées"]
-    },
-    {
       icon: Wifi,
-      title: "Connectivité Enterprise",
-      description: "Solutions réseau haute performance pour entreprises. Fibre optique, SD-WAN, sécurité avancée.",
+      title: "Connectivité",
+      description: "Solutions réseau complètes pour entreprises et particuliers.",
       image: "https://wawtelecom.com/connectivite2.jpg",
-      features: ["Fibre dédiée", "99.9% SLA", "Support 24/7"]
+      features: [
+        "Internet haut débit",
+        "SD-WAN",
+        "VPN/MPLS"
+      ]
     },
     {
       icon: Cloud,
-      title: "Services Cloud",
-      description: "Infrastructure cloud scalable et sécurisée. Migration, hébergement, sauvegarde et monitoring.",
+      title: "Cloud & Hébergement",
+      description: "Solutions d'hébergement adaptées à tous les besoins.",
       image: "https://wawtelecom.com/cloude3.webp",
-      features: ["Multi-cloud", "Sécurité ISO 27001", "Backup automatique"]
+      features: [
+        "VPS",
+        "Dédié",
+        "Mutualisé"
+      ]
     },
     {
       icon: Cpu,
-      title: "Solutions IoT",
-      description: "Connectez vos objets intelligents avec nos solutions IoT. Agriculture, industrie, santé et smart city.",
+      title: "IoT & Objets connectés",
+      description: "Solutions innovantes pour l'industrie 4.0.",
       image: "https://tse2.mm.bing.net/th/id/OIP.oImQCErImb0pTF-wkRmnowHaD4?rs=1&pid=ImgDetMain&o=7&rm=3",
-      features: ["Capteurs intelligents", "Monitoring temps réel", "Analytics avancées"]
+      features: [
+        "Visibilité",
+        "Efficacité",
+        "Automatisation"
+      ]
+    },
+    {
+      icon: Smartphone,
+      title: "eSIM & Travel",
+      description: "Connectivité mondiale simple et abordable.",
+      image: "https://wawtelecom.com/esim20.jpg",
+      features: [
+        "Dès 3 000 FCFA",
+        "Couverture mondiale",
+        "Activation instantanée"
+      ]
+    },
+    {
+      icon: Building,
+      title: "Opérateurs & Institutions",
+      description: "Solutions sur mesure pour les professionnels.",
+      image: "https://wawtelecom.com/operateurs.jpg",
+      features: [
+        "Backbone",
+        "Sécurité",
+        "Santé & Éducation"
+      ]
     }
   ];
 
@@ -189,22 +216,22 @@ Cordialement,`);
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.6 }}
                 >
-                  <h1 className="text-5xl lg:text-6xl font-display font-bold mb-6 leading-tight">
+                  <h2 className="text-5xl lg:text-6xl font-display font-bold mb-6 leading-tight">
                     {heroSlides[currentSlide].title}
-                  </h1>
-                  <h2 className="text-2xl lg:text-3xl font-light text-waw-yellow mb-6">
-                    {heroSlides[currentSlide].subtitle}
                   </h2>
+                  <h3 className="text-2xl lg:text-3xl font-light text-waw-yellow mb-6">
+                    {heroSlides[currentSlide].subtitle}
+                  </h3>
                   <p className="text-xl leading-relaxed mb-8 text-gray-200">
                     {heroSlides[currentSlide].description}
                   </p>
 
                   {/* Statistique en vedette */}
-                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 mb-8 inline-block">
+                  {/* <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 mb-8 inline-block">
                     <div className="text-3xl font-bold text-waw-yellow">
                       {heroSlides[currentSlide].stats}
                     </div>
-                  </div>
+                  </div> */}
                 </motion.div>
               </AnimatePresence>
 
@@ -217,17 +244,17 @@ Cordialement,`);
                   className="bg-waw-yellow hover:bg-waw-yellow-dark text-waw-dark px-8 py-4 rounded-2xl font-semibold text-lg flex items-center justify-center space-x-2 transition-all"
                 >
                   <Rocket size={20} />
-                  <span>Découvrir nos solutions</span>
+                  <span>Explorer nos solutions</span>
                 </motion.button>
 
                 <motion.button
-                  onClick={() => onNavigate('travel')}
+                  onClick={() => onNavigate('contact')}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   className="border-2 border-white/30 hover:border-waw-yellow text-white hover:text-waw-yellow px-8 py-4 rounded-2xl font-semibold text-lg flex items-center justify-center space-x-2 transition-all backdrop-blur-sm"
                 >
                   <Smartphone size={20} />
-                  <span>Obtenir eSIM Travel</span>
+                  <span>Nous contacter</span>
                 </motion.button>
               </div>
             </motion.div>
@@ -250,7 +277,7 @@ Cordialement,`);
         </div>
       </section>
 
-      {/* Section Statistiques Impressionnantes */}
+      {/* Section Pourquoi choisir WAW ? */}
       <section ref={statsRef} className="py-20 bg-waw-dark text-white">
         <div className="container-custom">
           <motion.div
@@ -260,35 +287,65 @@ Cordialement,`);
             className="text-center mb-16"
           >
             <h2 className="text-4xl font-display font-bold mb-6">
-              Des chiffres qui parlent de notre excellence
+              Pourquoi choisir WAW ?
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Nos performances témoignent de notre engagement envers l'excellence et la satisfaction client
+              L'excellence technologique au service de votre entreprise
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-4 gap-8">
-            {[
-              { number: "50+", label: "Pays couverts", icon: Globe },
-              { number: "99.9%", label: "Disponibilité garantie", icon: Shield },
-              { number: "24/7", label: "Support client expert", icon: Clock },
-              { number: "15+", label: "Années d'expérience", icon: Award }
-            ].map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 30 }}
-                animate={statsInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ scale: 1.05 }}
-                className="text-center bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10"
-              >
-                <div className="w-16 h-16 bg-waw-yellow rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <stat.icon size={32} className="text-waw-dark" />
+          <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+            <div className="space-y-8">
+              <div className="flex items-start space-x-6">
+                <div className="flex-shrink-0 w-12 h-12 bg-waw-yellow/10 rounded-xl flex items-center justify-center">
+                  <Building className="text-waw-yellow" size={24} />
                 </div>
-                <div className="text-4xl font-bold text-waw-yellow mb-2">{stat.number}</div>
-                <div className="text-gray-300">{stat.label}</div>
-              </motion.div>
-            ))}
+                <div>
+                  <h3 className="text-2xl font-bold mb-3">Expertise locale, vision globale</h3>
+                  <p className="text-gray-400 leading-relaxed">
+                    Acteur de référence au Sénégal, WAW TELECOM allie connaissance approfondie du marché local et standards internationaux pour vous offrir des solutions sur mesure.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-6">
+                <div className="flex-shrink-0 w-12 h-12 bg-waw-yellow/10 rounded-xl flex items-center justify-center">
+                  <Cpu className="text-waw-yellow" size={24} />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold mb-3">Technologie de pointe</h3>
+                  <p className="text-gray-400 leading-relaxed">
+                    Des infrastructures dernier cri et des solutions innovantes (Fibre, Cloud, eSIM, IoT) pour une performance optimale de votre entreprise.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-8">
+              <div className="flex items-start space-x-6">
+                <div className="flex-shrink-0 w-12 h-12 bg-waw-yellow/10 rounded-xl flex items-center justify-center">
+                  <Users className="text-waw-yellow" size={24} />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold mb-3">Accompagnement personnalisé</h3>
+                  <p className="text-gray-400 leading-relaxed">
+                    Une équipe d'experts dédiée à votre réussite, disponible 24/7 pour vous conseiller et vous accompagner à chaque étape de votre transformation numérique.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-6">
+                <div className="flex-shrink-0 w-12 h-12 bg-waw-yellow/10 rounded-xl flex items-center justify-center">
+                  <Shield className="text-waw-yellow" size={24} />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold mb-3">Engagement qualité</h3>
+                  <p className="text-gray-400 leading-relaxed">
+                    Une qualité de service irréprochable avec des indicateurs de performance stricts et une disponibilité garantie à 99,9%.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -303,7 +360,7 @@ Cordialement,`);
             className="text-center mb-16"
           >
             <h2 className="text-4xl font-display font-bold text-waw-dark mb-6">
-              Solutions qui transforment votre business
+            Nos services phares
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Découvrez nos services conçus pour propulser votre entreprise vers le succès
@@ -343,6 +400,27 @@ Cordialement,`);
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
+                    onClick={() => {
+                      switch(service.title) {
+                        case 'Connectivité':
+                          onNavigate('connectivite');
+                          break;
+                        case 'Cloud & Hébergement':
+                          onNavigate('cloud');
+                          break;
+                        case 'IoT & Objets connectés':
+                          onNavigate('iot');
+                          break;
+                        case 'eSIM & Travel':
+                          onNavigate('travel');
+                          break;
+                        case 'Opérateurs & Institutions':
+                          onNavigate('contact');
+                          break;
+                        default:
+                          onNavigate('home');
+                      }
+                    }}
                     className="bg-waw-yellow hover:bg-waw-yellow-dark text-waw-dark px-6 py-3 rounded-xl font-semibold flex items-center space-x-2 transition-all"
                   >
                     <span>En savoir plus</span>
