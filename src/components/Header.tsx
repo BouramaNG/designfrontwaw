@@ -61,22 +61,37 @@ const Header = ({ currentPage, onNavigate }: HeaderProps) => {
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
             {navItems.map((item, index) => (
-              <motion.button
-                key={item.name}
-                onClick={() => onNavigate(item.page)}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className={`flex items-center space-x-2 font-medium transition-colors group ${
-                  currentPage === item.page
-                    ? 'text-waw-yellow-dark'
-                    : 'text-gray-700 hover:text-waw-yellow-dark'
-                }`}
-                whileHover={{ scale: 1.05 }}
-              >
-                <item.icon size={18} className="group-hover:text-waw-yellow transition-colors" />
-                <span>{item.name}</span>
-              </motion.button>
+              item.name === 'IoT' ? (
+                <motion.a
+                  key={item.name}
+                  href="#"
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="flex items-center space-x-2 font-medium transition-colors group text-gray-700 hover:text-waw-yellow-dark"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <item.icon size={18} className="group-hover:text-waw-yellow transition-colors" />
+                  <span>{item.name}</span>
+                </motion.a>
+              ) : (
+                <motion.button
+                  key={item.name}
+                  onClick={() => onNavigate(item.page)}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className={`flex items-center space-x-2 font-medium transition-colors group ${
+                    currentPage === item.page
+                      ? 'text-waw-yellow-dark'
+                      : 'text-gray-700 hover:text-waw-yellow-dark'
+                  }`}
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <item.icon size={18} className="group-hover:text-waw-yellow transition-colors" />
+                  <span>{item.name}</span>
+                </motion.button>
+              )
             ))}
           </nav>
 
@@ -84,7 +99,7 @@ const Header = ({ currentPage, onNavigate }: HeaderProps) => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => onNavigate('travel')}
+            onClick={() => onNavigate('login')}
             className="hidden lg:block btn-primary"
           >
             Connexion
@@ -113,30 +128,47 @@ const Header = ({ currentPage, onNavigate }: HeaderProps) => {
             <div className="container-custom py-4">
               <nav className="space-y-4">
                 {navItems.map((item, index) => (
-                  <motion.button
-                    key={item.name}
-                    onClick={() => {
-                      onNavigate(item.page);
-                      setIsOpen(false);
-                    }}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className={`w-full flex items-center space-x-3 font-medium transition-colors p-3 rounded-lg hover:bg-waw-yellow/5 ${
-                      currentPage === item.page
-                        ? 'text-waw-yellow-dark bg-waw-yellow/10'
-                        : 'text-gray-700 hover:text-waw-yellow-dark'
-                    }`}
-                  >
-                    <item.icon size={20} />
-                    <span>{item.name}</span>
-                  </motion.button>
+                  item.name === 'IoT' ? (
+                    <motion.a
+                      key={item.name}
+                      href="#"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="w-full flex items-center space-x-3 font-medium transition-colors p-3 rounded-lg hover:bg-waw-yellow/5 text-gray-700 hover:text-waw-yellow-dark"
+                    >
+                      <item.icon size={20} />
+                      <span>{item.name}</span>
+                    </motion.a>
+                  ) : (
+                    <motion.button
+                      key={item.name}
+                      onClick={() => {
+                        onNavigate(item.page);
+                        setIsOpen(false);
+                      }}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className={`w-full flex items-center space-x-3 font-medium transition-colors p-3 rounded-lg hover:bg-waw-yellow/5 ${
+                        currentPage === item.page
+                          ? 'text-waw-yellow-dark bg-waw-yellow/10'
+                          : 'text-gray-700 hover:text-waw-yellow-dark'
+                      }`}
+                    >
+                      <item.icon size={20} />
+                      <span>{item.name}</span>
+                    </motion.button>
+                  )
                 ))}
                 <motion.button
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: navItems.length * 0.1 }}
-                  onClick={() => onNavigate('travel')}
+                  onClick={() => {
+                    onNavigate('login');
+                    setIsOpen(false);
+                  }}
                   className="w-full btn-primary mt-4"
                 >
                   Connexion

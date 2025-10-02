@@ -122,7 +122,7 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-waw-dark via-gray-900 to-black text-white">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-waw-dark via-gray-900 to-black text-white pt-32">
         {/* Background Elements */}
         <div className="absolute inset-0">
           <motion.div

@@ -18,8 +18,10 @@ import PlanDetailsPage from './pages/PlanDetailsPage';
 import CheckoutPage from './pages/CheckoutPage';
 import ConfirmationPage from './pages/ConfirmationPage';
 import HomePage2 from './pages/HomePage2';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
 
-export type PageType = 'home' | 'home2' | 'connectivite' | 'cloud' | 'travel' | 'iot' | 'about' | 'contact' | 'plan-details' | 'checkout' | 'confirmation';
+export type PageType = 'home' | 'home2' | 'connectivite' | 'cloud' | 'travel' | 'iot' | 'about' | 'contact' | 'plan-details' | 'checkout' | 'confirmation' | 'login' | 'register';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<PageType>('home2');
@@ -65,6 +67,10 @@ function App() {
         return <ConfirmationPage onNavigate={setCurrentPage} />;
       case 'contact':
         return <ContactPage onNavigate={setCurrentPage} />;
+      case 'login':
+        return <LoginPage onNavigate={setCurrentPage} />;
+      case 'register':
+        return <RegisterPage onNavigate={setCurrentPage} />;
       default:
         return <HomePage2 onNavigate={setCurrentPage} />;
     }

@@ -487,7 +487,7 @@ Cordialement,`);
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-waw-dark via-gray-900 to-black text-white">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-waw-dark via-gray-900 to-black text-white pt-32">
         {/* Background Elements */}
         <div className="absolute inset-0">
           <motion.div
@@ -621,25 +621,6 @@ Un ADN local, une vision panafricaine.
               </div>
             </motion.div>
 
-            {/* Stats */}
-            <motion.div
-              variants={itemVariants}
-              className="grid grid-cols-2 lg:grid-cols-4 gap-8 mt-20"
-            >
-              {stats.map((stat) => (
-                <motion.div
-                  key={stat.label}
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10"
-                >
-                  <div className="w-12 h-12 bg-waw-yellow rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <stat.icon size={24} className="text-waw-dark" />
-                  </div>
-                  <h3 className="text-3xl font-bold text-white mb-2">{stat.value}</h3>
-                  <p className="text-gray-300 text-sm">{stat.label}</p>
-                </motion.div>
-              ))}
-            </motion.div>
           </motion.div>
         </div>
       </section>

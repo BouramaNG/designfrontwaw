@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Apple, Smartphone } from 'lucide-react';
+import { createPortal } from 'react-dom';
 
 interface CompatibleDevicesModalProps {
   open: boolean;
@@ -40,21 +41,49 @@ const androidDevices = [
   'Google Pixel Fold'
 ];
 
-export const CompatibleDevicesModal: React.FC<CompatibleDevicesModalProps> = ({ open, onClose }) => (
-  <AnimatePresence>
-    {open && (
-      <motion.div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-      >
+export const CompatibleDevicesModal: React.FC<CompatibleDevicesModalProps> = ({ open, onClose }) => {
+  // Bloquer le scroll du body quand le modal est ouvert
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = '15px'; // Compenser la scrollbar
+    } else {
+      document.body.style.overflow = 'unset';
+      document.body.style.paddingRight = '0px';
+    }
+
+    // Cleanup au démontage
+    return () => {
+      document.body.style.overflow = 'unset';
+      document.body.style.paddingRight = '0px';
+    };
+  }, [open]);
+
+  const modalContent = (
+    <AnimatePresence>
+      {open && (
         <motion.div
-          className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl p-0 relative flex flex-col"
-          initial={{ scale: 0.95, y: 40 }}
-          animate={{ scale: 1, y: 0 }}
-          exit={{ scale: 0.95, y: 40 }}
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+          style={{ 
+            position: 'fixed', 
+            top: 0, 
+            left: 0, 
+            right: 0, 
+            bottom: 0,
+            zIndex: 9999
+          }}
         >
+          <motion.div
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl p-0 relative flex flex-col max-h-[90vh] mx-4"
+            initial={{ scale: 0.95, y: 40 }}
+            animate={{ scale: 1, y: 0 }}
+            exit={{ scale: 0.95, y: 40 }}
+            onClick={(e) => e.stopPropagation()}
+          >
           {/* Sticky Header */}
           <div className="sticky top-0 z-10 bg-white rounded-t-2xl border-b border-gray-100 flex items-center justify-between px-6 py-4 shadow-sm">
             <h2 className="text-xl font-bold text-waw-dark flex items-center gap-2">
@@ -68,42 +97,48 @@ export const CompatibleDevicesModal: React.FC<CompatibleDevicesModalProps> = ({ 
               <X size={24} />
             </button>
           </div>
-          {/* Scrollable Content */}
-          <div className="overflow-y-auto max-h-[70vh] px-6 py-6 md:py-8 md:px-10">
-            {/* Apple Section */}
-            <div className="mb-8">
-              <div className="flex items-center gap-2 mb-2">
-                <Apple className="text-waw-yellow-dark" size={20} />
-                <span className="text-lg font-semibold text-waw-yellow-dark">APPLE</span>
-                <span className="text-2xl">🍏</span>
+            {/* Scrollable Content */}
+            <div className="overflow-y-auto flex-1 px-6 py-6 md:py-8 md:px-10">
+              {/* Apple Section */}
+              <div className="mb-8">
+                <div className="flex items-center gap-2 mb-2">
+                  <Apple className="text-waw-yellow-dark" size={20} />
+                  <span className="text-lg font-semibold text-waw-yellow-dark">APPLE</span>
+                  <span className="text-2xl">🍏</span>
+                </div>
+                <ul className="list-disc list-inside text-gray-700 space-y-1 pl-2">
+                  {appleDevices.map((device, i) => (
+                    <li key={i} className="flex items-center gap-2">
+                      <Smartphone className="text-waw-yellow-dark" size={16} />
+                      {device}
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <ul className="list-disc list-inside text-gray-700 space-y-1 pl-2">
-                {appleDevices.map((device, i) => (
-                  <li key={i} className="flex items-center gap-2">
-                    <Smartphone className="text-waw-yellow-dark" size={16} />
-                    {device}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            {/* Android Section */}
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <span className="inline-flex items-center justify-center w-5 h-5 bg-green-100 rounded-full mr-1">🤖</span>
-                <span className="text-lg font-semibold text-waw-yellow-dark">ANDROID</span>
+              {/* Android Section */}
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="inline-flex items-center justify-center w-5 h-5 bg-green-100 rounded-full mr-1">🤖</span>
+                  <span className="text-lg font-semibold text-waw-yellow-dark">ANDROID</span>
+                </div>
+                <ul className="list-disc list-inside text-gray-700 space-y-1 pl-2">
+                  {androidDevices.map((device, i) => (
+                    <li key={i} className="flex items-center gap-2">
+                      <Smartphone className="text-waw-yellow-dark" size={16} />
+                      {device}
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <ul className="list-disc list-inside text-gray-700 space-y-1 pl-2">
-                {androidDevices.map((device, i) => (
-                  <li key={i} className="flex items-center gap-2">
-                    <Smartphone className="text-waw-yellow-dark" size={16} />
-                    {device}
-                  </li>
-                ))}
-              </ul>
             </div>
-          </div>
+          </motion.div>
         </motion.div>
-      </motion.div>
-    )}
-  </AnimatePresence>
-);
+      )}
+    </AnimatePresence>
+  );
+
+  // Utiliser un portail pour rendre le modal à la racine du DOM
+  return typeof document !== 'undefined' 
+    ? createPortal(modalContent, document.body)
+    : null;
+};

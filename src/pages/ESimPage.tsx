@@ -249,7 +249,7 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-waw-dark via-gray-900 to-black text-white">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-waw-dark via-gray-900 to-black text-white pt-32">
         {/* Background Elements */}
         <div className="absolute inset-0">
           <motion.div
@@ -688,23 +688,6 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
             ))}
           </div>
 
-          {/* View All Destinations Button */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={section2InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ delay: 1.5 }}
-            className="text-center mt-12"
-          >
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-gradient-to-r from-waw-yellow to-waw-yellow-dark text-waw-dark font-bold px-8 py-4 rounded-lg text-lg hover:shadow-lg transition-all flex items-center justify-center space-x-2 mx-auto"
-            >
-              <Globe size={20} />
-              <span>Voir toutes les destinations (200+)</span>
-              <ArrowRight size={20} />
-            </motion.button>
-          </motion.div>
         </div>
       </section>
 

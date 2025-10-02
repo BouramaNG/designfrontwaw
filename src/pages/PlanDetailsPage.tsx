@@ -771,49 +771,6 @@ const PlanDetailsPage = ({ onNavigate, navigateToPage, planId }: PlanDetailsPage
           </div>
         </div>
       </section>
-
-      {/* Other Destinations Section */}
-      <section className="section-padding bg-gray-50">
-        <div className="container-custom">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-display font-bold text-waw-dark mb-4">
-              Autres destinations
-            </h2>
-            <p className="text-xl text-gray-600">
-              Explorez nos offres dans d'autres pays
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            {otherDestinations.map((destination, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="bg-white rounded-2xl p-6 shadow-sm flex items-center justify-between"
-              >
-                <div>
-                  <h3 className="font-semibold text-waw-dark">{destination.name}</h3>
-                  <p className="text-gray-600">{destination.price}</p>
-                </div>
-                <div className="text-4xl">{destination.flag}</div>
-              </motion.div>
-            ))}
-          </div>
-
-          <div className="text-center mt-12">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center px-8 py-4 bg-waw-yellow text-waw-dark rounded-lg font-semibold hover:bg-waw-yellow-dark transition-colors"
-            >
-              Voir toutes les destinations
-              <ArrowRight size={20} className="ml-2" />
-            </motion.button>
-          </div>
-        </div>
-      </section>
     </div>
   );
 };
