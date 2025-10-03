@@ -61,7 +61,7 @@ const Header = ({ currentPage, onNavigate }: HeaderProps) => {
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
             {navItems.map((item, index) => (
-              item.name === 'IoT' ? (
+              item.name === 'IoT' || item.name === 'Cloud' ? (
                 <motion.a
                   key={item.name}
                   href="#"
@@ -128,7 +128,7 @@ const Header = ({ currentPage, onNavigate }: HeaderProps) => {
             <div className="container-custom py-4">
               <nav className="space-y-4">
                 {navItems.map((item, index) => (
-                  item.name === 'IoT' ? (
+                  item.name === 'IoT' || item.name === 'Cloud' ? (
                     <motion.a
                       key={item.name}
                       href="#"
