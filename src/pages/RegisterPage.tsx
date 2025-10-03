@@ -87,7 +87,6 @@ const RegisterPage = ({ onNavigate }: RegisterPageProps) => {
       opacity: 1,
       transition: {
         duration: 0.8,
-        ease: 'easeOut',
       },
     },
   };
