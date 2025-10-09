@@ -570,14 +570,16 @@ Cordialement,`);
               </h1>
 
               <p className="text-xl lg:text-2xl text-gray-300 leading-relaxed max-w-4xl mx-auto">
-              Depuis 2016, WAW TELECOM redéfinit les standards des télécommunications au Sénégal. Née de l’ambition de rendre la connectivité haut débit accessible, performante et locale, notre entreprise a su évoluer en combinant innovation technologique, ancrage régional et exigence de qualité.
-
-Aujourd’hui, WAW accompagne les entreprises, institutions et opérateurs vers l’avenir numérique.
-
-Un ADN local, une vision panafricaine.
+              Depuis 2016, WAW TELECOM redéfinit les standards des télécommunications au Sénégal. Née de l'ambition de rendre la connectivité haut débit accessible, performante et locale, notre entreprise a su évoluer en combinant innovation technologique, ancrage régional et exigence de qualité.
+              </p>
+              <p className="text-xl lg:text-2xl text-waw-yellow leading-relaxed max-w-4xl mx-auto">
+              Aujourd'hui, WAW accompagne les entreprises, institutions et opérateurs vers l'avenir numérique.
+              </p>
+              <p className="text-xl lg:text-2xl text-gray-300 leading-relaxed max-w-4xl mx-auto">
+              Un ADN local, une vision panafricaine.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8">
+              <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8 pb-16">
               <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -592,32 +594,7 @@ Un ADN local, une vision panafricaine.
                   <span>En savoir plus sur notre histoire</span>
                   <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                 </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const phoneNumber = '221769291717';
-                    const message = encodeURIComponent('Bonjour, je souhaite être contacté par un conseiller WAW TELECOM pour discuter de mes besoins en télécommunications.');
-                    window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
-                  }}
-                  className="bg-waw-yellow text-waw-dark font-bold px-8 py-4 rounded-lg text-lg hover:bg-waw-yellow-dark transition-colors flex items-center justify-center space-x-2 group"
-                >
-                  <MessageCircle size={20} />
-                  <span>Parler à un conseiller</span>
-                  <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-                </motion.button>
 
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={downloadCatalog}
-                  className="border-2 border-waw-yellow text-waw-yellow font-bold px-8 py-4 rounded-lg text-lg hover:bg-waw-yellow hover:text-waw-dark transition-colors flex items-center justify-center space-x-2"
-                >
-                  <Download size={20} />
-                  <span>Catalogue PDF</span>
-                </motion.button>
               </div>
             </motion.div>
 
@@ -625,7 +602,7 @@ Un ADN local, une vision panafricaine.
         </div>
       </section>
 
-      {/* Notre Histoire Timeline */}
+      {/* Notre Vision Commerciale */}
       <section className="section-padding bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
         <div className="absolute inset-0">
           <motion.div
@@ -654,35 +631,56 @@ Un ADN local, une vision panafricaine.
               variants={itemVariants}
               className="inline-block px-4 py-2 bg-waw-yellow/20 text-waw-dark rounded-full text-sm font-semibold mb-4"
             >
-              📅 Timeline
+              🎯 Notre Vision
             </motion.span>
 
             <motion.h2
               variants={itemVariants}
               className="text-4xl lg:text-5xl font-display font-bold text-waw-dark mb-6"
             >
-              L'histoire de{' '}
-              <span className="gradient-text">WAW TELECOM</span>
+              Notre Vision{' '}
+              <span className="gradient-text">Commerciale</span>
             </motion.h2>
 
             <motion.p
               variants={itemVariants}
               className="text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto"
             >
-              Chaque étape de notre évolution témoigne de notre engagement
-              à révolutionner les télécommunications au Sénégal.
+              Chez WAW TELECOM, nous croyons qu'une connectivité performante n'a de valeur que si elle sert la croissance de nos clients.
             </motion.p>
           </motion.div>
 
-          {/* Timeline */}
+          {/* Piliers de notre Vision */}
           <div className="relative">
-            {/* Timeline Line */}
+            {/* Vertical Line */}
             <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gradient-to-b from-waw-yellow to-waw-yellow-dark hidden lg:block" />
 
             <div className="space-y-16">
-              {historyMilestones.map((milestone, index) => (
+              {[
+                {
+                  title: "Proximité et accompagnement",
+                  description: "Un service client réactif et à l'écoute, disponible 24/7 pour répondre à vos besoins. Notre équipe d'experts vous accompagne à chaque étape de votre transformation numérique.",
+                  icon: Users,
+                  image: "https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?w=500&h=300&fit=crop",
+                  highlight: "Service client 24/7"
+                },
+                {
+                  title: "Performance et innovation",
+                  description: "Des solutions toujours à la pointe de la technologie, intégrant les dernières innovations en matière de fibre optique, eSIM, IoT et Cloud computing pour garantir une performance optimale.",
+                  icon: Zap,
+                  image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=500&h=300&fit=crop",
+                  highlight: "Solutions innovantes"
+                },
+                {
+                  title: "Partenariat durable",
+                  description: "Une relation gagnant-gagnant basée sur la confiance et la transparence. Nous nous engageons à long terme pour la réussite de nos clients et partenaires.",
+                  icon: Shield,
+                  image: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=500&h=300&fit=crop",
+                  highlight: "Confiance & Transparence"
+                }
+              ].map((pilier, index) => (
                 <motion.div
-                  key={milestone.year}
+                  key={pilier.title}
                   initial={{ opacity: 0, y: 50 }}
                   animate={historyInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
                   transition={{ delay: 0.3 + index * 0.2 }}
@@ -697,15 +695,15 @@ Un ADN local, une vision panafricaine.
                   >
                     <div className="relative bg-gradient-to-br from-waw-dark to-gray-800 rounded-3xl p-8 shadow-2xl">
                       <img
-                        src={milestone.image}
-                        alt={milestone.title}
+                        src={pilier.image}
+                        alt={pilier.title}
                         className="w-full h-64 object-cover rounded-2xl"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-waw-dark/20 to-transparent rounded-2xl" />
 
-                      {/* Year Badge */}
-                      <div className="absolute -top-6 -right-6 w-20 h-20 bg-waw-yellow rounded-2xl flex items-center justify-center shadow-lg">
-                        <span className="text-2xl font-bold text-waw-dark">{milestone.year}</span>
+                      {/* Highlight Badge */}
+                      <div className="absolute -top-6 -right-6 w-auto min-w-[120px] px-4 py-2 bg-waw-yellow rounded-2xl flex items-center justify-center shadow-lg">
+                        <span className="text-lg font-bold text-waw-dark">{pilier.highlight}</span>
                       </div>
                     </div>
                   </motion.div>
@@ -714,20 +712,13 @@ Un ADN local, une vision panafricaine.
                   <motion.div className={`space-y-6 ${index % 2 === 1 ? 'lg:order-1' : ''}`}>
                     <div className="flex items-center space-x-3 mb-4">
                       <div className="w-12 h-12 bg-gradient-to-br from-waw-yellow to-waw-yellow-dark rounded-lg flex items-center justify-center">
-                        <milestone.icon size={24} className="text-waw-dark" />
+                        <pilier.icon size={24} className="text-waw-dark" />
                       </div>
                       <div>
-                        <span className="text-sm font-semibold text-waw-yellow">{milestone.year}</span>
-                        <h3 className="text-3xl font-bold text-waw-dark">{milestone.title}</h3>
+                        <h3 className="text-3xl font-bold text-waw-dark">{pilier.title}</h3>
                       </div>
                     </div>
-
-                    <p className="text-xl text-gray-600 leading-relaxed">{milestone.description}</p>
-
-                    <div className="flex items-center space-x-2 text-waw-yellow">
-                      <CheckCircle size={20} />
-                      <span className="font-semibold">Étape franchie avec succès</span>
-                    </div>
+                    <p className="text-xl text-gray-600 leading-relaxed">{pilier.description}</p>
                   </motion.div>
 
                   {/* Timeline Node (Desktop) */}
@@ -737,12 +728,95 @@ Un ADN local, une vision panafricaine.
               ))}
             </div>
           </div>
+
+          {/* Notre Objectif - Section Finale */}
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={historyInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+            transition={{ delay: 1.2 }}
+            className="mt-24 relative"
+          >
+            <div className="bg-gradient-to-br from-waw-dark to-gray-900 rounded-3xl p-12 overflow-hidden">
+              {/* Cercles décoratifs en arrière-plan */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-waw-yellow/10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-waw-yellow/10 rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2" />
+
+              <div className="relative z-10 flex flex-col lg:flex-row items-center gap-12">
+                {/* Illustration symbolique */}
+                <div className="lg:w-1/2">
+                  <div className="relative">
+                    <img
+                      src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=600&fit=crop"
+                      alt="Leadership et Efficacité"
+                      className="rounded-2xl shadow-2xl"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-waw-dark to-transparent rounded-2xl" />
+                    
+                    {/* Icônes flottantes */}
+                    <motion.div
+                      animate={{
+                        y: [0, -10, 0],
+                      }}
+                      transition={{
+                        duration: 4,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                      className="absolute -top-6 -right-6 w-16 h-16 bg-waw-yellow rounded-xl flex items-center justify-center shadow-lg"
+                    >
+                      <Globe size={32} className="text-waw-dark" />
+                    </motion.div>
+                    
+                    <motion.div
+                      animate={{
+                        y: [0, 10, 0],
+                      }}
+                      transition={{
+                        duration: 4,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: 1
+                      }}
+                      className="absolute -bottom-6 -left-6 w-16 h-16 bg-white rounded-xl flex items-center justify-center shadow-lg"
+                    >
+                      <TrendingUp size={32} className="text-waw-yellow" />
+                    </motion.div>
+                  </div>
+                </div>
+
+                {/* Texte de l'objectif */}
+                <div className="lg:w-1/2 text-center lg:text-left">
+                  <span className="inline-block px-4 py-2 bg-waw-yellow/20 text-waw-yellow rounded-full text-sm font-semibold mb-6">
+                    🎯 Notre Objectif
+                  </span>
+                  <h3 className="text-4xl font-bold text-white mb-6">
+                    Propulser votre{' '}
+                    <span className="text-waw-yellow">succès</span>
+                  </h3>
+                  <p className="text-xl text-gray-300 leading-relaxed mb-8">
+                    Notre objectif : renforcer le leadership interne et améliorer l'efficacité commerciale de nos clients en les connectant au monde.
+                  </p>
+                  <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
+                    <div className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-xl">
+                      <Shield size={20} className="text-waw-yellow" />
+                      <span className="text-white">Leadership</span>
+                    </div>
+                    <div className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-xl">
+                      <TrendingUp size={20} className="text-waw-yellow" />
+                      <span className="text-white">Efficacité</span>
+                    </div>
+                    <div className="flex items-center space-x-2 bg-white/10 px-4 py-2 rounded-xl">
+                      <Globe size={20} className="text-waw-yellow" />
+                      <span className="text-white">Connectivité</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Notre Vision Commerciale */}
-      <VisionCommerciale />
-      
       {/* Nos Infrastructures */}
       <NosInfrastructures />
 

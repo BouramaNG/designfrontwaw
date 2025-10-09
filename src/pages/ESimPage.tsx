@@ -24,8 +24,18 @@ import {
 } from 'lucide-react';
 import { CompatibleDevicesModal } from '../components/CompatibleDevicesModal';
 import React from 'react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import type { PageType } from '../App';
+
+interface EsimPlan {
+  id: string;
+  name: string;
+  data: string;
+  validity: string;
+  price: string;
+  description: string;
+  popular?: boolean;
+}
 
 interface ESimPageProps {
   onNavigate: (page: PageType) => void;
@@ -35,6 +45,7 @@ interface ESimPageProps {
 const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
   // State for Compatible Devices Modal
   const [modalOpen, setModalOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [heroRef, heroInView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -49,6 +60,13 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
     triggerOnce: true,
     threshold: 0.1,
   });
+
+  const [destinationsRef, destinationsInView] = useInView({
+    triggerOnce: false,
+    threshold: 0.2,
+  });
+
+  const destinationSectionRef = useRef<HTMLElement | null>(null);
 
   const [section3Ref, section3InView] = useInView({
     triggerOnce: true,
@@ -119,6 +137,65 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
       icon: Star,
       title: "Support humain & multilingue",
       description: "Notre équipe WAW vous accompagne 7j/7, en français, anglais et wolof. Un service client réactif, expert et proche de vous."
+    }
+  ];
+
+  const esIntroHighlights = [
+    {
+      icon: Smartphone,
+      title: 'Activation instantanée',
+      description: "Recevez votre QR code et connectez-vous en moins de 60 secondes, où que vous soyez.",
+    },
+    {
+      icon: Zap,
+      title: 'Multi-profils',
+      description: 'Utilisez plusieurs numéros et réseaux sur un seul appareil, pour séparer pro et perso en toute simplicité.',
+    },
+    {
+      icon: Globe,
+      title: 'Compatibilité étendue',
+      description: 'Fonctionne avec les appareils récents Android, iOS et wearables compatibles eSIM.',
+    },
+    {
+      icon: Shield,
+      title: 'Sécurité opérateur',
+      description: 'Vos données sont protégées par nos standards opérateur : chiffrage, protection réseau et contrôle distant.',
+    },
+  ];
+
+  const esimPlans: EsimPlan[] = [
+    {
+      id: 'starter',
+      name: 'Starter',
+      data: '1 Go',
+      validity: '7 jours',
+      price: '3 000 FCFA',
+      description: 'Idéal pour une courte escapade ou un week-end à l’étranger.'
+    },
+    {
+      id: 'voyageur',
+      name: 'Voyageur',
+      data: '3 Go',
+      validity: '15 jours',
+      price: '7 500 FCFA',
+      description: 'Pensé pour explorer plusieurs destinations en toute tranquillité.'
+    },
+    {
+      id: 'business',
+      name: 'Business',
+      data: '5 Go',
+      validity: '30 jours',
+      price: '12 000 FCFA',
+      description: 'Une enveloppe data généreuse pour vos missions professionnelles.'
+    },
+    {
+      id: 'illimite',
+      name: 'Illimité',
+      data: 'Données illimitées*',
+      validity: '30 jours',
+      price: '19 000 FCFA',
+      description: 'La liberté totale pour rester connecté sans vous soucier de la consommation.',
+      popular: true
     }
   ];
 
@@ -210,6 +287,19 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
     }
   ];
 
+  const selectedPlanDetails = selectedPlan
+    ? esimPlans.find((plan) => plan.id === selectedPlan) ?? null
+    : null;
+
+  const handlePlanSelect = (planId: string) => {
+    setSelectedPlan(planId);
+    setTimeout(() => {
+      if (destinationSectionRef.current) {
+        destinationSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 200);
+  };
+
   const howItWorks = [
     {
       step: '1',
@@ -249,7 +339,7 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-waw-dark via-gray-900 to-black text-white pt-32">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-waw-dark via-gray-900 to-black text-white">
         {/* Background Elements */}
         <div className="absolute inset-0">
           <motion.div
@@ -474,7 +564,165 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
         </motion.div>
       </section>
 
-  {/* Section 1 - Avantages eSIM */}
+      {/* Section - Qu'est-ce que l'eSIM ? */}
+      <section className="section-padding relative overflow-hidden bg-gradient-to-br from-white via-[#f9fafc] to-waw-yellow/10 text-[#111]">
+        <div className="absolute inset-0 pointer-events-none">
+          <motion.div
+            animate={{
+              rotate: 360,
+              scale: [1, 1.15, 1],
+            }}
+            transition={{
+              duration: 40,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: 'linear',
+            }}
+            className="absolute -top-40 -left-32 w-[460px] h-[460px] bg-gradient-to-br from-waw-yellow/20 via-waw-yellow/5 to-transparent rounded-full blur-3xl"
+          />
+          <motion.div
+            animate={{
+              rotate: -360,
+              scale: [1.05, 0.9, 1.05],
+            }}
+            transition={{
+              duration: 45,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: 'linear',
+            }}
+            className="absolute bottom-[-120px] right-[-80px] w-[520px] h-[520px] bg-gradient-to-br from-[#111]/6 via-transparent to-waw-yellow/20 rounded-full blur-3xl"
+          />
+        </div>
+
+        <div className="container-custom relative z-10">
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.4 }}
+            className="grid gap-16 items-center lg:grid-cols-[1.05fr_0.95fr]"
+          >
+            {/* Text Content */}
+            <motion.div variants={itemVariants} className="space-y-12">
+              <div className="space-y-6">
+                <motion.span
+                  initial={{ scale: 0.85, opacity: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  viewport={{ once: true, amount: 0.6 }}
+                  transition={{ delay: 0.1, type: 'spring', stiffness: 220, damping: 18 }}
+                  className="inline-flex items-center gap-2 rounded-full border border-[#111]/5 bg-white/70 px-5 py-2 text-sm font-semibold text-[#111] shadow-sm backdrop-blur"
+                >
+                  <span className="text-lg">🔮</span>
+                  Technologie du Futur
+                </motion.span>
+
+                <h2 className="text-4xl lg:text-5xl font-display font-bold leading-tight">
+                  Qu'est-ce que l'eSIM ?
+                </h2>
+
+                <p className="text-lg lg:text-xl text-[#4a4a4a] leading-relaxed max-w-2xl">
+                  La eSIM est une carte SIM 100% numérique intégrée à votre smartphone, tablette ou montre connectée.
+                  <br />
+                  Plus besoin de puce physique : tout se passe en ligne, en quelques clics.
+                </p>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-6">
+                {esIntroHighlights.map((highlight, index) => (
+                  <motion.div
+                    key={highlight.title}
+                    initial={{ opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    transition={{ delay: 0.2 + index * 0.1 }}
+                    whileHover={{ y: -8 }}
+                    className="group relative overflow-hidden rounded-3xl border border-white/60 bg-white/85 p-6 shadow-[0_30px_70px_-40px_rgba(15,23,42,0.45)] backdrop-blur-xl"
+                  >
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-br from-waw-yellow/20 via-transparent to-waw-yellow-dark/10" />
+
+                    <div className="relative flex items-center justify-center w-12 h-12 rounded-2xl bg-waw-yellow/20 text-waw-yellow-dark mb-4">
+                      <highlight.icon size={22} />
+                    </div>
+
+                    <h3 className="relative text-lg font-semibold text-[#111] mb-2">
+                      {highlight.title}
+                    </h3>
+                    <p className="relative text-sm text-[#555] leading-relaxed">
+                      {highlight.description}
+                    </p>
+                  </motion.div>
+                ))}
+              </div>
+
+              <div className="flex items-center gap-3 text-sm text-[#666]">
+                <div className="h-9 w-9 rounded-full bg-waw-yellow/20 flex items-center justify-center text-waw-yellow-dark font-semibold">
+                  24h
+                </div>
+                <span>Activation garantie en moins de 24 heures</span>
+              </div>
+            </motion.div>
+
+            {/* Visual Element */}
+            <motion.div variants={itemVariants} className="relative">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-[36px] border border-white/25 bg-gradient-to-br from-[#0f172a]/90 via-[#0b1220]/85 to-[#0f172a]/95 shadow-[0_60px_120px_-50px_rgba(15,23,42,0.85)]">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.18),transparent_58%)]" />
+
+                <motion.div
+                  animate={{ y: [-18, 18, -18], rotate: [0, 3, 0] }}
+                  transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut' }}
+                  className="absolute inset-0 flex items-center justify-center"
+                >
+                  <div className="relative w-[220px] h-[220px]">
+                    <div className="absolute inset-0 rounded-[40px] bg-gradient-to-br from-waw-yellow to-waw-yellow-dark opacity-30 blur-2xl" />
+                    <div className="relative z-10 flex flex-col items-center justify-center gap-4 rounded-[28px] border border-white/20 bg-white/5 px-10 py-12 backdrop-blur-2xl shadow-[0_45px_90px_-60px_rgba(255,221,51,0.8)]">
+                      <Smartphone size={68} className="text-waw-yellow" />
+                      <div className="text-center space-y-1">
+                        <p className="text-xs uppercase tracking-[0.45em] text-white/70">WAW eSIM</p>
+                        <p className="text-xl font-semibold text-white">Connectivité Premium</p>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  animate={{
+                    y: [0, -16, 0],
+                    x: [0, 12, 0],
+                  }}
+                  transition={{ duration: 6, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut' }}
+                  className="absolute top-12 left-10 rounded-2xl border border-white/20 bg-white/10 px-5 py-4 backdrop-blur-lg shadow-lg"
+                >
+                  <div className="flex items-center gap-3">
+                    <Zap size={20} className="text-waw-yellow" />
+                    <div>
+                      <p className="text-xs uppercase tracking-widest text-white/60">Activation</p>
+                      <p className="text-sm font-semibold text-white">QR Code Instantané</p>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  animate={{
+                    y: [0, 18, 0],
+                    x: [0, -14, 0],
+                  }}
+                  transition={{ duration: 7, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut', delay: 0.5 }}
+                  className="absolute bottom-12 right-8 rounded-2xl border border-white/15 bg-white/8 px-5 py-4 backdrop-blur-lg shadow-lg"
+                >
+                  <div className="flex items-center gap-3">
+                    <Globe size={20} className="text-waw-yellow" />
+                    <div>
+                      <p className="text-xs uppercase tracking-widest text-white/60">Couverture</p>
+                      <p className="text-sm font-semibold text-white">200+ Destinations</p>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Section 1 - Avantages eSIM */}
       <section className="section-padding bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
         <div className="absolute inset-0">
           <motion.div
@@ -631,66 +879,167 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
           </motion.div>
 
           {/* Destinations Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-            {destinations.map((destination, index) => (
+          <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-4">
+            {esimPlans.map((plan, index) => (
               <motion.div
-                key={destination.country}
-                initial={{ opacity: 0, y: 20 }}
-                animate={section2InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                transition={{ delay: 0.3 + index * 0.1 }}
-                whileHover={{ scale: 1.05, y: -5 }}
-                className={`relative bg-white rounded-xl p-6 shadow-lg border-2 transition-all cursor-pointer ${
-                  destination.popular
-                    ? 'border-waw-yellow shadow-waw-yellow/20'
-                    : 'border-gray-200 hover:border-waw-yellow/50'
+                key={plan.id}
+                initial={{ opacity: 0, y: 25 }}
+                animate={section2InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 25 }}
+                transition={{ delay: 0.2 + index * 0.1 }}
+                whileHover={{ y: -10, scale: 1.02 }}
+                className={`relative flex flex-col gap-5 rounded-3xl border bg-white p-8 shadow-xl transition-all ${
+                  plan.popular
+                    ? 'border-waw-yellow/80 shadow-[0_40px_80px_-45px_rgba(255,221,51,0.8)]'
+                    : 'border-gray-200 hover:border-waw-yellow/60 shadow-[0_30px_60px_-48px_rgba(15,23,42,0.4)]'
                 }`}
               >
-                {destination.popular && (
-                  <div className="absolute -top-3 -right-3">
-                    <span className="bg-waw-yellow text-waw-dark px-3 py-1 rounded-full text-xs font-bold flex items-center">
-                      <Star size={12} className="mr-1" />
-                      Populaire
-                    </span>
+                {plan.popular && (
+                  <div className="absolute -top-4 right-6 rounded-full bg-waw-yellow px-4 py-1 text-xs font-semibold text-waw-dark shadow-lg">
+                    Offre la plus demandée
                   </div>
                 )}
 
-                <div className="text-center">
-                  <div className="mb-3">
-                  <img src={destination.flag} alt={destination.country} className="w-12 h-12 rounded-full mx-auto" />
+                <div className="space-y-2 text-left">
+                  <h3 className="text-2xl font-display font-bold text-waw-dark">{plan.name}</h3>
+                  <p className="text-sm uppercase tracking-[0.3em] text-gray-400">Forfait eSIM</p>
+                  <p className="text-gray-600 text-sm leading-relaxed">{plan.description}</p>
                 </div>
-                  <h3 className="text-lg font-bold text-waw-dark mb-2">{destination.country}</h3>
 
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center justify-between text-sm text-gray-600">
-                      <span>À partir de</span>
-                      <span className="font-bold text-waw-dark">{destination.price}</span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm text-gray-600">
-                      <span>Validité</span>
-                      <span>{destination.duration}</span>
-                    </div>
-                  </div>
-
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => onNavigateWithPlan?.('plan-details', destination.country)}
-                    className={`w-full py-2 rounded-lg font-semibold transition-colors text-sm ${
-                      destination.popular
-                        ? 'bg-waw-yellow text-waw-dark hover:bg-waw-yellow-dark'
-                        : 'bg-gray-100 text-waw-dark hover:bg-waw-yellow'
-                    }`}
-                  >
-                    Voir les plans
-                  </motion.button>
+                <div className="flex items-baseline gap-3">
+                  <div className="text-4xl font-extrabold text-waw-dark">{plan.data}</div>
+                  <div className="text-sm text-gray-500">sur {plan.validity}</div>
                 </div>
+
+                <div className="flex items-center gap-2">
+                  <CreditCard className="text-waw-yellow" size={20} />
+                  <span className="text-lg font-semibold text-waw-dark">{plan.price}</span>
+                </div>
+
+                <motion.button
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => handlePlanSelect(plan.id)}
+                  className={`mt-auto inline-flex items-center justify-center gap-2 rounded-2xl border px-6 py-3 font-semibold transition-all ${
+                    selectedPlan === plan.id
+                      ? 'border-waw-yellow bg-waw-yellow text-waw-dark shadow-lg'
+                      : 'border-waw-yellow/60 text-waw-dark hover:bg-waw-yellow/20'
+                  }`}
+                >
+                  {selectedPlan === plan.id ? 'Plan sélectionné' : 'Choisir ce forfait'}
+                  <ArrowRight size={18} />
+                </motion.button>
               </motion.div>
             ))}
           </div>
 
+          <div className="mt-10 text-center text-sm text-gray-500">
+            *Usage raisonnable appliqué pour le forfait illimité afin de garantir la qualité de service.
+          </div>
         </div>
       </section>
 
+      {/* Section 2bis - Destinations conditionnelles */}
+      {selectedPlanDetails && (
+        <section
+          ref={(node) => {
+            destinationSectionRef.current = node;
+          }}
+          className="section-padding bg-gradient-to-br from-gray-50/70 to-white relative overflow-hidden"
+        >
+          <div className="absolute inset-0">
+            <motion.div
+              animate={{ rotate: -360, scale: [1, 0.9, 1] }}
+              transition={{ duration: 30, repeat: Number.POSITIVE_INFINITY, ease: 'linear' }}
+              className="absolute top-24 right-16 w-80 h-80 bg-gradient-to-r from-waw-yellow/20 to-waw-yellow-dark/20 rounded-full blur-3xl"
+            />
+          </div>
+
+          <div className="container-custom relative z-10">
+            <motion.div
+              ref={destinationsRef}
+              variants={containerVariants}
+              initial="hidden"
+              animate={destinationsInView ? 'visible' : 'hidden'}
+              className="text-center mb-16"
+            >
+              <motion.span
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
+                className="inline-block px-4 py-2 bg-waw-yellow/20 text-waw-dark rounded-full text-sm font-semibold mb-4"
+              >
+                🌍 Choisissez votre destination
+              </motion.span>
+
+              <h2 className="text-4xl lg:text-5xl font-display font-bold text-waw-dark mb-6">
+                Plus de 200 pays <span className="gradient-text">couvert</span> instantanément
+              </h2>
+
+              <p className="text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
+                Vous avez sélectionné le forfait <span className="font-semibold text-waw-dark">{selectedPlanDetails.name}</span>.
+                Sélectionnez maintenant votre destination pour activer votre eSIM.
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+              {destinations.map((destination, index) => (
+                <motion.div
+                  key={destination.country}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={destinationsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                  transition={{ delay: 0.3 + index * 0.1 }}
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  className={`relative bg-white rounded-xl p-6 shadow-lg border-2 transition-all cursor-pointer ${
+                    destination.popular
+                      ? 'border-waw-yellow shadow-waw-yellow/20'
+                      : 'border-gray-200 hover:border-waw-yellow/50'
+                  }`}
+                >
+                  {destination.popular && (
+                    <div className="absolute -top-3 -right-3">
+                      <span className="bg-waw-yellow text-waw-dark px-3 py-1 rounded-full text-xs font-bold flex items-center">
+                        <Star size={12} className="mr-1" />
+                        Populaire
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="text-center">
+                    <div className="mb-3">
+                      <img src={destination.flag} alt={destination.country} className="w-12 h-12 rounded-full mx-auto" />
+                    </div>
+                    <h3 className="text-lg font-bold text-waw-dark mb-2">{destination.country}</h3>
+
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-center justify-between text-sm text-gray-600">
+                        <span>À partir de</span>
+                        <span className="font-bold text-waw-dark">{destination.price}</span>
+                      </div>
+                      <div className="flex items-center justify-between text-sm text-gray-600">
+                        <span>Validité</span>
+                        <span>{destination.duration}</span>
+                      </div>
+                    </div>
+
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => onNavigateWithPlan?.('plan-details', `${destination.country}-${selectedPlanDetails.id}`)}
+                      className="w-full py-2 rounded-lg font-semibold transition-colors text-sm bg-gradient-to-r from-waw-yellow to-waw-yellow-dark text-waw-dark hover:shadow-lg"
+                    >
+                      Continuer avec {destination.country}
+                    </motion.button>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            <div className="mt-12 text-center text-sm text-gray-500">
+              Sélectionnez un pays pour finaliser l’activation de votre eSIM {selectedPlanDetails.name}.
+            </div>
+          </div>
+        </section>
+      )}
       {/* Section 3 - Comment ça marche */}
       <section className="section-padding bg-gradient-to-br from-waw-yellow/5 to-waw-yellow-dark/5 relative overflow-hidden">
         <div className="container-custom relative z-10">
@@ -958,7 +1307,7 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
       </section>
 
       {/* Section Témoignages clients - Slider africain */}
-      <section className="section-padding bg-gradient-to-br from-white to-waw-yellow/10 relative overflow-hidden">
+      <section className="section-padding bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
         <div className="container-custom relative z-10">
           <motion.div
             variants={containerVariants}
@@ -971,7 +1320,7 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
-              className="inline-block px-4 py-2 bg-waw-yellow/20 text-waw-yellow-dark rounded-full text-sm font-semibold mb-4"
+              className="inline-block px-6 py-3 bg-waw-yellow/20 text-waw-yellow rounded-full text-lg font-semibold mb-6"
             >
               ⭐ Témoignages clients
             </motion.span>
@@ -982,95 +1331,73 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
               Découvrez les avis de nos clients africains satisfaits !
             </p>
           </motion.div>
-          {/* Slider horizontal auto défilant */}
-          {(() => {
-            // Témoignages africains
-            const testimonials = [
+          <div className="grid gap-8 md:grid-cols-2">
+            {[
               {
                 name: 'Fatou Ndiaye',
-                country: 'Sénégal',
+                role: 'Entrepreneure digitale',
+                country: 'Sénégal → France',
                 flag: '/flags/sn.svg',
                 stars: 5,
-                text: 'Service rapide, activation instantanée et support très réactif. Je recommande à tous les voyageurs africains !'
+                text: "J'ai activé ma eSIM WAW avant de voyager à Paris. Aucun souci de roaming, tout a fonctionné dès l'arrivée.",
               },
               {
-                name: 'Yao Kouassi',
-                country: 'Côte d’Ivoire',
-                flag: '/flags/ci.svg',
-                stars: 5,
-                text: 'Activation facile, connexion stable à Abidjan comme à Dakar. Merci WAW eSIM !'
-              },
-              {
-                name: 'Aminata Traoré',
-                country: 'Mali',
-                flag: '/flags/ma.svg',
-                stars: 4,
-                text: 'Très pratique pour voyager sans changer de SIM. Support WhatsApp efficace.'
-              },
-              {
-                name: 'Mohamed Camara',
-                country: 'Guinée',
-                flag: '/flags/gh.svg',
-                stars: 5,
-                text: 'J’ai utilisé WAW eSIM au Maroc et en France, tout a fonctionné parfaitement.'
-              },
-              {
-                name: 'Awa Diop',
-                country: 'Sénégal',
+                name: 'Mamadou Diallo',
+                role: 'Consultant IT',
+                country: 'Sénégal → Mali & Guinée',
                 flag: '/flags/sn.svg',
                 stars: 5,
-                text: 'Installation simple, internet rapide, je recommande à mes amis !'
+                text: "Parfait pour les déplacements professionnels à Bamako et Conakry. Connexion stable et activation rapide.",
               },
-              {
-                name: 'Koffi Mensah',
-                country: 'Togo',
-                flag: '/flags/gh.svg',
-                stars: 4,
-                text: 'Bon rapport qualité/prix pour les voyageurs africains.'
-              }
-            ];
-            // Auto-scroll state
-            const [offset, setOffset] = useState(0);
-            // Largeur d’une carte + gap
-            const cardWidth = 360;
-            // Scroll automatique
-            React.useEffect(() => {
-              const interval = setInterval(() => {
-                setOffset(prev => (prev + 1) % testimonials.length);
-              }, 3500);
-              return () => clearInterval(interval);
-            }, [testimonials.length]);
-            return (
-              <div className="relative w-full overflow-hidden">
-                <div
-                  className="flex gap-8 transition-transform duration-700"
-                  style={{ transform: `translateX(-${offset * cardWidth}px)` }}
-                >
-                  {testimonials.concat(testimonials[0]).map((testimonial, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.3 + (i % testimonials.length) * 0.1 }}
-                      className="relative flex flex-col items-center bg-white rounded-3xl p-8 shadow-xl border-2 border-waw-yellow/20 hover:border-waw-yellow transition-all min-w-[320px] max-w-[340px]"
-                    >
-                      <div className="relative mb-4 flex flex-col items-center">
-                        <img src={testimonial.flag} alt={testimonial.country} className="w-16 h-16 rounded-full border-4 border-waw-yellow/30 shadow-lg mb-2" />
+            ].map((testimonial, index) => (
+              <motion.div
+                key={testimonial.name}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 + index * 0.1 }}
+                viewport={{ once: true, amount: 0.3 }}
+                className="relative overflow-hidden rounded-3xl border border-waw-yellow/30 bg-white/90 p-8 shadow-[0_30px_70px_-50px_rgba(15,23,42,0.4)]"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-waw-yellow/10 via-transparent to-waw-yellow-dark/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+                <div className="relative flex flex-col gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className="relative">
+                      <img
+                        src={testimonial.flag}
+                        alt={testimonial.country}
+                        className="h-14 w-14 rounded-full border-4 border-white shadow-lg"
+                      />
+                      <div className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-waw-yellow text-waw-dark text-xs font-bold shadow-md">
+                        <Globe size={16} />
                       </div>
-                      <div className="flex items-center mb-2">
-                        {Array.from({ length: testimonial.stars }).map((_, idx) => (
-                          <Star key={idx} size={18} className="text-waw-yellow" />
-                        ))}
+                    </div>
+
+                    <div className="text-left">
+                      <div className="flex items-center gap-2 text-waw-dark font-semibold text-lg">
+                        {testimonial.name}
                       </div>
-                      <p className="text-gray-700 text-base italic mb-4">“{testimonial.text}”</p>
-                      <div className="font-bold text-waw-dark">{testimonial.name}</div>
-                      <div className="text-sm text-gray-500">{testimonial.country}</div>
-                    </motion.div>
-                  ))}
+                      <div className="text-sm text-gray-500">{testimonial.role}</div>
+                      <div className="text-sm text-gray-600 flex items-center gap-2">
+                        <MapPin size={16} className="text-waw-yellow" />
+                        {testimonial.country}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-1 text-waw-yellow">
+                    {Array.from({ length: testimonial.stars }).map((_, idx) => (
+                      <Star key={idx} size={20} fill="currentColor" />
+                    ))}
+                  </div>
+
+                  <p className="text-gray-700 text-lg italic leading-relaxed">
+                    “{testimonial.text}”
+                  </p>
                 </div>
-              </div>
-            );
-          })()}
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
      

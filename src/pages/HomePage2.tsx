@@ -87,7 +87,7 @@ Cordialement,`);
     {
       title: "La connectivité intelligente pour vos ambitions numériques",
       subtitle: "Ensemble, façonnons l’avenir digital de votre entreprise",
-      description: "Grâce à nostechnologies de pointe (Fibre, Cloud, eSIM, IoT), nous vous connectons aumonde avec performance, sécurité et simplicité",
+      description: "Grâce à nos technologies de pointe (Fibre, Cloud, eSIM, IoT), nous vous connectons au monde avec performance, sécurité et simplicité",
       image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
       // stats: "24/7 Support client"
     },
@@ -301,9 +301,9 @@ Cordialement,`);
                   <Building className="text-waw-yellow" size={24} />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold mb-3">Expertise locale, vision globale</h3>
+                  <h3 className="text-2xl font-bold mb-3">L'efficacité dans la synergie</h3>
                   <p className="text-gray-400 leading-relaxed">
-                    Acteur de référence au Sénégal, WAW TELECOM allie connaissance approfondie du marché local et standards internationaux pour vous offrir des solutions sur mesure.
+                    Quand tout fonctionne ensemble, tout fonctionne mieux.
                   </p>
                 </div>
               </div>
@@ -313,9 +313,9 @@ Cordialement,`);
                   <Cpu className="text-waw-yellow" size={24} />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold mb-3">Technologie de pointe</h3>
+                  <h3 className="text-2xl font-bold mb-3">Notre identité</h3>
                   <p className="text-gray-400 leading-relaxed">
-                    Des infrastructures dernier cri et des solutions innovantes (Fibre, Cloud, eSIM, IoT) pour une performance optimale de votre entreprise.
+                    Acteur 100 % sénégalais, nous avons grandi au rythme des besoins de nos clients et des défis du numérique local. Chaque jour, nous plaçons la proximité, l'écoute, et l'agilité au cœur de notre action.
                   </p>
                 </div>
               </div>
@@ -327,9 +327,9 @@ Cordialement,`);
                   <Users className="text-waw-yellow" size={24} />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold mb-3">Accompagnement personnalisé</h3>
+                  <h3 className="text-2xl font-bold mb-3">Notre expertise</h3>
                   <p className="text-gray-400 leading-relaxed">
-                    Une équipe d'experts dédiée à votre réussite, disponible 24/7 pour vous conseiller et vous accompagner à chaque étape de votre transformation numérique.
+                    WAW TELECOM est un acteur de confiance pour accompagner votre transformation numérique, grâce à une approche intégrée et des infrastructures de nouvelle génération.
                   </p>
                 </div>
               </div>
@@ -339,9 +339,9 @@ Cordialement,`);
                   <Shield className="text-waw-yellow" size={24} />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold mb-3">Engagement qualité</h3>
+                  <h3 className="text-2xl font-bold mb-3">Notre promesse</h3>
                   <p className="text-gray-400 leading-relaxed">
-                    Une qualité de service irréprochable avec des indicateurs de performance stricts et une disponibilité garantie à 99,9%.
+                    Être le moteur local d'un avenir numérique plus inclusif, plus humain, plus accessible. Parce qu'un réseau n'a de valeur que s'il crée du lien humain.
                   </p>
                 </div>
               </div>

@@ -204,10 +204,13 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
                 </span>
               </h1>
 
-              <p className="text-xl lg:text-2xl text-gray-300 leading-relaxed max-w-4xl mx-auto">
-              Restez performants en toute circonstance. Nos accès Internet professionnels s’adaptent à vos usages (bureaux, sites distants, cloud, visioconférences) pour offrir une expérience fluide et constante.
-
-Atouts clés : performance stable, continuité de service, offres flexibles selon vos besoins.
+              <p className="text-xl lg:text-2xl text-gray-300 leading-relaxed max-w-4xl mx-auto space-y-4">
+                <span>
+                  Restez performants en toute circonstance. Nos accès Internet professionnels s’adaptent à vos usages (bureaux, sites distants, cloud, visioconférences) pour offrir une expérience fluide et constante.
+                </span>
+                <span className="block">
+                  <span className="text-[#FFDD33] font-semibold">Atouts clés :</span> performance stable, continuité de service, offres flexibles selon vos besoins.
+                </span>
               </p>
 
               <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8">
@@ -219,7 +222,7 @@ Atouts clés : performance stable, continuité de service, offres flexibles selo
                   onClick={() => onNavigate('contact')}
                   className="bg-waw-yellow text-waw-dark font-bold px-8 py-4 rounded-lg text-lg hover:bg-waw-yellow-dark transition-colors flex items-center justify-center space-x-2 group"
                 >
-                  <span>Contactez-nous</span>
+                  <span>Parlez à un expert</span>
                   <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                 </motion.button>
 
@@ -229,7 +232,7 @@ Atouts clés : performance stable, continuité de service, offres flexibles selo
                   className="border-2 border-waw-yellow text-waw-yellow font-bold px-8 py-4 rounded-lg text-lg hover:bg-waw-yellow hover:text-waw-dark transition-colors flex items-center justify-center space-x-2"
                 >
                   <Network size={20} />
-                  <span>Découvrir nos solutions</span>
+                  <span>Contactez-nous au +221 33 860 19 29</span>
                 </motion.button>
               </div>
             </motion.div>
@@ -348,7 +351,7 @@ Atouts clés : performance stable, continuité de service, offres flexibles selo
                 onClick={() => onNavigate('contact')}
                 className="btn-primary flex items-center space-x-2 group"
               >
-                <span>Contactez-nous</span>
+                <span>Demander un audit de connectivité</span>
                 <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
               </motion.button>
             </motion.div>
@@ -658,7 +661,7 @@ Atouts clés : performance stable, continuité de service, offres flexibles selo
                 onClick={() => onNavigate('contact')}
                 className="btn-primary flex items-center space-x-2 group"
               >
-                <span>Contactez-nous</span>
+                <span>Obtenir une proposition MPLS</span>
                 <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
               </motion.button>
             </motion.div>
@@ -732,7 +735,7 @@ Atouts clés : performance stable, continuité de service, offres flexibles selo
                 onClick={() => onNavigate('contact')}
                 className="btn-primary flex items-center space-x-2 group"
               >
-                <span>Contactez-nous</span>
+                <span>Planifier une démo SD-WAN</span>
                 <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
               </motion.button>
             </motion.div>
