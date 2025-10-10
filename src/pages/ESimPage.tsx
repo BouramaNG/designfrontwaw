@@ -420,7 +420,7 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
                 <span className="bg-gradient-to-r from-waw-yellow to-waw-yellow-dark bg-clip-text text-transparent">
                 1 000 FCFA
                 </span>{' '}
-                internationale
+                L'internationale
               </h1>
 
               <p className="text-xl lg:text-2xl text-gray-300 leading-relaxed">
@@ -616,7 +616,7 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
                 </motion.span>
 
                 <h2 className="text-4xl lg:text-5xl font-display font-bold leading-tight">
-                  Qu'est-ce que l'eSIM ?
+                  Qu'est-ce que la eSIM ?
                 </h2>
 
                 <p className="text-lg lg:text-xl text-[#4a4a4a] leading-relaxed max-w-2xl">
@@ -757,8 +757,8 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
             </motion.span>
 
             <h2 className="text-4xl lg:text-5xl font-display font-bold text-waw-dark mb-6">
-              Pourquoi choisir l'
-              <span className="gradient-text">eSIM WAW Travel</span> ?
+              Pourquoi choisir la
+              <span className="gradient-text"> eSIM WAW Travel</span> ?
             </h2>
 
             <p className="text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
@@ -811,10 +811,10 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
               📱 Appareils compatibles
             </motion.span>
             <h2 className="text-4xl lg:text-5xl font-display font-bold text-waw-dark mb-6">
-              Votre smartphone est-il <span className="gradient-text">compatible eSIM</span> ?
+              Votre smartphone est-il <span className="gradient-text">compatible a la eSIM</span> ?
             </h2>
             <p className="text-xl text-gray-600 leading-relaxed max-w-2xl mx-auto">
-              Vérifiez si votre appareil prend en charge la technologie eSIM avant de commander. La majorité des modèles récents Apple, Samsung, Google Pixel et autres sont compatibles.
+              Vérifiez si votre appareil prend en charge la technologie la eSIM avant de commander. La majorité des modèles récents Apple, Samsung, Google Pixel et autres sont compatibles.
             </p>
           </motion.div>
           <div className="flex flex-col items-center justify-center gap-6">
