@@ -360,7 +360,7 @@ Cordialement,`);
             className="text-center mb-16"
           >
             <h2 className="text-4xl font-display font-bold text-waw-dark mb-6">
-            Nos services phares
+            Nos services phare
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Découvrez nos services conçus pour propulser votre entreprise vers le succès
