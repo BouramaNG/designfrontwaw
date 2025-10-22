@@ -833,7 +833,6 @@ const ContactPage = ({ onNavigate }: ContactPageProps) => {
                   <p className="text-gray-300">
                     <strong>WAW TELECOM</strong><br />
                     Ngor Almadies<br />
-                    Immeuble BIB'S<br />
                     56 Route de Ngor<br />
                     Dakar, Sénégal
                   </p>
