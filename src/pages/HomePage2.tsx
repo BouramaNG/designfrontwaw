@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import {
   Globe,
-  Rocket,
   Users,
   Zap,
   Shield,
@@ -77,30 +76,15 @@ Cordialement,`);
   };
 
   const heroSlides = [
-    // {
-    //   title: "🚀 Innovation Télécom",
-    //   subtitle: "L'efficacité dans la synergie",
-    //   description: "Tout fonctionne mieux quand tout fonctionne ensemble. Accompagnons votre transformation numérique avec nos solutions eSIM, connectivité et cloud.",
-    //   image: "https://imageio.forbes.com/specials-images/imageserve/5f8d4bc46738826921f51465/0x0.jpg?format=jpg&height=900&width=1600&fit=bounds",
-    //   stats: "50+ Pays couverts"
-    // },
     {
-      title: "La connectivité intelligente pour vos ambitions numériques",
-      subtitle: "Ensemble, façonnons l’avenir digital de votre entreprise",
-      description: "Grâce à nos technologies de pointe (Fibre, Cloud, eSIM, IoT), nous vous connectons au monde avec performance, sécurité et simplicité",
+      title: "La connectivité intelligente au service de vos ambitions numériques",
+      subtitle: "Ensemble, façonnons l’avenir digital de votre entreprise.",
+      description: [
+        "Grâce à nos technologies de pointe — fibre optique, cloud souverain, eSIM et IoT — nous vous connectons au monde avec performance, sécurité et simplicité.",
+        "Nos experts conçoivent des solutions sur mesure pour accélérer votre transformation numérique et soutenir durablement votre croissance."
+      ],
       image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
-      // stats: "24/7 Support client"
     },
-    // {
-    //   title: "☁️ Solutions Cloud",
-    //   subtitle: "L'infrastructure de demain",
-    //   description: "Optimisez vos performances avec nos solutions cloud intelligentes. Sécurité, évolutivité et innovation pour propulser votre entreprise vers l'avenir.",
-    //   image: "https://wawtelecom.com/cloude5.webp",
-    //   stats: "99.9% Disponibilité"
-    // },
-    // {
-    //   title: "🤝 Équipe Experte",
-    //   subtitle: "L'humain au cœur de la technologie",
     //   description: "Notre équipe de spécialistes vous accompagne à chaque étape. Conseil personnalisé, formation et support technique pour maximiser votre réussite.",
     //   image: "https://www.lemoci.com/wp-content/uploads/2022/03/Entreprise-africaine-julief514-iStock.jpg",
     //   stats: "15+ Années d'expérience"
@@ -200,13 +184,13 @@ Cordialement,`);
         </AnimatePresence>
 
         <div className="container-custom relative z-20">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid gap-12 items-center">
             {/* Contenu Texte */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={heroInView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.8 }}
-              className="text-white"
+              className="text-white text-center w-full max-w-5xl mx-auto lg:max-w-none"
             >
               <AnimatePresence mode="wait">
                 <motion.div
@@ -216,15 +200,19 @@ Cordialement,`);
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.6 }}
                 >
-                  <h2 className="text-5xl lg:text-6xl font-display font-bold mb-6 leading-tight">
+                  <h2 className="text-5xl lg:text-7xl font-display font-bold mb-6 leading-tight">
                     {heroSlides[currentSlide].title}
                   </h2>
                   <h3 className="text-2xl lg:text-3xl font-light text-waw-yellow mb-6">
                     {heroSlides[currentSlide].subtitle}
                   </h3>
-                  <p className="text-xl leading-relaxed mb-8 text-gray-200">
-                    {heroSlides[currentSlide].description}
-                  </p>
+                  <div className="text-lg md:text-xl leading-relaxed mb-8 text-gray-200 max-w-4xl mx-auto text-justify">
+                    {heroSlides[currentSlide].description.map((line, index) => (
+                      <span key={index} className={`block ${index < heroSlides[currentSlide].description.length - 1 ? 'mb-3' : ''}`}>
+                        {line}
+                      </span>
+                    ))}
+                  </div>
 
                   {/* Statistique en vedette */}
                   {/* <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 mb-8 inline-block">
@@ -236,17 +224,7 @@ Cordialement,`);
               </AnimatePresence>
 
               {/* Boutons d'action */}
-              <div className="flex flex-col sm:flex-row gap-4">
-                <motion.button
-                  onClick={() => onNavigate('travel')}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-waw-yellow hover:bg-waw-yellow-dark text-waw-dark px-8 py-4 rounded-2xl font-semibold text-lg flex items-center justify-center space-x-2 transition-all"
-                >
-                  <Rocket size={20} />
-                  <span>Explorer nos solutions</span>
-                </motion.button>
-
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <motion.button
                   onClick={() => onNavigate('contact')}
                   whileHover={{ scale: 1.05 }}
@@ -289,8 +267,8 @@ Cordialement,`);
             <h2 className="text-4xl font-display font-bold mb-6">
               Pourquoi choisir WAW ?
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              L'excellence technologique au service de votre entreprise
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto text-justify">
+              L'excellence technologique au service de votre entreprise.
             </p>
           </motion.div>
 
@@ -302,8 +280,8 @@ Cordialement,`);
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold mb-3">L'efficacité dans la synergie</h3>
-                  <p className="text-gray-400 leading-relaxed">
-                    Quand tout fonctionne ensemble, tout fonctionne mieux.
+                  <p className="text-gray-400 leading-relaxed text-justify">
+                    Quand tout fonctionne ensemble, tout fonctionne mieux. Nous orchestrons chaque composant de votre infrastructure pour offrir une continuité opérationnelle sans compromis.
                   </p>
                 </div>
               </div>
@@ -314,8 +292,8 @@ Cordialement,`);
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold mb-3">Notre identité</h3>
-                  <p className="text-gray-400 leading-relaxed">
-                    Acteur 100 % sénégalais, nous avons grandi au rythme des besoins de nos clients et des défis du numérique local. Chaque jour, nous plaçons la proximité, l'écoute, et l'agilité au cœur de notre action.
+                  <p className="text-gray-400 leading-relaxed text-justify">
+                    Acteur 100&nbsp;% sénégalais, nous grandissons au rythme des besoins de nos clients et des défis du numérique local. Chaque jour, nous plaçons la proximité, l'écoute et l'agilité au cœur de notre action.
                   </p>
                 </div>
               </div>
@@ -328,8 +306,8 @@ Cordialement,`);
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold mb-3">Notre expertise</h3>
-                  <p className="text-gray-400 leading-relaxed">
-                    WAW TELECOM est un acteur de confiance pour accompagner votre transformation numérique, grâce à une approche intégrée et des infrastructures de nouvelle génération.
+                  <p className="text-gray-400 leading-relaxed text-justify">
+                    WAW TELECOM est un partenaire de confiance pour piloter votre transformation numérique, grâce à une approche intégrée, des infrastructures de nouvelle génération et une gouvernance de projet éprouvée.
                   </p>
                 </div>
               </div>
@@ -340,8 +318,8 @@ Cordialement,`);
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold mb-3">Notre promesse</h3>
-                  <p className="text-gray-400 leading-relaxed">
-                    Être le moteur local d'un avenir numérique plus inclusif, plus humain, plus accessible. Parce qu'un réseau n'a de valeur que s'il crée du lien humain.
+                  <p className="text-gray-400 leading-relaxed text-justify">
+                    Être le moteur local d'un avenir numérique plus inclusif, plus humain et plus accessible. Parce qu'un réseau n'a de valeur que s'il crée du lien, nous garantissons une expérience qui place l'humain au centre.
                   </p>
                 </div>
               </div>
@@ -471,7 +449,7 @@ Cordialement,`);
             Prêt à transformer votre connectivité ?
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Prêt à transformer votre entreprise ? Parlons de vos besoins et trouvons la solution parfaite ensemble.
+              Parlons de vos besoins et trouvons la solution parfaite ensemble.
             </p>
           </motion.div>
 
@@ -483,7 +461,7 @@ Cordialement,`);
               transition={{ duration: 0.8 }}
               className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20"
             >
-              <h3 className="text-2xl font-bold text-white mb-6">Écrivez-nous</h3>
+              <h3 className="text-2xl font-bold text-white mb-6">Demander un devis</h3>
 
               <form className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-4">

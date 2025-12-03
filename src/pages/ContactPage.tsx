@@ -305,27 +305,19 @@ const ContactPage = ({ onNavigate }: ContactPageProps) => {
             className="text-center max-w-5xl mx-auto"
           >
             <motion.div variants={itemVariants} className="space-y-8">
-              <motion.span
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
-                className="inline-block px-6 py-3 bg-waw-yellow/20 text-waw-yellow rounded-full text-lg font-semibold"
+              <motion.h1
+                variants={itemVariants}
+                className="text-5xl lg:text-6xl font-display font-bold leading-tight"
               >
-                📞 Contactez-nous
-              </motion.span>
+                Besoin d'assistance ou d'informations ?
+              </motion.h1>
 
-              <h1 className="text-5xl lg:text-7xl font-display font-bold leading-tight">
-                Besoin d'assistance ou{' '}
-                <span className="bg-gradient-to-r from-waw-yellow to-waw-yellow-dark bg-clip-text text-transparent">
-                  d'informations
-                </span> ?
-              </h1>
-
-              <p className="text-xl lg:text-2xl text-gray-300 leading-relaxed max-w-4xl mx-auto">
-                Notre équipe d'experts est à votre disposition pour répondre à toutes vos questions
-                et vous accompagner dans vos projets de transformation numérique.
-                Contactez-nous dès aujourd'hui !
-              </p>
+              <motion.p
+                variants={itemVariants}
+                className="text-xl lg:text-2xl text-gray-300 leading-relaxed max-w-4xl mx-auto text-justify"
+              >
+                Notre équipe d'experts est à votre disposition pour répondre à toutes vos questions et vous accompagner dans vos projets de transformation numérique. Contactez-nous dès aujourd'hui !
+              </motion.p>
 
               <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8">
                 <motion.button
@@ -369,9 +361,6 @@ const ContactPage = ({ onNavigate }: ContactPageProps) => {
             >
               <motion.div variants={itemVariants} className="space-y-8">
                 <div>
-                  <h2 className="text-4xl font-display font-bold text-waw-dark mb-4">
-                    Envoyez-nous un message
-                  </h2>
                   <p className="text-xl text-gray-600">
                     Remplissez le formulaire ci-dessous et nous vous répondrons dans les plus brefs délais.
                   </p>
@@ -697,9 +686,14 @@ const ContactPage = ({ onNavigate }: ContactPageProps) => {
               className="space-y-8"
             >
               <motion.div variants={itemVariants}>
-                <h2 className="text-4xl font-display font-bold text-waw-dark mb-4">
-                  Informations de contact
-                </h2>
+                <motion.h2
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={infoInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.8 }}
+                  className="text-4xl font-display font-bold text-waw-dark mb-4"
+                >
+                  Comment nous contacter
+                </motion.h2>
                 <p className="text-xl text-gray-600">
                   Plusieurs moyens de nous contacter selon vos préférences et l'urgence de votre demande.
                 </p>

@@ -553,15 +553,6 @@ Cordialement,`);
             className="text-center max-w-5xl mx-auto"
           >
             <motion.div variants={itemVariants} className="space-y-8">
-              <motion.span
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
-                className="inline-block px-6 py-3 bg-waw-yellow/20 text-waw-yellow rounded-full text-lg font-semibold"
-              >
-                🏢 Notre Histoire
-              </motion.span>
-
               <h1 className="text-5xl lg:text-7xl font-display font-bold leading-tight">
                 10 ans d'innovation{' '}
                 <span className="bg-gradient-to-r from-waw-yellow to-waw-yellow-dark bg-clip-text text-transparent">
@@ -572,30 +563,14 @@ Cordialement,`);
               <p className="text-xl lg:text-2xl text-gray-300 leading-relaxed max-w-4xl mx-auto">
               Depuis 2016, WAW TELECOM redéfinit les standards des télécommunications au Sénégal. Née de l'ambition de rendre la connectivité haut débit accessible, performante et locale, notre entreprise a su évoluer en combinant innovation technologique, ancrage régional et exigence de qualité.
               </p>
-              <p className="text-xl lg:text-2xl text-waw-yellow leading-relaxed max-w-4xl mx-auto">
-              Aujourd'hui, WAW accompagne les entreprises, institutions et opérateurs vers l'avenir numérique.
+              <p className="text-xl lg:text-2xl text-gray-300 leading-relaxed max-w-4xl mx-auto">
+                Aujourd'hui, WAW accompagne les entreprises, institutions et opérateurs vers l'avenir numérique.
               </p>
               <p className="text-xl lg:text-2xl text-gray-300 leading-relaxed max-w-4xl mx-auto">
               Un ADN local, une vision panafricaine.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8 pb-16">
-              <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onNavigate('about');
-                  }}
-                  className="bg-waw-yellow text-waw-dark font-bold px-8 py-4 rounded-lg text-lg hover:bg-waw-yellow-dark transition-colors flex items-center justify-center space-x-2 group"
-                >
-                  <MessageCircle size={20} />
-                  <span>En savoir plus sur notre histoire</span>
-                  <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-                </motion.button>
-
-              </div>
+              <div className="pt-8 pb-16" />
             </motion.div>
 
           </motion.div>
@@ -627,13 +602,6 @@ Cordialement,`);
             animate={historyInView ? 'visible' : 'hidden'}
             className="text-center mb-16"
           >
-            <motion.span
-              variants={itemVariants}
-              className="inline-block px-4 py-2 bg-waw-yellow/20 text-waw-dark rounded-full text-sm font-semibold mb-4"
-            >
-              🎯 Notre Vision
-            </motion.span>
-
             <motion.h2
               variants={itemVariants}
               className="text-4xl lg:text-5xl font-display font-bold text-waw-dark mb-6"
@@ -786,8 +754,8 @@ Cordialement,`);
 
                 {/* Texte de l'objectif */}
                 <div className="lg:w-1/2 text-center lg:text-left">
-                  <span className="inline-block px-4 py-2 bg-waw-yellow/20 text-waw-yellow rounded-full text-sm font-semibold mb-6">
-                    🎯 Notre Objectif
+                  <span className="inline-block px-5 py-3 bg-waw-yellow/20 text-waw-yellow rounded-full text-base sm:text-lg font-semibold mb-6">
+                    Notre Objectif
                   </span>
                   <h3 className="text-4xl font-bold text-white mb-6">
                     Propulser votre{' '}

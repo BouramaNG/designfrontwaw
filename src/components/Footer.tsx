@@ -106,11 +106,14 @@ const Footer = ({ onNavigate }: FooterProps) => {
                 </div>
               </div>
 
-              <p className="text-gray-300 mb-6 leading-relaxed">
-                Ensemble, façonnons l'avenir digital de votre organisation.
-                Nous accompagnons les entreprises dans leur transformation numérique
-                à l'échelle mondiale en intégrant des technologies essentielles.
-              </p>
+              <div className="text-gray-300 mb-6 leading-relaxed text-justify space-y-3">
+                <span className="block">
+                  Ensemble, façonnons l'avenir digital de votre organisation.
+                </span>
+                <span className="block">
+                  Nous accompagnons les entreprises dans leur transformation numérique à l'échelle mondiale en intégrant des technologies essentielles.
+                </span>
+              </div>
 
               {/* Contact Info */}
               <div className="space-y-3">
@@ -214,7 +217,7 @@ const Footer = ({ onNavigate }: FooterProps) => {
         >
           <div className="max-w-2xl mx-auto text-center">
             <h4 className="text-xl font-bold mb-4">Restez informé de nos innovations</h4>
-            <p className="text-gray-300 mb-6">
+            <p className="text-gray-300 mb-6 whitespace-nowrap">
               Recevez les dernières actualités sur nos solutions télécoms et innovations technologiques.
             </p>
 

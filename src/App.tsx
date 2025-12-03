@@ -82,42 +82,59 @@ function App() {
       {renderPage()}
       <Footer onNavigate={setCurrentPage} />
 
-      {/* WhatsApp Floating Button Support (droite) */}
+      {/* WhatsApp Floating Actions */}
       <motion.div
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ delay: 3, type: 'spring', stiffness: 200 }}
-        className="fixed bottom-6 right-6 z-50"
+        className="fixed bottom-6 right-6 z-50 flex flex-col items-end space-y-5"
       >
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => openWhatsApp('Bonjour, j\'ai une question concernant vos services WAW TELECOM')}
-          className="w-16 h-16 bg-green-500 hover:bg-green-600 text-white rounded-full shadow-lg flex items-center justify-center transition-colors"
-          animate={{
-            y: [0, -5, 0],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: 'easeInOut',
-          }}
-        >
-          <MessageCircle size={28} />
-        </motion.button>
-      </motion.div>
+        <div className="flex flex-col items-center space-y-2">
+          <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-emerald-400 to-green-600 text-white shadow-lg border border-white/30">
+            Support 24/7
+          </span>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.92 }}
+            onClick={() => openWhatsApp('Bonjour, j\'ai une question concernant vos services WAW TELECOM')}
+            className="w-14 h-14 bg-green-500 hover:bg-green-600 text-white rounded-xl shadow-lg flex items-center justify-center transition-colors"
+            animate={{
+              y: [0, -6, 0],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: 'easeInOut',
+            }}
+          >
+            <MessageCircle size={26} />
+          </motion.button>
+        </div>
 
-      {/* WhatsApp Floating Button Achat (gauche) */}
-      <a
-        href="https://wa.me/221763644946"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-6 left-6 z-50 flex items-center gap-3 px-5 py-3 bg-green-500 hover:bg-green-600 text-white font-bold rounded-full shadow-lg transition-all text-base group"
-        style={{ boxShadow: '0 4px 24px 0 rgba(39, 174, 96, 0.25)' }}
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 32 32"><rect width="32" height="32" rx="16" fill="#25D366"/><path fill="#fff" d="M16 7.5A8.5 8.5 0 0 0 7.5 16c0 1.5.4 2.9 1.1 4.1l-1.2 4.4 4.5-1.2A8.5 8.5 0 1 0 16 7.5Zm4.8 12.1c-.2.6-1.1 1.1-1.5 1.2-.4.1-.9.2-1.5-.1-.3-.1-.7-.2-1.5-.5-2.6-1.1-4.3-3.7-4.4-3.9-.1-.2-1-1.3-1-2.5 0-1.1.6-1.6.8-1.8.2-.2.4-.2.6-.2.1 0 .3 0 .4.3.2.3.5 1 .6 1.1.1.1.1.2 0 .4-.1.2-.2.3-.3.5-.1.1-.2.2-.1.4.2.4.7 1.2 1.5 1.7.7.4 1.1.6 1.3.5.2-.1.3-.2.4-.4.1-.2.2-.2.4-.2.1 0 .2 0 .3 0 .1 0 .2 0 .3.2.1.2.4.9.5 1.2.1.3.2.3.1.5Z"/></svg>
-        Acheter votre eSIM avec WhatsApp
-      </a>
+        <div className="flex flex-col items-center space-y-2">
+          <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-amber-300 via-yellow-300 to-amber-400 text-waw-dark shadow-lg border border-waw-yellow/50">
+            Acheter eSIM
+          </span>
+          <motion.div
+            animate={{ y: [0, 4, 0] }}
+            transition={{ duration: 1.6, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut' }}
+            className="flex flex-col items-center text-waw-dark"
+          >
+            <span className="block w-1 h-6 rounded-full bg-waw-yellow/70" />
+            <span className="block w-3 h-3 border-l-2 border-b-2 border-waw-yellow-dark rotate-45 -mt-1" />
+          </motion.div>
+          <motion.a
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.92 }}
+            href="https://wa.me/221763644946"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-14 h-14 bg-waw-yellow text-waw-dark rounded-xl shadow-lg flex items-center justify-center transition-colors hover:bg-waw-yellow-dark"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 32 32"><rect width="32" height="32" rx="16" fill="#25D366"/><path fill="#fff" d="M16 7.5A8.5 8.5 0 0 0 7.5 16c0 1.5.4 2.9 1.1 4.1l-1.2 4.4 4.5-1.2A8.5 8.5 0 1 0 16 7.5Zm4.8 12.1c-.2.6-1.1 1.1-1.5 1.2-.4.1-.9.2-1.5-.1-.3-.1-.7-.2-1.5-.5-2.6-1.1-4.3-3.7-4.4-3.9-.1-.2-1-1.3-1-2.5 0-1.1.6-1.6.8-1.8.2-.2.4-.2.6-.2.1 0 .3 0 .4.3.2.3.5 1 .6 1.1.1.1.1.2 0 .4-.1.2-.2.3-.3.5-.1.1-.2.2-.1.4.2.4.7 1.2 1.5 1.7.7.4 1.1.6 1.3.5.2-.1.3-.2.4-.4.1-.2.2-.2.4-.2.1 0 .2 0 .3 0 .1 0 .2 0 .3.2.1.2.4.9.5 1.2.1.3.2.3.1.5Z"/></svg>
+          </motion.a>
+        </div>
+      </motion.div>
     </div>
   );
 }

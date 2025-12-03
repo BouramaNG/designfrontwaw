@@ -40,7 +40,7 @@ const Header = ({ currentPage, onNavigate }: HeaderProps) => {
           : 'bg-white/90 backdrop-blur-sm shadow-sm'
       }`}
     >
-      <div className="container-custom">
+      <div className="container-custom px-2 sm:px-4 lg:px-6">
         <div className="flex items-center justify-between py-4">
           {/* Logo */}
           <motion.div
@@ -94,16 +94,6 @@ const Header = ({ currentPage, onNavigate }: HeaderProps) => {
               )
             ))}
           </nav>
-
-          {/* CTA Button */}
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => onNavigate('login')}
-            className="hidden lg:block btn-primary"
-          >
-            Connexion
-          </motion.button>
 
           {/* Mobile Menu Button */}
           <motion.button
@@ -161,18 +151,6 @@ const Header = ({ currentPage, onNavigate }: HeaderProps) => {
                     </motion.button>
                   )
                 ))}
-                <motion.button
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: navItems.length * 0.1 }}
-                  onClick={() => {
-                    onNavigate('login');
-                    setIsOpen(false);
-                  }}
-                  className="w-full btn-primary mt-4"
-                >
-                  Connexion
-                </motion.button>
               </nav>
             </div>
           </motion.div>
