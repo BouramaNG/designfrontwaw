@@ -37,6 +37,11 @@ import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import logoWaw from '../assets/images/Logo Waw officiel.png';
+import backbone from '../assets/images/backbone.png';
+import ingenieur from '../assets/images/ingenieurs .png';
+import images4 from '../assets/images/Images4.png';
+import technicien from '../assets/images/technicien.png';
+import slide1 from '../assets/images/slide1.png';
 
 // Custom marker icon for Leaflet
 const customMarkerIcon = L.divIcon({
@@ -149,7 +154,7 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
       title: "La connectivité intelligente au service de vos ambitions",
       subtitle: "Ensemble, façonnons l'avenir digital de votre entreprise",
       description: "Grâce à nos technologies de pointe — fibre optique, cloud souverain, eSIM et IoT — nous vous connectons au monde avec performance, sécurité et simplicité.",
-      image: "/src/assets/images/backbone.png",
+      image: backbone,
       imageType: "single"
     },
     {
@@ -158,9 +163,9 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
       description: "Découvrez notre gamme complète de services professionnels : connectivité fibre, solutions cloud, eSIM international, et infrastructure IoT adaptés à vos besoins.",
       images: [
         "https://images.unsplash.com/photo-1573164713988-8665fc963095?w=800&q=80",
-        "/src/assets/images/ingenieurs .png",
-        "/src/assets/images/Images4.png",
-        "/src/assets/images/technicien.png"
+        ingenieur,
+        images4,
+        technicien
       ],
       imageType: "collage"
     },
@@ -168,7 +173,7 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
       title: "Restez connecté partout dans le monde",
       subtitle: "L'eSIM nouvelle génération pour vos voyages",
       description: "Voyagez sans frontières avec notre eSIM internationale. Activation instantanée, couverture mondiale, et tarifs transparents pour rester connecté où que vous soyez.",
-      image: "/src/assets/images/slide1.png",
+      image: slide1,
       imageType: "single"
     }
   ];
