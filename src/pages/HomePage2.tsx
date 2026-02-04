@@ -77,18 +77,31 @@ Cordialement,`);
 
   const heroSlides = [
     {
-      title: "La connectivité intelligente au service de vos ambitions numériques",
-      subtitle: "Ensemble, façonnons l’avenir digital de votre entreprise.",
-      description: [
-        "Grâce à nos technologies de pointe — fibre optique, cloud souverain, eSIM et IoT — nous vous connectons au monde avec performance, sécurité et simplicité.",
-        "Nos experts conçoivent des solutions sur mesure pour accélérer votre transformation numérique et soutenir durablement votre croissance."
-      ],
-      image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+      title: "La connectivité intelligente au service de vos ambitions",
+      subtitle: "Ensemble, façonnons l'avenir digital de votre entreprise",
+      description: "Grâce à nos technologies de pointe — fibre optique, cloud souverain, eSIM et IoT — nous vous connectons au monde avec performance, sécurité et simplicité.",
+      image: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1600&q=80",
+      imageType: "single"
     },
-    //   description: "Notre équipe de spécialistes vous accompagne à chaque étape. Conseil personnalisé, formation et support technique pour maximiser votre réussite.",
-    //   image: "https://www.lemoci.com/wp-content/uploads/2022/03/Entreprise-africaine-julief514-iStock.jpg",
-    //   stats: "15+ Années d'expérience"
-    // }
+    {
+      title: "Nos solutions complètes pour votre réussite",
+      subtitle: "De la connectivité au cloud, tout pour votre entreprise",
+      description: "Découvrez notre gamme complète de services professionnels : connectivité fibre, solutions cloud, eSIM international, et infrastructure IoT adaptés à vos besoins.",
+      images: [
+        "https://images.unsplash.com/photo-1573164713988-8665fc963095?w=800&q=80",
+        "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80",
+        "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80",
+        "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=800&q=80"
+      ],
+      imageType: "collage"
+    },
+    {
+      title: "Restez connecté partout dans le monde",
+      subtitle: "L'eSIM nouvelle génération pour vos voyages",
+      description: "Voyagez sans frontières avec notre eSIM internationale. Activation instantanée, couverture mondiale, et tarifs transparents pour rester connecté où que vous soyez.",
+      image: "/src/assets/images/slide1.png",
+      imageType: "single"
+    }
   ];
 
   const services = [
@@ -162,97 +175,153 @@ Cordialement,`);
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
       {/* Hero Section avec Slider */}
-      <section ref={heroRef} className="relative h-screen flex items-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-waw-dark/95 to-waw-dark/70 z-10" />
+      <section ref={heroRef} className="relative min-h-screen pt-32 pb-20 flex items-center overflow-hidden bg-gradient-to-br from-gray-50 via-white to-blue-50">
 
-        {/* Background Slider */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentSlide}
-            initial={{ scale: 1.1, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
-            transition={{ duration: 1 }}
-            className="absolute inset-0"
-          >
-            <img
-              src={heroSlides[currentSlide].image}
-              alt={heroSlides[currentSlide].title}
-              className="w-full h-full object-cover"
-            />
-          </motion.div>
-        </AnimatePresence>
-
-        <div className="container-custom relative z-20">
-          <div className="grid gap-12 items-center">
-            {/* Contenu Texte */}
+        <div className="container-custom relative z-10">
+          <AnimatePresence mode="wait">
             <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={heroInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.8 }}
-              className="text-white text-center w-full max-w-5xl mx-auto lg:max-w-none"
+              key={currentSlide}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.6 }}
+              className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center"
             >
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentSlide}
+              {/* Contenu Texte - Gauche */}
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="space-y-6"
+              >
+                <div>
+                  <motion.h1
+                    className="text-5xl lg:text-6xl xl:text-7xl font-display font-bold mb-4 leading-tight text-waw-dark"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.3 }}
+                  >
+                    {heroSlides[currentSlide].title}
+                  </motion.h1>
+                  <motion.h2
+                    className="text-2xl lg:text-3xl font-light text-gray-600 mb-6"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.4 }}
+                  >
+                    {heroSlides[currentSlide].subtitle}
+                  </motion.h2>
+                </div>
+
+                <motion.p
+                  className="text-lg lg:text-xl leading-relaxed text-gray-700"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.6 }}
+                  transition={{ duration: 0.6, delay: 0.5 }}
                 >
-                  <h2 className="text-5xl lg:text-7xl font-display font-bold mb-6 leading-tight">
-                    {heroSlides[currentSlide].title}
-                  </h2>
-                  <h3 className="text-2xl lg:text-3xl font-light text-waw-yellow mb-6">
-                    {heroSlides[currentSlide].subtitle}
-                  </h3>
-                  <div className="text-lg md:text-xl leading-relaxed mb-8 text-gray-200 max-w-4xl mx-auto text-justify">
-                    {heroSlides[currentSlide].description.map((line, index) => (
-                      <span key={index} className={`block ${index < heroSlides[currentSlide].description.length - 1 ? 'mb-3' : ''}`}>
-                        {line}
-                      </span>
-                    ))}
-                  </div>
+                  {heroSlides[currentSlide].description}
+                </motion.p>
 
-                  {/* Statistique en vedette */}
-                  {/* <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 mb-8 inline-block">
-                    <div className="text-3xl font-bold text-waw-yellow">
-                      {heroSlides[currentSlide].stats}
-                    </div>
-                  </div> */}
+                {/* Boutons d'action */}
+                <motion.div
+                  className="flex flex-col sm:flex-row gap-4 pt-4"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.6 }}
+                >
+                  <motion.button
+                    onClick={() => onNavigate('contact')}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="bg-waw-yellow hover:bg-yellow-400 text-waw-dark px-8 py-4 rounded-xl font-semibold text-lg flex items-center justify-center space-x-2 transition-all shadow-lg hover:shadow-xl"
+                  >
+                    <Smartphone size={20} />
+                    <span>Nous contacter</span>
+                  </motion.button>
+                  <motion.button
+                    onClick={openConsultationModal}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="border-2 border-waw-dark hover:bg-waw-dark text-waw-dark hover:text-white px-8 py-4 rounded-xl font-semibold text-lg flex items-center justify-center space-x-2 transition-all"
+                  >
+                    <MessageCircle size={20} />
+                    <span>Consultation gratuite</span>
+                  </motion.button>
                 </motion.div>
-              </AnimatePresence>
+              </motion.div>
 
-              {/* Boutons d'action */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <motion.button
-                  onClick={() => onNavigate('contact')}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="border-2 border-white/30 hover:border-waw-yellow text-white hover:text-waw-yellow px-8 py-4 rounded-2xl font-semibold text-lg flex items-center justify-center space-x-2 transition-all backdrop-blur-sm"
-                >
-                  <Smartphone size={20} />
-                  <span>Nous contacter</span>
-                </motion.button>
-              </div>
+              {/* Images - Droite */}
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="relative"
+              >
+                {heroSlides[currentSlide].imageType === 'single' ? (
+                  /* Image unique */
+                  <motion.div
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.6, delay: 0.4 }}
+                    className="relative rounded-3xl overflow-hidden shadow-2xl"
+                  >
+                    <img
+                      src={heroSlides[currentSlide].image}
+                      alt={heroSlides[currentSlide].title}
+                      className="w-full h-[500px] lg:h-[600px] object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-waw-dark/20 to-transparent" />
+                  </motion.div>
+                ) : (
+                  /* Collage d'images */
+                  <motion.div
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.6, delay: 0.4 }}
+                    className="grid grid-cols-2 gap-4"
+                  >
+                    {heroSlides[currentSlide].images?.map((img: string, idx: number) => (
+                      <motion.div
+                        key={idx}
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.4, delay: 0.5 + idx * 0.1 }}
+                        className={`relative rounded-2xl overflow-hidden shadow-xl ${
+                          idx === 0 ? 'col-span-2 h-[280px]' : 'h-[240px]'
+                        }`}
+                      >
+                        <img
+                          src={img}
+                          alt={`Service ${idx + 1}`}
+                          className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-waw-dark/30 to-transparent" />
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                )}
+              </motion.div>
             </motion.div>
+          </AnimatePresence>
 
-            {/* Indicateurs de slide */}
-            <div className="lg:flex lg:justify-center lg:items-center hidden">
-              <div className="flex flex-col space-y-4">
-                {heroSlides.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentSlide(index)}
-                    className={`w-16 h-1 rounded-full transition-all ${
-                      index === currentSlide ? 'bg-waw-yellow' : 'bg-white/30'
-                    }`}
-                  />
-                ))}
-              </div>
-            </div>
+          {/* Indicateurs de slide */}
+          <div className="flex justify-center items-center mt-12 space-x-3">
+            {heroSlides.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentSlide(index)}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  index === currentSlide ? 'bg-waw-yellow w-12' : 'bg-gray-300 w-8'
+                }`}
+                aria-label={`Slide ${index + 1}`}
+              />
+            ))}
           </div>
         </div>
+
+        {/* Décorations subtiles */}
+        <div className="absolute top-40 right-10 w-72 h-72 bg-waw-yellow/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-40 left-10 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
       </section>
 
       {/* Section Pourquoi choisir WAW ? */}
