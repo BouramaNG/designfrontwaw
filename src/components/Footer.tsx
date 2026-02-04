@@ -249,7 +249,7 @@ const Footer = ({ onNavigate }: FooterProps) => {
                   level="H"
                   includeMargin={true}
                 />
-                <p className="mt-2 text-sm text-waw-yellow">Téléchargez notre application</p>
+                <p className="mt-2 text-sm text-waw-yellow">Téléchargez notre application eSIM</p>
               </motion.div>
             </div>
           </div>

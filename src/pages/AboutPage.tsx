@@ -4,6 +4,11 @@ import { useState } from 'react';
 import jsPDF from 'jspdf';
 import VisionCommerciale from '../components/VisionCommerciale';
 import NosInfrastructures from '../components/NosInfrastructures';
+import coachingImg from '../assets/images/coaching.png';
+import supportnocImg from '../assets/images/supportnoc.png';
+import technicienImg from '../assets/images/technicien.png';
+import ingenieursImg from '../assets/images/ingenieurs .png';
+import images4Img from '../assets/images/Images4.png';
 import {
   Users,
   Rocket,
@@ -127,7 +132,7 @@ const AboutPage = ({ onNavigate }: AboutPageProps) => {
     {
       year: '2025',
       title: 'Leader Tech',
-      description: 'Position de leader dans l\'innovation télécom avec plus de 500 entreprises clientes',
+      description: 'Position de leader dans l\'innovation télécom avec plus de 100 entreprises clientes',
       icon: Award,
       image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=500&h=300&fit=crop'
     }
@@ -165,14 +170,14 @@ const AboutPage = ({ onNavigate }: AboutPageProps) => {
     }
   ];
 
-  // Témoignages clients (mockés mais réalistes)
+  // Témoignages clients
   const testimonials = [
     {
       id: 1,
       name: 'Amadou Diallo',
       position: 'Directeur IT',
       company: 'Banque Atlantique Sénégal',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
+      image: 'https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?w=150&h=150&fit=crop&crop=face',
       content: 'WAW TELECOM a transformé notre infrastructure IT. Depuis l\'installation de leur solution fibre, nos opérations bancaires sont 3x plus rapides. Un partenaire de confiance.',
       rating: 5,
       service: 'Connectivité Entreprise'
@@ -182,7 +187,7 @@ const AboutPage = ({ onNavigate }: AboutPageProps) => {
       name: 'Fatou Mbaye',
       position: 'CEO',
       company: 'Digital Innovation Hub',
-      image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
+      image: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=150&h=150&fit=crop&crop=face',
       content: 'Grâce à leurs solutions cloud, nous avons pu déployer notre startup tech rapidement. Le support 24/7 est exceptionnel, même pendant nos pics d\'activité.',
       rating: 5,
       service: 'Solutions Cloud'
@@ -192,8 +197,8 @@ const AboutPage = ({ onNavigate }: AboutPageProps) => {
       name: 'Moussa Kane',
       position: 'Responsable Voyage',
       company: 'Sénégal Tours International',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-      content: 'Les eSIM WAW nous ont révolutionné ! Nos clients voyagent maintenant connectés dans 200+ pays. Commande en 2 minutes, activation instantanée.',
+      image: 'https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?w=150&h=150&fit=crop&crop=face',
+      content: 'Les eSIM WAW nous ont révolutionné ! Nos clients voyagent maintenant connectés partout dans le monde. Commande en 2 minutes, activation instantanée.',
       rating: 5,
       service: 'eSIM Travel'
     },
@@ -202,7 +207,7 @@ const AboutPage = ({ onNavigate }: AboutPageProps) => {
       name: 'Dr. Aïssatou Sow',
       position: 'Directrice Médicale',
       company: 'Hôpital Principal de Dakar',
-      image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=150&h=150&fit=crop&crop=face',
+      image: 'https://images.unsplash.com/photo-1589156280159-27698a70f29e?w=150&h=150&fit=crop&crop=face',
       content: 'L\'installation fibre de WAW a permis de connecter tous nos services médicaux. Les téléconsultations et le partage de données se font maintenant en temps réel.',
       rating: 5,
       service: 'Infrastructure Santé'
@@ -268,8 +273,8 @@ const AboutPage = ({ onNavigate }: AboutPageProps) => {
   ];
 
   const stats = [
-    { icon: Building, value: '500+', label: 'Entreprises clientes' },
-    { icon: Users, value: '50K+', label: 'Utilisateurs connectés' },
+    { icon: Building, value: '100+', label: 'Entreprises clientes' },
+    { icon: Users, value: '100+', label: 'Utilisateurs connectés' },
     { icon: Globe, value: '99.9%', label: 'Disponibilité réseau' },
     { icon: Award, value: '10', label: 'Années d\'expertise' }
   ];
@@ -486,94 +491,282 @@ Cordialement,`);
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-waw-dark via-gray-900 to-black text-white pt-32">
-        {/* Background Elements */}
-        <div className="absolute inset-0">
+      {/* Hero Section - Light & Modern with 3D Image Collage */}
+      <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-white via-gray-50 to-amber-50/30 pt-32 pb-20">
+        {/* Decorative Background */}
+        <div className="absolute inset-0 overflow-hidden">
           <motion.div
-            animate={{
-              rotate: 360,
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              duration: 25,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: 'linear',
-            }}
-            className="absolute top-20 right-20 w-96 h-96 bg-gradient-to-r from-waw-yellow/10 to-waw-yellow-dark/10 rounded-full blur-3xl"
+            animate={{ scale: [1, 1.15, 1], opacity: [0.25, 0.4, 0.25] }}
+            transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut' }}
+            className="absolute -top-32 -right-32 w-[550px] h-[550px] bg-gradient-to-br from-waw-yellow/15 to-amber-200/15 rounded-full blur-3xl"
           />
-
           <motion.div
-            animate={{
-              rotate: -360,
-              scale: [1, 0.8, 1],
-            }}
-            transition={{
-              duration: 30,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: 'linear',
-            }}
-            className="absolute bottom-20 left-20 w-80 h-80 bg-gradient-to-r from-waw-yellow/5 to-white/5 rounded-full blur-3xl"
+            animate={{ scale: [1, 1.1, 1], opacity: [0.15, 0.3, 0.15] }}
+            transition={{ duration: 12, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut', delay: 3 }}
+            className="absolute -bottom-40 -left-40 w-[450px] h-[450px] bg-gradient-to-tr from-amber-100/25 to-yellow-50/15 rounded-full blur-3xl"
           />
-
-          {/* Floating Icons */}
+          {/* Subtle dot grid */}
+          <div className="absolute inset-0 opacity-[0.025]" style={{
+            backgroundImage: 'radial-gradient(circle, #1a1a2e 1px, transparent 1px)',
+            backgroundSize: '36px 36px'
+          }} />
+          {/* Floating subtle bubbles */}
           {[
-            { icon: Globe, position: 'top-40 left-20', delay: 0 },
-            { icon: Zap, position: 'top-60 right-40', delay: 1 },
-            { icon: Shield, position: 'bottom-60 left-40', delay: 2 },
-            { icon: Building, position: 'bottom-40 right-20', delay: 0.5 },
-          ].map((item, index) => (
+            { size: 'w-3 h-3', pos: 'top-[18%] left-[8%]', delay: 0, dur: 7 },
+            { size: 'w-2 h-2', pos: 'top-[35%] right-[12%]', delay: 1.5, dur: 5.5 },
+            { size: 'w-4 h-4', pos: 'bottom-[22%] left-[15%]', delay: 2, dur: 6.5 },
+            { size: 'w-2 h-2', pos: 'top-[55%] right-[30%]', delay: 0.8, dur: 8 },
+            { size: 'w-3 h-3', pos: 'bottom-[35%] right-[8%]', delay: 3, dur: 6 },
+          ].map((b, i) => (
             <motion.div
-              key={index}
-              className={`absolute ${item.position} hidden lg:block`}
-              animate={{
-                y: [-10, 10, -10],
-                rotate: [0, 180, 360],
-              }}
-              transition={{
-                duration: 4 + item.delay,
-                repeat: Number.POSITIVE_INFINITY,
-                ease: 'easeInOut',
-                delay: item.delay,
-              }}
-            >
-              <div className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-xl shadow-lg flex items-center justify-center">
-                <item.icon size={24} className="text-waw-yellow" />
-              </div>
-            </motion.div>
+              key={`dot-${i}`}
+              className={`absolute ${b.pos} ${b.size} rounded-full bg-waw-yellow/15 hidden lg:block`}
+              animate={{ y: [-12, 12, -12], opacity: [0.2, 0.5, 0.2] }}
+              transition={{ duration: b.dur, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut', delay: b.delay }}
+            />
           ))}
         </div>
 
         <div className="container-custom relative z-10">
-          <motion.div
-            ref={heroRef}
-            variants={containerVariants}
-            initial="hidden"
-            animate={heroInView ? 'visible' : 'hidden'}
-            className="text-center max-w-5xl mx-auto"
-          >
-            <motion.div variants={itemVariants} className="space-y-8">
-              <h1 className="text-5xl lg:text-7xl font-display font-bold leading-tight">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            {/* Left Side - Text Content */}
+            <motion.div
+              ref={heroRef}
+              variants={containerVariants}
+              initial="hidden"
+              animate={heroInView ? 'visible' : 'hidden'}
+              className="space-y-7"
+            >
+              {/* Badge */}
+              <motion.div variants={itemVariants}>
+                <motion.span
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={heroInView ? { scale: 1, opacity: 1 } : {}}
+                  transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-waw-yellow/10 border border-waw-yellow/20 rounded-full text-sm font-semibold text-waw-dark"
+                >
+                  <Award size={14} className="text-waw-yellow" />
+                  Notre Histoire
+                </motion.span>
+              </motion.div>
+
+              {/* Title */}
+              <motion.h1
+                variants={itemVariants}
+                className="text-4xl lg:text-5xl xl:text-6xl font-display font-bold leading-tight text-waw-dark"
+              >
                 10 ans d'innovation{' '}
-                <span className="bg-gradient-to-r from-waw-yellow to-waw-yellow-dark bg-clip-text text-transparent">
-                  télécoms
+                <span className="relative inline-block">
+                  <span className="gradient-text">télécoms</span>
+                  <motion.span
+                    initial={{ width: 0 }}
+                    animate={heroInView ? { width: '100%' } : {}}
+                    transition={{ delay: 1.2, duration: 0.8 }}
+                    className="absolute bottom-1 left-0 h-1 bg-waw-yellow/30 rounded-full"
+                  />
                 </span>
-              </h1>
+              </motion.h1>
 
-              <p className="text-xl lg:text-2xl text-gray-300 leading-relaxed max-w-4xl mx-auto">
-              Depuis 2016, WAW TELECOM redéfinit les standards des télécommunications au Sénégal. Née de l'ambition de rendre la connectivité haut débit accessible, performante et locale, notre entreprise a su évoluer en combinant innovation technologique, ancrage régional et exigence de qualité.
-              </p>
-              <p className="text-xl lg:text-2xl text-gray-300 leading-relaxed max-w-4xl mx-auto">
-                Aujourd'hui, WAW accompagne les entreprises, institutions et opérateurs vers l'avenir numérique.
-              </p>
-              <p className="text-xl lg:text-2xl text-gray-300 leading-relaxed max-w-4xl mx-auto">
-              Un ADN local, une vision panafricaine.
-              </p>
+              {/* Description */}
+              <motion.div variants={itemVariants} className="space-y-4">
+                <p className="text-lg text-gray-600 leading-relaxed">
+                  Depuis 2016, WAW TELECOM redéfinit les standards des télécommunications au Sénégal. Innovation technologique, ancrage régional et exigence de qualité.
+                </p>
+                <p className="text-base text-gray-500 leading-relaxed">
+                  Aujourd'hui, WAW accompagne les entreprises, institutions et opérateurs vers l'avenir numérique.
+                  <span className="block mt-2 font-semibold text-waw-dark">Un ADN local, une vision panafricaine.</span>
+                </p>
+              </motion.div>
 
-              <div className="pt-8 pb-16" />
+              {/* Stats Counters */}
+              <motion.div
+                variants={itemVariants}
+                className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4"
+              >
+                {stats.map((stat, index) => (
+                  <motion.div
+                    key={stat.label}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={heroInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ delay: 1 + index * 0.12 }}
+                    className="text-center"
+                  >
+                    <div className="w-10 h-10 mx-auto mb-2 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center">
+                      <stat.icon size={18} className="text-waw-yellow" />
+                    </div>
+                    <p className="text-2xl font-black text-waw-dark leading-none">{stat.value}</p>
+                    <p className="text-[11px] text-gray-400 mt-1 font-medium">{stat.label}</p>
+                  </motion.div>
+                ))}
+              </motion.div>
             </motion.div>
 
-          </motion.div>
+            {/* Right Side - 3D Image Collage */}
+            <motion.div
+              initial={{ opacity: 0, x: 80 }}
+              animate={heroInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 1, delay: 0.5 }}
+              className="relative hidden lg:block"
+            >
+              <div className="relative h-[560px]" style={{ perspective: '1200px' }}>
+
+                {/* Image 1 - Top Left - Coaching */}
+                <motion.div
+                  animate={{ y: [-6, 8, -6] }}
+                  transition={{ duration: 6, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut' }}
+                  className="absolute top-0 left-0 z-30"
+                  style={{ transform: 'rotateY(-8deg) rotateX(4deg)' }}
+                >
+                  <div className="w-60 h-44 rounded-2xl overflow-hidden shadow-2xl shadow-gray-300/40 border-2 border-white/80 bg-white p-1.5">
+                    <img
+                      src={coachingImg}
+                      alt="Coaching WAW Telecom"
+                      className="w-full h-full object-cover rounded-xl"
+                    />
+                  </div>
+                  {/* Floating label */}
+                  <motion.div
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={heroInView ? { opacity: 1, x: 0 } : {}}
+                    transition={{ delay: 1.5 }}
+                    className="absolute -bottom-3 -left-3 bg-white rounded-lg px-3 py-1.5 shadow-lg border border-gray-100 flex items-center gap-1.5"
+                  >
+                    <Users size={12} className="text-waw-yellow" />
+                    <span className="text-[10px] font-bold text-waw-dark">Notre Équipe</span>
+                  </motion.div>
+                </motion.div>
+
+                {/* Image 2 - Top Right - Support NOC */}
+                <motion.div
+                  animate={{ y: [5, -10, 5] }}
+                  transition={{ duration: 7, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut', delay: 0.8 }}
+                  className="absolute top-8 right-0 z-20"
+                  style={{ transform: 'rotateY(6deg) rotateX(-3deg)' }}
+                >
+                  <div className="w-52 h-40 rounded-2xl overflow-hidden shadow-2xl shadow-gray-300/40 border-2 border-white/80 bg-white p-1.5">
+                    <img
+                      src={supportnocImg}
+                      alt="Support NOC WAW Telecom"
+                      className="w-full h-full object-cover rounded-xl"
+                    />
+                  </div>
+                  <motion.div
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={heroInView ? { opacity: 1, x: 0 } : {}}
+                    transition={{ delay: 1.7 }}
+                    className="absolute -bottom-3 -right-2 bg-white rounded-lg px-3 py-1.5 shadow-lg border border-gray-100 flex items-center gap-1.5"
+                  >
+                    <Wifi size={12} className="text-blue-500" />
+                    <span className="text-[10px] font-bold text-waw-dark">Support NOC</span>
+                  </motion.div>
+                </motion.div>
+
+                {/* Image 3 - Center - Main/Bigger - Technicien */}
+                <motion.div
+                  animate={{ y: [-4, 6, -4] }}
+                  transition={{ duration: 5.5, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut', delay: 0.4 }}
+                  className="absolute top-[155px] left-[60px] z-40"
+                  style={{ transform: 'rotateY(-3deg) rotateX(2deg)' }}
+                >
+                  <div className="w-[270px] h-48 rounded-2xl overflow-hidden shadow-2xl shadow-waw-yellow/15 border-2 border-waw-yellow/20 bg-white p-1.5">
+                    <img
+                      src={technicienImg}
+                      alt="Technicien WAW Telecom"
+                      className="w-full h-full object-cover rounded-xl"
+                    />
+                  </div>
+                  {/* Highlight badge */}
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={heroInView ? { scale: 1 } : {}}
+                    transition={{ delay: 1.8, type: 'spring', stiffness: 200 }}
+                    className="absolute -top-4 -right-4 w-10 h-10 bg-waw-yellow rounded-full flex items-center justify-center shadow-lg shadow-waw-yellow/30"
+                  >
+                    <Star size={16} className="text-waw-dark" />
+                  </motion.div>
+                </motion.div>
+
+                {/* Image 4 - Bottom Left - Ingénieurs */}
+                <motion.div
+                  animate={{ y: [7, -8, 7] }}
+                  transition={{ duration: 6.5, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut', delay: 1.2 }}
+                  className="absolute bottom-[55px] left-0 z-10"
+                  style={{ transform: 'rotateY(-10deg) rotateX(-5deg)' }}
+                >
+                  <div className="w-48 h-36 rounded-2xl overflow-hidden shadow-2xl shadow-gray-300/40 border-2 border-white/80 bg-white p-1.5">
+                    <img
+                      src={ingenieursImg}
+                      alt="Ingénieurs WAW Telecom"
+                      className="w-full h-full object-cover rounded-xl"
+                    />
+                  </div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={heroInView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ delay: 1.9 }}
+                    className="absolute -bottom-3 left-3 bg-white rounded-lg px-3 py-1.5 shadow-lg border border-gray-100 flex items-center gap-1.5"
+                  >
+                    <Rocket size={12} className="text-orange-500" />
+                    <span className="text-[10px] font-bold text-waw-dark">Ingénieurs</span>
+                  </motion.div>
+                </motion.div>
+
+                {/* Image 5 - Bottom Right - Images4 */}
+                <motion.div
+                  animate={{ y: [-5, 10, -5] }}
+                  transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut', delay: 0.6 }}
+                  className="absolute bottom-[15px] right-[10px] z-20"
+                  style={{ transform: 'rotateY(8deg) rotateX(5deg)' }}
+                >
+                  <div className="w-56 h-40 rounded-2xl overflow-hidden shadow-2xl shadow-gray-300/40 border-2 border-white/80 bg-white p-1.5">
+                    <img
+                      src={images4Img}
+                      alt="WAW Telecom"
+                      className="w-full h-full object-cover rounded-xl"
+                    />
+                  </div>
+                  <motion.div
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={heroInView ? { opacity: 1, x: 0 } : {}}
+                    transition={{ delay: 2 }}
+                    className="absolute -bottom-3 -right-2 bg-white rounded-lg px-3 py-1.5 shadow-lg border border-gray-100 flex items-center gap-1.5"
+                  >
+                    <Phone size={12} className="text-emerald-500" />
+                    <span className="text-[10px] font-bold text-waw-dark">WAW Telecom</span>
+                  </motion.div>
+                </motion.div>
+
+                {/* Decorative elements */}
+                <motion.div
+                  animate={{ rotate: [0, 360] }}
+                  transition={{ duration: 45, repeat: Number.POSITIVE_INFINITY, ease: 'linear' }}
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 border border-waw-yellow/8 rounded-full pointer-events-none"
+                />
+                <motion.div
+                  animate={{ rotate: [360, 0] }}
+                  transition={{ duration: 55, repeat: Number.POSITIVE_INFINITY, ease: 'linear' }}
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] border border-dashed border-gray-200/40 rounded-full pointer-events-none"
+                />
+
+                {/* Accent dots */}
+                <motion.div
+                  animate={{ scale: [1, 1.5, 1], opacity: [0.4, 0.8, 0.4] }}
+                  transition={{ duration: 3, repeat: Number.POSITIVE_INFINITY }}
+                  className="absolute top-12 right-20 w-3 h-3 bg-waw-yellow rounded-full"
+                />
+                <motion.div
+                  animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.6, 0.3] }}
+                  transition={{ duration: 4, repeat: Number.POSITIVE_INFINITY, delay: 1.5 }}
+                  className="absolute bottom-16 left-12 w-2 h-2 bg-blue-400 rounded-full"
+                />
+                <motion.div
+                  animate={{ scale: [1, 1.4, 1], opacity: [0.3, 0.7, 0.3] }}
+                  transition={{ duration: 3.5, repeat: Number.POSITIVE_INFINITY, delay: 0.8 }}
+                  className="absolute top-[45%] right-4 w-2 h-2 bg-emerald-400 rounded-full"
+                />
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
@@ -789,8 +982,27 @@ Cordialement,`);
       <NosInfrastructures />
 
       {/* Témoignages Clients */}
-      <section className="section-padding bg-gradient-to-br from-waw-yellow/5 to-waw-yellow-dark/5 relative overflow-hidden">
+      <section className="relative py-24 overflow-hidden bg-gradient-to-br from-white via-gray-50/80 to-amber-50/20">
+        {/* Background */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute inset-0 opacity-[0.025]" style={{
+            backgroundImage: 'radial-gradient(circle, #1a1a2e 1px, transparent 1px)',
+            backgroundSize: '40px 40px'
+          }} />
+          <motion.div
+            animate={{ scale: [1, 1.15, 1], opacity: [0.15, 0.25, 0.15] }}
+            transition={{ duration: 10, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut' }}
+            className="absolute -top-32 left-1/4 w-[500px] h-[500px] bg-gradient-to-br from-waw-yellow/10 to-amber-100/10 rounded-full blur-3xl"
+          />
+          <motion.div
+            animate={{ scale: [1, 1.1, 1], opacity: [0.1, 0.2, 0.1] }}
+            transition={{ duration: 12, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut', delay: 4 }}
+            className="absolute -bottom-32 right-1/4 w-[400px] h-[400px] bg-gradient-to-tl from-amber-100/15 to-transparent rounded-full blur-3xl"
+          />
+        </div>
+
         <div className="container-custom relative z-10">
+          {/* Header */}
           <motion.div
             ref={testimonialsRef}
             variants={containerVariants}
@@ -800,14 +1012,15 @@ Cordialement,`);
           >
             <motion.span
               variants={itemVariants}
-              className="inline-block px-4 py-2 bg-waw-yellow/20 text-waw-dark rounded-full text-sm font-semibold mb-4"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold bg-waw-yellow/10 text-waw-dark border border-waw-yellow/20"
             >
-              💬 Témoignages
+              <MessageCircle size={14} className="text-waw-yellow" />
+              TÉMOIGNAGES
             </motion.span>
 
             <motion.h2
               variants={itemVariants}
-              className="text-4xl lg:text-5xl font-display font-bold text-waw-dark mb-6"
+              className="mt-8 text-4xl lg:text-5xl font-display font-bold text-waw-dark leading-tight"
             >
               Ce que disent nos{' '}
               <span className="gradient-text">clients</span>
@@ -815,57 +1028,67 @@ Cordialement,`);
 
             <motion.p
               variants={itemVariants}
-              className="text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto"
+              className="mt-6 text-lg text-gray-500 leading-relaxed max-w-2xl mx-auto"
             >
               La satisfaction de nos clients est notre plus belle récompense.
-              Découvrez leurs expériences avec WAW TELECOM.
             </motion.p>
           </motion.div>
 
-          {/* Testimonials Grid */}
-          <div className="grid md:grid-cols-2 gap-8">
+          {/* Testimonials - Bento-style Grid */}
+          <div className="grid md:grid-cols-2 gap-6">
             {testimonials.map((testimonial, index) => (
               <motion.div
                 key={testimonial.id}
-                initial={{ opacity: 0, y: 50 }}
-                animate={testimonialsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-                transition={{ delay: 0.3 + index * 0.1 }}
-                whileHover={{ scale: 1.02, y: -5 }}
-                className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-all relative"
+                initial={{ opacity: 0, y: 40 }}
+                animate={testimonialsInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.2 + index * 0.12 }}
+                whileHover={{ y: -4 }}
+                className="group relative rounded-3xl p-8 bg-white border border-gray-100 shadow-sm hover:shadow-xl hover:border-waw-yellow/20 transition-all duration-500"
               >
-                {/* Quote Icon */}
-                <div className="absolute -top-4 -left-4 w-12 h-12 bg-waw-yellow rounded-full flex items-center justify-center shadow-lg">
-                  <Quote size={20} className="text-waw-dark" />
-                </div>
+                {/* Hover glow */}
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-waw-yellow/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                {/* Rating */}
-                <div className="flex items-center space-x-1 mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} size={16} className="text-waw-yellow fill-current" />
-                  ))}
-                </div>
+                <div className="relative z-10">
+                  {/* Top row: Avatar + Info + Rating */}
+                  <div className="flex items-start justify-between mb-6">
+                    <div className="flex items-center gap-4">
+                      <div className="relative">
+                        <img
+                          src={testimonial.image}
+                          alt={testimonial.name}
+                          className="w-14 h-14 rounded-2xl object-cover ring-2 ring-gray-100"
+                        />
+                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-400 rounded-full border-2 border-white" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-waw-dark text-lg">{testimonial.name}</h4>
+                        <p className="text-gray-500 text-sm">{testimonial.position}</p>
+                        <p className="text-waw-yellow text-sm font-medium">{testimonial.company}</p>
+                      </div>
+                    </div>
+                    {/* Stars */}
+                    <div className="flex items-center gap-0.5">
+                      {[...Array(testimonial.rating)].map((_, i) => (
+                        <Star key={i} size={14} className="text-waw-yellow fill-waw-yellow" />
+                      ))}
+                    </div>
+                  </div>
 
-                {/* Content */}
-                <p className="text-gray-700 leading-relaxed mb-6 italic">
-                  "{testimonial.content}"
-                </p>
+                  {/* Quote */}
+                  <div className="relative">
+                    <Quote size={28} className="absolute -top-1 -left-1 text-gray-100" />
+                    <p className="text-gray-600 leading-relaxed pl-6 text-[15px]">
+                      {testimonial.content}
+                    </p>
+                  </div>
 
-                {/* Service Tag */}
-                <div className="inline-block px-3 py-1 bg-waw-yellow/20 text-waw-dark text-sm font-semibold rounded-full mb-4">
-                  {testimonial.service}
-                </div>
-
-                {/* Author */}
-                <div className="flex items-center space-x-4">
-                  <img
-                    src={testimonial.image}
-                    alt={testimonial.name}
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                  <div>
-                    <h4 className="font-bold text-waw-dark">{testimonial.name}</h4>
-                    <p className="text-gray-600 text-sm">{testimonial.position}</p>
-                    <p className="text-waw-yellow text-sm font-semibold">{testimonial.company}</p>
+                  {/* Service Tag */}
+                  <div className="mt-6 flex items-center justify-between">
+                    <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-100 text-xs font-semibold text-gray-600">
+                      <CheckCircle size={12} className="text-waw-yellow" />
+                      {testimonial.service}
+                    </span>
+                    <span className="text-xs text-gray-400">Client vérifié</span>
                   </div>
                 </div>
               </motion.div>
@@ -874,12 +1097,14 @@ Cordialement,`);
 
           {/* Partners Section */}
           <motion.div
-            variants={itemVariants}
+            initial={{ opacity: 0, y: 30 }}
+            animate={testimonialsInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.8 }}
             className="mt-20"
           >
-            <div className="text-center mb-12">
-              <h3 className="text-3xl font-bold text-waw-dark mb-4">Nos partenaires de confiance</h3>
-              <p className="text-gray-600">Nous collaborons avec les leaders technologiques pour vous offrir l'excellence</p>
+            <div className="text-center mb-10">
+              <h3 className="text-2xl font-bold text-waw-dark mb-2">Nos partenaires de confiance</h3>
+              <p className="text-gray-500 text-sm">Nous collaborons avec les leaders technologiques</p>
             </div>
 
             {/* Logos défilants */}
@@ -893,48 +1118,40 @@ Cordialement,`);
                   repeat: Number.POSITIVE_INFINITY,
                   ease: 'linear',
                 }}
-                className="flex space-x-8"
+                className="flex space-x-6"
                 style={{ width: `${200 * partners.length}%` }}
               >
-                {/* Première série de logos */}
-                {partners.map((partner, index) => (
-                  <motion.div
+                {partners.map((partner) => (
+                  <div
                     key={`first-${partner.name}`}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={testimonialsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                    transition={{ delay: 0.8 + index * 0.1 }}
-                    whileHover={{ scale: 1.05, y: -5 }}
-                    className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all flex items-center justify-center flex-shrink-0"
-                    style={{ width: '200px', height: '120px' }}
+                    className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm flex items-center justify-center flex-shrink-0 hover:shadow-md hover:border-waw-yellow/20 transition-all"
+                    style={{ width: '180px', height: '100px' }}
                   >
                     <img
                       src={partner.logo}
                       alt={`Logo ${partner.name}`}
-                      className="max-h-16 max-w-full object-contain filter hover:brightness-110 transition-all"
+                      className="max-h-14 max-w-full object-contain hover:brightness-110 transition-all"
                     />
-                  </motion.div>
+                  </div>
                 ))}
-
-                {/* Deuxième série pour créer l'effet de boucle infinie */}
-                {partners.map((partner, index) => (
-                  <motion.div
+                {partners.map((partner) => (
+                  <div
                     key={`second-${partner.name}`}
-                    whileHover={{ scale: 1.05, y: -5 }}
-                    className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all flex items-center justify-center flex-shrink-0"
-                    style={{ width: '200px', height: '120px' }}
+                    className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm flex items-center justify-center flex-shrink-0 hover:shadow-md hover:border-waw-yellow/20 transition-all"
+                    style={{ width: '180px', height: '100px' }}
                   >
                     <img
                       src={partner.logo}
                       alt={`Logo ${partner.name}`}
-                      className="max-h-16 max-w-full object-contain filter hover:brightness-110 transition-all"
+                      className="max-h-14 max-w-full object-contain hover:brightness-110 transition-all"
                     />
-                  </motion.div>
+                  </div>
                 ))}
               </motion.div>
 
-              {/* Gradient fade sur les côtés */}
-              <div className="absolute left-0 top-0 w-20 h-full bg-gradient-to-r from-white to-transparent z-10" />
-              <div className="absolute right-0 top-0 w-20 h-full bg-gradient-to-l from-white to-transparent z-10" />
+              {/* Gradient fade */}
+              <div className="absolute left-0 top-0 w-24 h-full bg-gradient-to-r from-white to-transparent z-10" />
+              <div className="absolute right-0 top-0 w-24 h-full bg-gradient-to-l from-gray-50 to-transparent z-10" />
             </div>
           </motion.div>
         </div>
@@ -1018,12 +1235,12 @@ Cordialement,`);
                       <Router size={24} className="text-white" />
                     </motion.div>
                     <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg text-sm font-bold whitespace-nowrap shadow-lg">
-                      DAKAR 95% - 850km fibre
+                      DAKAR 70% - 60km fibre
                     </div>
 
                     {/* Tooltip on hover */}
                     <div className="absolute -top-20 left-1/2 transform -translate-x-1/2 bg-black text-white px-3 py-2 rounded-lg text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
-                      Centre économique - 320+ entreprises connectées
+                      Centre économique - 100+ entreprises connectées
                     </div>
                   </div>
                 </motion.div>
@@ -1050,11 +1267,11 @@ Cordialement,`);
                       <Signal size={18} className="text-waw-dark" />
                     </motion.div>
                     <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 bg-waw-yellow text-waw-dark px-3 py-2 rounded-lg text-sm font-bold whitespace-nowrap shadow-lg">
-                      THIÈS 78% - 420km fibre
+                      SALY 50% - 50km fibre
                     </div>
 
                     <div className="absolute -top-20 left-1/2 transform -translate-x-1/2 bg-black text-white px-3 py-2 rounded-lg text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
-                      Hub industriel - 95+ entreprises
+                      Zone touristique - 50+ entreprises
                     </div>
                   </div>
                 </motion.div>
@@ -1071,7 +1288,7 @@ Cordialement,`);
                       <Building size={16} className="text-white" />
                     </div>
                     <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 bg-blue-400 text-white px-3 py-2 rounded-lg text-xs font-bold whitespace-nowrap shadow-lg">
-                      SAINT-LOUIS Q2 2025
+                      DAKAR Q2 2025
                     </div>
 
                     <div className="absolute -top-16 left-1/2 transform -translate-x-1/2 bg-black text-white px-2 py-1 rounded text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
@@ -1165,7 +1382,7 @@ Cordialement,`);
                       transition={{ delay: 0.5 }}
                       className="text-3xl font-bold text-green-600 mb-1"
                     >
-                      +127%
+                      +70%
                     </motion.div>
                     <div className="text-sm text-gray-600">Croissance fibre annuelle</div>
                   </div>
@@ -1176,7 +1393,7 @@ Cordialement,`);
                       transition={{ delay: 0.7 }}
                       className="text-3xl font-bold text-waw-yellow mb-1"
                     >
-                      2,850
+                      50+ km
                     </motion.div>
                     <div className="text-sm text-gray-600">Kilomètres de fibre</div>
                   </div>
@@ -1187,7 +1404,7 @@ Cordialement,`);
                       transition={{ delay: 0.9 }}
                       className="text-3xl font-bold text-blue-600 mb-1"
                     >
-                      450+
+                      100+
                     </motion.div>
                     <div className="text-sm text-gray-600">Entreprises connectées</div>
                   </div>
@@ -1218,39 +1435,16 @@ Cordialement,`);
                   <p className="text-gray-600 mb-4">Centre économique avec infrastructure fibre complète et redondance totale</p>
                   <div className="grid grid-cols-3 gap-4 text-sm bg-gray-50 rounded-lg p-3">
                     <div className="text-center">
-                      <div className="font-bold text-green-600">850+ km</div>
+                      <div className="font-bold text-green-600">50+ km</div>
                       <div className="text-gray-600">Fibre déployée</div>
                     </div>
                     <div className="text-center">
-                      <div className="font-bold text-blue-600">320+</div>
+                      <div className="font-bold text-blue-600">100+</div>
                       <div className="text-gray-600">Entreprises</div>
                     </div>
                     <div className="text-center">
                       <div className="font-bold text-purple-600">45</div>
                       <div className="text-gray-600">Points de présence</div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Thiès */}
-                <div className="bg-white rounded-xl p-5 shadow-lg border border-gray-100">
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="font-bold text-lg text-gray-800">Région de Thiès</h4>
-                    <span className="bg-waw-yellow text-waw-dark px-3 py-1 rounded-full text-sm font-bold">78% EXPANSION</span>
-                  </div>
-                  <p className="text-gray-600 mb-4">Hub industriel en expansion rapide avec infrastructure moderne</p>
-                  <div className="grid grid-cols-3 gap-4 text-sm bg-gray-50 rounded-lg p-3">
-                    <div className="text-center">
-                      <div className="font-bold text-waw-yellow">420+ km</div>
-                      <div className="text-gray-600">Fibre en cours</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="font-bold text-blue-600">95+</div>
-                      <div className="text-gray-600">Entreprises</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="font-bold text-purple-600">12</div>
-                      <div className="text-gray-600">Zones industrielles</div>
                     </div>
                   </div>
                 </div>
@@ -1336,7 +1530,7 @@ Cordialement,`);
               </h2>
 
               <p className="text-xl text-gray-300 leading-relaxed mb-8">
-                Rejoignez les 500+ entreprises qui font confiance à WAW TELECOM
+                Rejoignez les 100+ entreprises qui font confiance à WAW TELECOM
                 pour leur transformation digitale. Nos experts vous accompagnent
                 à chaque étape de votre projet.
               </p>
