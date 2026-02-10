@@ -431,7 +431,7 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               animate={section1InView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: isSafari ? 0.45 : 0.9, delay: isSafari ? 0.1 : 0.2, ease: [0.16, 1, 0.3, 1] }}
               className="relative"
               style={{ perspective: '1200px' }}
             >
@@ -442,7 +442,7 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
                     initial={{ rotateY: 90, opacity: 0, scale: 0.85 }}
                     animate={{ rotateY: 0, opacity: 1, scale: 1 }}
                     exit={{ rotateY: -90, opacity: 0, scale: 0.85 }}
-                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{ duration: isSafari ? 0.35 : 0.8, ease: [0.16, 1, 0.3, 1] }}
                     className="absolute inset-0"
                     style={{ transformStyle: 'preserve-3d', backfaceVisibility: 'hidden' }}
                   >
@@ -508,7 +508,7 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={section2InView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: isSafari ? 0.45 : 0.9, delay: isSafari ? 0.1 : 0.2, ease: [0.16, 1, 0.3, 1] }}
               className="relative order-2 lg:order-1"
               style={{ perspective: '1200px' }}
             >
@@ -519,7 +519,7 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
                     initial={{ rotateX: -90, opacity: 0, scale: 0.9 }}
                     animate={{ rotateX: 0, opacity: 1, scale: 1 }}
                     exit={{ rotateX: 90, opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{ duration: isSafari ? 0.35 : 0.8, ease: [0.16, 1, 0.3, 1] }}
                     className="absolute inset-0"
                     style={{ transformStyle: 'preserve-3d', backfaceVisibility: 'hidden' }}
                   >
@@ -692,7 +692,7 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               animate={section3InView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: isSafari ? 0.45 : 0.9, delay: isSafari ? 0.1 : 0.2, ease: [0.16, 1, 0.3, 1] }}
               className="relative"
               style={{ perspective: '1200px' }}
             >
@@ -703,7 +703,7 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
                     initial={{ scale: 0.6, rotateY: 45, opacity: 0 }}
                     animate={{ scale: 1, rotateY: 0, opacity: 1 }}
                     exit={{ scale: 0.6, rotateY: -45, opacity: 0 }}
-                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    transition={{ duration: isSafari ? 0.35 : 0.8, ease: [0.16, 1, 0.3, 1] }}
                     className="absolute inset-0"
                     style={{ transformStyle: 'preserve-3d', backfaceVisibility: 'hidden' }}
                   >
