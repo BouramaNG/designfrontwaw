@@ -1,5 +1,6 @@
 import { motion, Variants, Transition, easeOut, easeInOut, Easing } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import useDeviceOptimization from '../hooks/useDeviceOptimization';
 import {
   Cpu,
   Wifi,
@@ -75,6 +76,9 @@ const itemVariants: Variants = {
 };
 
 const IoTPage = ({ onNavigate }: IoTPageProps) => {
+  // Optimisation device
+  const { isSafari, isMobile, transitionConfig } = useDeviceOptimization();
+  
   const [heroRef, heroInView] = useInView({
     triggerOnce: true,
     threshold: 0.1,

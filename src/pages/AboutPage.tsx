@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { useState } from 'react';
+import useDeviceOptimization from '../hooks/useDeviceOptimization';
 import jsPDF from 'jspdf';
 import VisionCommerciale from '../components/VisionCommerciale';
 import NosInfrastructures from '../components/NosInfrastructures';
@@ -43,6 +44,9 @@ interface AboutPageProps {
 }
 
 const AboutPage = ({ onNavigate }: AboutPageProps) => {
+  // Optimisation device
+  const { isSafari, isMobile, transitionConfig } = useDeviceOptimization();
+  
   const [heroRef, heroInView] = useInView({
     triggerOnce: true,
     threshold: 0.1,

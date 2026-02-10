@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import useDeviceOptimization from '../hooks/useDeviceOptimization';
 import {
   ArrowLeft,
   Mail,
@@ -22,6 +23,9 @@ interface CheckoutPageProps {
 }
 
 const CheckoutPage = ({ onNavigate, selectedPlan }: CheckoutPageProps) => {
+  // Optimisation device
+  const { isSafari, isMobile, transitionConfig } = useDeviceOptimization();
+  
   const [formData, setFormData] = useState({
     email: '',
     phone: '',

@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import useDeviceOptimization from '../hooks/useDeviceOptimization';
 import {
   Smartphone,
   Globe,
@@ -50,6 +51,9 @@ interface ESimPageProps {
 const heroImages = [esimImg, slide1Img, image4Img];
 
 const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
+  // Optimisation device
+  const { isSafari, isMobile, transitionConfig } = useDeviceOptimization();
+  
   // State for Compatible Devices Modal
   const [modalOpen, setModalOpen] = useState(false);
   // Hero image cycling

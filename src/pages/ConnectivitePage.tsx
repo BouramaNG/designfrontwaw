@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import useDeviceOptimization from '../hooks/useDeviceOptimization';
 import {
   Shield,
   Network,
@@ -58,6 +59,9 @@ function MapClickHandler({ onMapClick }: { onMapClick: (lat: number, lng: number
 
 const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
   const [imgFlip, setImgFlip] = useState(0);
+  
+  // Optimisation device
+  const { isSafari, isMobile, transitionConfig } = useDeviceOptimization();
 
   // Modal state
   const [modalOpen, setModalOpen] = useState(false);

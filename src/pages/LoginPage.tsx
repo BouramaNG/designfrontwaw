@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import useDeviceOptimization from '../hooks/useDeviceOptimization';
 import { 
   Mail, 
   Lock, 
@@ -19,6 +20,9 @@ interface LoginPageProps {
 }
 
 const LoginPage = ({ onNavigate }: LoginPageProps) => {
+  // Optimisation device
+  const { isSafari, isMobile, transitionConfig } = useDeviceOptimization();
+  
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',

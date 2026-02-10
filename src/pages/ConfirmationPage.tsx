@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import useDeviceOptimization from '../hooks/useDeviceOptimization';
 import {
   CheckCircle,
   Check,
@@ -16,6 +17,9 @@ interface ConfirmationPageProps {
 }
 
 const ConfirmationPage = ({ onNavigate }: ConfirmationPageProps) => {
+  // Optimisation device
+  const { isSafari, isMobile, transitionConfig } = useDeviceOptimization();
+  
   return (
     <div className="min-h-screen bg-white">
       {/* Header Navigation */}

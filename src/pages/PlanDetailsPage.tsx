@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { useState, useEffect, useCallback } from 'react';
+import useDeviceOptimization from '../hooks/useDeviceOptimization';
 import {
   ArrowLeft,
   Globe,
@@ -62,6 +63,9 @@ interface PlanDetailsPageProps {
 }
 
 const PlanDetailsPage = ({ onNavigate, navigateToPage, planId }: PlanDetailsPageProps) => {
+  // Optimisation device
+  const { isSafari, isMobile, transitionConfig } = useDeviceOptimization();
+  
   const [heroRef, heroInView] = useInView({
     triggerOnce: true,
     threshold: 0.1,

@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { useState } from 'react';
+import useDeviceOptimization from '../hooks/useDeviceOptimization';
 import {
   Phone,
   Mail,
@@ -49,6 +50,9 @@ interface FormErrors {
 }
 
 const ContactPage = ({ onNavigate }: ContactPageProps) => {
+  // Optimisation device
+  const { isSafari, isMobile, transitionConfig } = useDeviceOptimization();
+  
   const [heroRef, heroInView] = useInView({
     triggerOnce: true,
     threshold: 0.1,

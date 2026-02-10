@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import useDeviceOptimization from '../hooks/useDeviceOptimization';
 import {
   Cloud,
   Server,
@@ -31,6 +32,9 @@ interface CloudPageProps {
 }
 
 const CloudPage = ({ onNavigate }: CloudPageProps) => {
+  // Optimisation device
+  const { isSafari, isMobile, transitionConfig } = useDeviceOptimization();
+  
   const [heroRef, heroInView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
