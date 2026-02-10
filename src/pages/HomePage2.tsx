@@ -73,20 +73,6 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
   const [selectedService, setSelectedService] = useState('');
   const [formStep, setFormStep] = useState(0);
   const [showComingSoon, setShowComingSoon] = useState(false);
-  
-  // Détection mobile pour optimiser les animations
-  const [isMobile, setIsMobile] = useState(false);
-  
-  useEffect(() => {
-    const checkMobile = () => {
-      const isMobileDevice = /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      setIsMobile(isMobileDevice);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
   // Modal devis state
   const [devisModalOpen, setDevisModalOpen] = useState(false);
@@ -294,50 +280,56 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
     checkSafari();
   }, []);
 
-  // Configuration des animations adaptées au device
-  const transitionConfig = {
-    main: isMobile || isSafari
-      ? { duration: 0.25 } // Plus rapide pour Safari/Mobile
-      : { duration: 0.3 },
-    element: isMobile || isSafari
-      ? { duration: 0.2 }
-      : { duration: 0.3 },
-    delay: {
-      small: (isMobile || isSafari) ? 0.02 : 0.05,
-      medium: (isMobile || isSafari) ? 0.05 : 0.1,
-      large: (isMobile || isSafari) ? 0.08 : 0.15,
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
       {/* Hero Section avec Slider */}
-      <section ref={heroRef} className="relative min-h-screen pt-32 pb-20 flex items-center overflow-hidden bg-gradient-to-br from-gray-50 via-white to-blue-50">
+      <section ref={heroRef} className="relative min-h-screen pt-20 md:pt-28 lg:pt-32 pb-12 md:pb-20 flex items-center overflow-hidden bg-gradient-to-br from-gray-50 via-white to-blue-50">
 
         <div className="container-custom relative z-10">
           {isSafari ? (
-            // Version simplifiée sans animations complexes pour Safari
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            // Version simplifiée optimisée pour Safari/WebKit avec GPU acceleration
+            <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center">
               {/* Contenu Texte - Gauche */}
-              <div className="space-y-6">
+              <div className="space-y-6 order-1 lg:order-none safari-slide-content">
                 <div>
-                  <h1 className="text-5xl lg:text-6xl xl:text-7xl font-display font-bold mb-4 leading-tight text-waw-dark transition-opacity duration-300">
+                  <h1
+                    className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold mb-4 leading-tight text-waw-dark"
+                    style={{
+                      willChange: 'auto',
+                      transform: 'translate3d(0, 0, 0)',
+                      WebkitTransform: 'translate3d(0, 0, 0)'
+                    }}
+                  >
                     {heroSlides[currentSlide].title}
                   </h1>
-                  <h2 className="text-2xl lg:text-3xl font-light text-gray-600 mb-6 transition-opacity duration-300">
+                  <h2
+                    className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-light text-gray-600 mb-6"
+                    style={{
+                      willChange: 'auto',
+                      transform: 'translate3d(0, 0, 0)',
+                      WebkitTransform: 'translate3d(0, 0, 0)'
+                    }}
+                  >
                     {heroSlides[currentSlide].subtitle}
                   </h2>
                 </div>
 
-                <p className="text-lg lg:text-xl leading-relaxed text-gray-700 transition-opacity duration-300">
+                <p
+                  className="text-lg lg:text-xl leading-relaxed text-gray-700"
+                  style={{
+                    willChange: 'auto',
+                    transform: 'translate3d(0, 0, 0)',
+                    WebkitTransform: 'translate3d(0, 0, 0)'
+                  }}
+                >
                   {heroSlides[currentSlide].description}
                 </p>
 
-                {/* Boutons d'action */}
-                <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                {/* Boutons d'action - visible seulement sur desktop */}
+                <div className="hidden lg:flex flex-col sm:flex-row gap-4 pt-4">
                   <button
                     onClick={() => setContactModalOpen(true)}
-                    className="group bg-waw-yellow text-waw-dark px-8 py-4 rounded-2xl font-bold text-base flex items-center justify-center gap-2 shadow-[0_8px_30px_rgba(255,221,51,0.25)] hover:shadow-[0_12px_40px_rgba(255,221,51,0.4)] transition-all hover:scale-103 active:scale-97"
+                    className="group bg-waw-yellow text-waw-dark px-6 py-4 md:px-8 md:py-4 min-h-[48px] rounded-2xl font-bold text-base flex items-center justify-center gap-2 shadow-[0_8px_30px_rgba(255,221,51,0.25)] hover:shadow-[0_12px_40px_rgba(255,221,51,0.4)] transition-all hover:scale-103 active:scale-97"
                   >
                     <span>Nous contacter</span>
                     <ArrowRight size={18} />
@@ -345,30 +337,40 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                 </div>
               </div>
 
-              {/* Images - Droite */}
-              <div className="relative">
+              {/* Images - Droite (order-2 sur mobile) */}
+              <div className="relative order-2 lg:order-none safari-fade-content">
                 {heroSlides[currentSlide].imageType === 'single' ? (
-                  <div className="relative rounded-3xl overflow-hidden shadow-2xl">
+                  <div className="relative rounded-2xl md:rounded-3xl overflow-hidden shadow-xl md:shadow-2xl gpu-accelerated">
                     <img
                       src={heroSlides[currentSlide].image}
                       alt={heroSlides[currentSlide].title}
-                      className="w-full h-[500px] lg:h-[600px] object-cover transition-opacity duration-300"
+                      className="w-full h-[300px] sm:h-[400px] lg:h-[600px] object-cover"
+                      style={{
+                        transform: 'translate3d(0, 0, 0)',
+                        WebkitTransform: 'translate3d(0, 0, 0)',
+                        willChange: 'auto'
+                      }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-waw-dark/20 to-transparent" />
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                     {heroSlides[currentSlide].images?.map((img: string, idx: number) => (
                       <div
                         key={idx}
-                        className={`relative rounded-2xl overflow-hidden shadow-xl transition-opacity duration-300 ${
-                          idx === 0 ? 'col-span-2 h-[280px]' : 'h-[240px]'
+                        className={`relative rounded-2xl overflow-hidden shadow-xl gpu-accelerated ${
+                          idx === 0 ? 'sm:col-span-2 h-[200px] sm:h-[240px] md:h-[280px]' : 'h-[180px] sm:h-[200px] md:h-[240px]'
                         }`}
                       >
                         <img
                           src={img}
                           alt={`Service ${idx + 1}`}
-                          className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                          className="w-full h-full object-cover"
+                          style={{
+                            transform: 'translate3d(0, 0, 0)',
+                            WebkitTransform: 'translate3d(0, 0, 0)',
+                            willChange: 'auto'
+                          }}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-waw-dark/30 to-transparent" />
                       </div>
@@ -376,28 +378,50 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                   </div>
                 )}
               </div>
+
+              {/* Bouton CTA - Mobile uniquement (order-3, après les images) */}
+              <div className="flex lg:hidden flex-col sm:flex-row gap-4 order-3 w-full">
+                <button
+                  onClick={() => setContactModalOpen(true)}
+                  className="group bg-waw-yellow text-waw-dark px-6 py-4 min-h-[48px] rounded-2xl font-bold text-base flex items-center justify-center gap-2 shadow-[0_8px_30px_rgba(255,221,51,0.25)] hover:shadow-[0_12px_40px_rgba(255,221,51,0.4)] transition-all active:scale-97"
+                >
+                  <span>Nous contacter</span>
+                  <ArrowRight size={18} />
+                </button>
+              </div>
             </div>
           ) : (
-            // Version avec animations Framer Motion pour les navigateurs rapides
-          <AnimatePresence mode="wait">
+            // Version avec animations Framer Motion optimisées pour desktop
+          <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={currentSlide}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={transitionConfig.main}
-              className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center"
+              transition={{
+                duration: 0.4,
+                ease: [0.4, 0, 0.2, 1]
+              }}
+              className="flex flex-col lg:grid lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center"
+              style={{
+                willChange: 'opacity',
+                transform: 'translate3d(0, 0, 0)'
+              }}
             >
               {/* Contenu Texte - Gauche */}
               <motion.div
-                initial={{ opacity: 0, x: -50 }}
+                initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={transitionConfig.element}
-                className="space-y-6"
+                transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                className="space-y-6 order-1 lg:order-none"
+                style={{
+                  willChange: 'opacity, transform',
+                  transform: 'translate3d(0, 0, 0)'
+                }}
               >
                 <div>
                   <motion.h1
-                    className="text-5xl lg:text-6xl xl:text-7xl font-display font-bold mb-4 leading-tight text-waw-dark"
+                    className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold mb-4 leading-tight text-waw-dark"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: 0.05 }}
@@ -405,7 +429,7 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                     {heroSlides[currentSlide].title}
                   </motion.h1>
                   <motion.h2
-                    className="text-2xl lg:text-3xl font-light text-gray-600 mb-6"
+                    className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-light text-gray-600 mb-6"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: 0.1 }}
@@ -423,9 +447,9 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                   {heroSlides[currentSlide].description}
                 </motion.p>
 
-                {/* Boutons d'action */}
+                {/* Boutons d'action - Desktop uniquement */}
                 <motion.div
-                  className="flex flex-col sm:flex-row gap-4 pt-4"
+                  className="hidden lg:flex flex-col sm:flex-row gap-4 pt-4"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: 0.2 }}
@@ -434,7 +458,7 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                     onClick={() => setContactModalOpen(true)}
                     whileHover={{ scale: 1.03, y: -2 }}
                     whileTap={{ scale: 0.97 }}
-                    className="group bg-waw-yellow text-waw-dark px-8 py-4 rounded-2xl font-bold text-base flex items-center justify-center gap-2 shadow-[0_8px_30px_rgba(255,221,51,0.25)] hover:shadow-[0_12px_40px_rgba(255,221,51,0.4)] transition-all"
+                    className="group bg-waw-yellow text-waw-dark px-6 py-4 md:px-8 md:py-4 min-h-[48px] rounded-2xl font-bold text-base flex items-center justify-center gap-2 shadow-[0_8px_30px_rgba(255,221,51,0.25)] hover:shadow-[0_12px_40px_rgba(255,221,51,0.4)] transition-all"
                   >
                     <span>Nous contacter</span>
                     <motion.div animate={{ x: [0, 4, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
@@ -445,58 +469,99 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                 </motion.div>
               </motion.div>
 
-              {/* Images - Droite */}
+              {/* Images - Droite (order-2 sur mobile) */}
               <motion.div
-                initial={{ opacity: 0, x: 50 }}
+                initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={transitionConfig.element}
-                className="relative"
+                transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                className="relative order-2 lg:order-none"
+                style={{
+                  willChange: 'opacity, transform',
+                  transform: 'translate3d(0, 0, 0)'
+                }}
               >
                 {heroSlides[currentSlide].imageType === 'single' ? (
                   /* Image unique */
                   <motion.div
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
                     transition={{ duration: 0.3, delay: 0.1 }}
-                    className="relative rounded-3xl overflow-hidden shadow-2xl"
+                    className="relative rounded-2xl md:rounded-3xl overflow-hidden shadow-xl md:shadow-2xl"
+                    style={{
+                      willChange: 'opacity',
+                      transform: 'translate3d(0, 0, 0)'
+                    }}
                   >
                     <img
                       src={heroSlides[currentSlide].image}
                       alt={heroSlides[currentSlide].title}
-                      className="w-full h-[500px] lg:h-[600px] object-cover"
-                      style={{ willChange: 'transform' }}
+                      className="w-full h-[300px] sm:h-[400px] lg:h-[600px] object-cover"
+                      style={{
+                        willChange: 'auto',
+                        transform: 'translate3d(0, 0, 0)',
+                        WebkitTransform: 'translate3d(0, 0, 0)'
+                      }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-waw-dark/20 to-transparent" />
                   </motion.div>
                 ) : (
                   /* Collage d'images */
                   <motion.div
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
                     transition={{ duration: 0.3, delay: 0.1 }}
-                    className="grid grid-cols-2 gap-4"
+                    className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4"
+                    style={{
+                      willChange: 'opacity',
+                      transform: 'translate3d(0, 0, 0)'
+                    }}
                   >
                     {heroSlides[currentSlide].images?.map((img: string, idx: number) => (
                       <motion.div
                         key={idx}
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ duration: 0.25, delay: 0.15 + idx * 0.05 }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.2, delay: 0.15 + idx * 0.03 }}
                         className={`relative rounded-2xl overflow-hidden shadow-xl ${
-                          idx === 0 ? 'col-span-2 h-[280px]' : 'h-[240px]'
+                          idx === 0 ? 'sm:col-span-2 h-[200px] sm:h-[240px] md:h-[280px]' : 'h-[180px] sm:h-[200px] md:h-[240px]'
                         }`}
+                        style={{
+                          willChange: 'opacity',
+                          transform: 'translate3d(0, 0, 0)'
+                        }}
                       >
                         <img
                           src={img}
                           alt={`Service ${idx + 1}`}
-                          className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                          style={{ willChange: 'transform' }}
+                          className="w-full h-full object-cover"
+                          style={{
+                            willChange: 'auto',
+                            transform: 'translate3d(0, 0, 0)',
+                            WebkitTransform: 'translate3d(0, 0, 0)'
+                          }}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-waw-dark/30 to-transparent" />
                       </motion.div>
                     ))}
                   </motion.div>
                 )}
+              </motion.div>
+
+              {/* Bouton CTA - Mobile uniquement (order-3, après les images) */}
+              <motion.div
+                className="flex lg:hidden flex-col sm:flex-row gap-4 order-3 w-full"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.3 }}
+              >
+                <motion.button
+                  onClick={() => setContactModalOpen(true)}
+                  whileTap={{ scale: 0.97 }}
+                  className="group bg-waw-yellow text-waw-dark px-6 py-4 min-h-[48px] rounded-2xl font-bold text-base flex items-center justify-center gap-2 shadow-[0_8px_30px_rgba(255,221,51,0.25)] active:shadow-[0_12px_40px_rgba(255,221,51,0.4)] transition-all"
+                >
+                  <span>Nous contacter</span>
+                  <ArrowRight size={18} />
+                </motion.button>
               </motion.div>
             </motion.div>
           </AnimatePresence>
@@ -523,7 +588,7 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
       </section>
 
       {/* Section Pourquoi choisir WAW ? - Bento Grid Ultra Moderne */}
-      <section ref={statsRef} className="py-32 bg-gradient-to-br from-white via-blue-50/30 to-yellow-50/30 relative overflow-hidden">
+      <section ref={statsRef} className="py-16 md:py-24 lg:py-32 bg-gradient-to-br from-white via-blue-50/30 to-yellow-50/30 relative overflow-hidden">
         {/* Décorations de fond */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-r from-waw-yellow/10 to-blue-500/10 rounded-full blur-3xl" />
@@ -536,35 +601,35 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
             initial={{ opacity: 0, y: 30 }}
             animate={statsInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8 }}
-            className="text-center mb-20"
+            className="text-center mb-12 md:mb-16 lg:mb-20"
           >
             <motion.span
               initial={{ scale: 0 }}
               animate={statsInView ? { scale: 1 } : {}}
               transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-              className="inline-block px-6 py-3 bg-waw-yellow/10 text-waw-dark rounded-full text-sm font-semibold mb-6"
+              className="inline-block px-4 py-2 md:px-6 md:py-3 bg-waw-yellow/10 text-waw-dark rounded-full text-xs md:text-sm font-semibold mb-4 md:mb-6"
             >
               ⚡ Pourquoi choisir WAW ?
             </motion.span>
-            <h2 className="text-5xl lg:text-6xl font-display font-bold mb-6 text-waw-dark">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-display font-bold mb-4 md:mb-6 text-waw-dark px-4">
               Pourquoi choisir WAW ?
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base md:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed px-4">
               L'excellence technologique au service de votre entreprise.
             </p>
           </motion.div>
 
           {/* Bento Grid Layout */}
-          <div className="grid lg:grid-cols-2 gap-6 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 max-w-7xl mx-auto px-4">
             {/* Colonne gauche */}
-            <div className="space-y-6">
+            <div className="space-y-4 md:space-y-6">
               {/* Grande carte noire */}
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
                 animate={statsInView ? { opacity: 1, x: 0 } : {}}
                 transition={{ duration: 0.8, delay: 0.2 }}
                 whileHover={{ y: -8, transition: { duration: 0.3 } }}
-                className="group relative bg-gradient-to-br from-waw-dark to-gray-800 rounded-3xl p-8 overflow-hidden lg:max-h-[450px]"
+                className="group relative bg-gradient-to-br from-waw-dark to-gray-800 rounded-2xl md:rounded-3xl p-6 md:p-8 overflow-hidden lg:max-h-[450px]"
               >
               {/* Background animé */}
               <motion.div
@@ -595,10 +660,10 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                   />
                 </motion.div>
 
-                <h3 className="text-3xl font-display font-bold text-white mb-3">
+                <h3 className="text-2xl md:text-3xl font-display font-bold text-white mb-2 md:mb-3">
                   L'efficacité dans la synergie
                 </h3>
-                <p className="text-gray-300 text-base mb-6 leading-relaxed">
+                <p className="text-gray-300 text-sm md:text-base mb-4 md:mb-6 leading-relaxed">
                   Quand tout fonctionne ensemble, tout fonctionne mieux. Nous orchestrons chaque composant de votre infrastructure pour offrir une continuité opérationnelle sans compromis.
                 </p>
 

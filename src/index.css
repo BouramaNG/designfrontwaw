@@ -121,9 +121,51 @@
     background: #E6C300;
   }
 
-  /* Smooth transitions for all elements */
-  * {
-    transition: all 0.3s ease;
+  /* Removed: * { transition: all } - Causes severe performance issues on Safari/WebKit */
+
+  /* Safari-optimized slide animations with GPU acceleration */
+  @keyframes safariSlideIn {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 10px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @keyframes safariFadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .safari-slide-content {
+    animation: safariSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    will-change: opacity, transform;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  .safari-fade-content {
+    animation: safariFadeIn 0.3s ease-out forwards;
+    will-change: opacity;
+    -webkit-font-smoothing: antialiased;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  /* Force GPU acceleration for better performance */
+  .gpu-accelerated {
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
+    will-change: transform, opacity;
   }
 }
 
