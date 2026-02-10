@@ -436,15 +436,13 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
               style={{ perspective: '1200px' }}
             >
               <div className="relative h-[400px] lg:h-[480px]" style={{ transformStyle: 'preserve-3d' }}>
-                <AnimatePresence mode="wait">
+                {isSafari ? (
+                  // Safari: No AnimatePresence to avoid flickering
                   <motion.div
-                    key={`s1-${imgFlip}`}
-                    initial={{ rotateY: 90, opacity: 0, scale: 0.85 }}
-                    animate={{ rotateY: 0, opacity: 1, scale: 1 }}
-                    exit={{ rotateY: -90, opacity: 0, scale: 0.85 }}
-                    transition={{ duration: isSafari ? 0.35 : 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.4 }}
                     className="absolute inset-0"
-                    style={{ transformStyle: 'preserve-3d', backfaceVisibility: 'hidden' }}
                   >
                     <div className="relative rounded-3xl overflow-hidden shadow-[0_25px_80px_rgba(0,0,0,0.15)] h-full">
                       <img
@@ -453,7 +451,7 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
                           : 'https://images.unsplash.com/photo-1563986768609-322da13575f2?w=800&q=80'
                         }
                         alt="Connectivité sécurisée"
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover transition-opacity duration-300"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-waw-dark/40 via-transparent to-transparent" />
 
@@ -471,7 +469,45 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
                       </motion.div>
                     </div>
                   </motion.div>
-                </AnimatePresence>
+                ) : (
+                  // Chrome/Firefox: Full 3D flip animation
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={`s1-${imgFlip}`}
+                      initial={{ rotateY: 90, opacity: 0, scale: 0.85 }}
+                      animate={{ rotateY: 0, opacity: 1, scale: 1 }}
+                      exit={{ rotateY: -90, opacity: 0, scale: 0.85 }}
+                      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                      className="absolute inset-0"
+                      style={{ transformStyle: 'preserve-3d', backfaceVisibility: 'hidden' }}
+                    >
+                      <div className="relative rounded-3xl overflow-hidden shadow-[0_25px_80px_rgba(0,0,0,0.15)] h-full">
+                        <img
+                          src={imgFlip === 0
+                            ? 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80'
+                            : 'https://images.unsplash.com/photo-1563986768609-322da13575f2?w=800&q=80'
+                          }
+                          alt="Connectivité sécurisée"
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-waw-dark/40 via-transparent to-transparent" />
+
+                        <motion.div
+                          animate={{ y: [-4, 4, -4] }}
+                          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                          className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-md rounded-2xl px-5 py-3 shadow-lg"
+                        >
+                          <div className="flex items-center gap-2">
+                            <div className="w-2.5 h-2.5 bg-emerald-400 rounded-full" />
+                            <span className="text-sm font-bold text-waw-dark">
+                              {imgFlip === 0 ? 'Réseau protégé 24/7' : 'Infrastructure sécurisée'}
+                            </span>
+                          </div>
+                        </motion.div>
+                      </div>
+                    </motion.div>
+                  </AnimatePresence>
+                )}
               </div>
 
               {/* Petite carte flottante */}
@@ -513,15 +549,13 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
               style={{ perspective: '1200px' }}
             >
               <div className="relative h-[400px] lg:h-[480px]" style={{ transformStyle: 'preserve-3d' }}>
-                <AnimatePresence mode="wait">
+                {isSafari ? (
+                  // Safari: No AnimatePresence to avoid flickering
                   <motion.div
-                    key={`s2-${imgFlip}`}
-                    initial={{ rotateX: -90, opacity: 0, scale: 0.9 }}
-                    animate={{ rotateX: 0, opacity: 1, scale: 1 }}
-                    exit={{ rotateX: 90, opacity: 0, scale: 0.9 }}
-                    transition={{ duration: isSafari ? 0.35 : 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.4 }}
                     className="absolute inset-0"
-                    style={{ transformStyle: 'preserve-3d', backfaceVisibility: 'hidden' }}
                   >
                     <div className="relative rounded-3xl overflow-hidden shadow-[0_25px_80px_rgba(0,0,0,0.15)] h-full">
                       <img
@@ -530,7 +564,7 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
                           : 'https://images.unsplash.com/photo-1590959651373-a3db0f38a961?w=800&q=80'
                         }
                         alt="Réseau MPLS"
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover transition-opacity duration-300"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-waw-dark/40 via-transparent to-transparent" />
 
@@ -548,7 +582,45 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
                       </motion.div>
                     </div>
                   </motion.div>
-                </AnimatePresence>
+                ) : (
+                  // Chrome/Firefox: Full 3D flip animation
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={`s2-${imgFlip}`}
+                      initial={{ rotateX: -90, opacity: 0, scale: 0.9 }}
+                      animate={{ rotateX: 0, opacity: 1, scale: 1 }}
+                      exit={{ rotateX: 90, opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                      className="absolute inset-0"
+                      style={{ transformStyle: 'preserve-3d', backfaceVisibility: 'hidden' }}
+                    >
+                      <div className="relative rounded-3xl overflow-hidden shadow-[0_25px_80px_rgba(0,0,0,0.15)] h-full">
+                        <img
+                          src={imgFlip === 0
+                            ? 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=800&q=80'
+                            : 'https://images.unsplash.com/photo-1590959651373-a3db0f38a961?w=800&q=80'
+                          }
+                          alt="Réseau MPLS"
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-waw-dark/40 via-transparent to-transparent" />
+
+                        <motion.div
+                          animate={{ y: [-4, 4, -4] }}
+                          transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+                          className="absolute bottom-6 right-6 bg-white/90 backdrop-blur-md rounded-2xl px-5 py-3 shadow-lg"
+                        >
+                          <div className="flex items-center gap-2">
+                            <div className="w-2.5 h-2.5 bg-waw-yellow rounded-full" />
+                            <span className="text-sm font-bold text-waw-dark">
+                              {imgFlip === 0 ? 'Latence <5ms' : 'QoS optimisé'}
+                            </span>
+                          </div>
+                        </motion.div>
+                      </div>
+                    </motion.div>
+                  </AnimatePresence>
+                )}
               </div>
 
               {/* Petite carte flottante */}
@@ -697,15 +769,50 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
               style={{ perspective: '1200px' }}
             >
               <div className="relative h-[400px] lg:h-[480px]" style={{ transformStyle: 'preserve-3d' }}>
-                <AnimatePresence mode="wait">
+                {isSafari ? (
+                  // Safari: No AnimatePresence to avoid flickering
                   <motion.div
-                    key={`s3-${imgFlip}`}
-                    initial={{ scale: 0.6, rotateY: 45, opacity: 0 }}
-                    animate={{ scale: 1, rotateY: 0, opacity: 1 }}
-                    exit={{ scale: 0.6, rotateY: -45, opacity: 0 }}
-                    transition={{ duration: isSafari ? 0.35 : 0.8, ease: [0.16, 1, 0.3, 1] }}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.4 }}
                     className="absolute inset-0"
-                    style={{ transformStyle: 'preserve-3d', backfaceVisibility: 'hidden' }}
+                  >
+                    <div className="relative rounded-3xl overflow-hidden shadow-[0_25px_80px_rgba(0,0,0,0.15)] h-full">
+                      <img
+                        src={imgFlip === 0
+                          ? 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80'
+                          : 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&q=80'
+                        }
+                        alt="SD-WAN réseau"
+                        className="w-full h-full object-cover transition-opacity duration-300"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-waw-dark/40 via-transparent to-transparent" />
+
+                      <motion.div
+                        animate={{ y: [-4, 4, -4] }}
+                        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                        className="absolute bottom-6 left-6 bg-white/90 backdrop-blur-md rounded-2xl px-5 py-3 shadow-lg"
+                      >
+                        <div className="flex items-center gap-2">
+                          <div className="w-2.5 h-2.5 bg-emerald-400 rounded-full" />
+                          <span className="text-sm font-bold text-waw-dark">
+                            {imgFlip === 0 ? 'Routage intelligent' : 'Multi-liens optimisés'}
+                          </span>
+                        </div>
+                      </motion.div>
+                    </div>
+                  </motion.div>
+                ) : (
+                  // Chrome/Firefox: Full 3D flip animation
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={`s3-${imgFlip}`}
+                      initial={{ scale: 0.6, rotateY: 45, opacity: 0 }}
+                      animate={{ scale: 1, rotateY: 0, opacity: 1 }}
+                      exit={{ scale: 0.6, rotateY: -45, opacity: 0 }}
+                      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                      className="absolute inset-0"
+                      style={{ transformStyle: 'preserve-3d', backfaceVisibility: 'hidden' }}
                   >
                     <div className="relative rounded-3xl overflow-hidden shadow-[0_25px_80px_rgba(0,0,0,0.15)] h-full">
                       <img
@@ -732,7 +839,8 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
                       </motion.div>
                     </div>
                   </motion.div>
-                </AnimatePresence>
+                  </AnimatePresence>
+                )}
               </div>
 
               {/* Petite carte flottante */}
