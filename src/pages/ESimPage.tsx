@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import useDeviceOptimization from '../hooks/useDeviceOptimization';
+import useOptimizedTransition from '../hooks/useOptimizedTransition';
 import {
   Smartphone,
   Globe,
@@ -53,6 +54,7 @@ const heroImages = [esimImg, slide1Img, image4Img];
 const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
   // Optimisation device
   const { isSafari, isMobile, transitionConfig } = useDeviceOptimization();
+  const { transitions } = useOptimizedTransition();
   
   // State for Compatible Devices Modal
   const [modalOpen, setModalOpen] = useState(false);
@@ -262,7 +264,7 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3, duration: 0.6 }}
+                transition={{ delay: isSafari ? 0.15 : 0.3, duration: isSafari ? 0.3 : 0.6 }}
                 className="inline-flex items-center gap-2 px-5 py-2.5 bg-waw-yellow/10 border border-waw-yellow/20 rounded-full"
               >
                 <div className="w-2 h-2 bg-waw-yellow rounded-full animate-pulse" />
@@ -307,7 +309,7 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
                     initial={{ rotateY: 90, opacity: 0, scale: 0.9 }}
                     animate={{ rotateY: 0, opacity: 1, scale: 1 }}
                     exit={{ rotateY: -90, opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.8, ease: 'easeInOut' }}
+                    transition={transitions.slow}
                     style={{ transformStyle: 'preserve-3d' }}
                     className="relative"
                   >
