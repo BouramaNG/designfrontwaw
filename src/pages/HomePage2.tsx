@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence, easeOut } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import {
   Globe,
@@ -277,18 +277,35 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
     return () => clearInterval(bgTimer);
   }, [contactBgImages.length]);
   
+  // Détection Safari/WebKit pour optimisations spécifiques
+  const [isSafari, setIsSafari] = useState(false);
+
+  useEffect(() => {
+    const checkSafari = () => {
+      const ua = navigator.userAgent.toLowerCase();
+      // Détection Safari desktop (macOS)
+      const isSafariMac = /safari/i.test(ua) && !/chrome|crios|fxios|edge|opr/i.test(ua) && /macintosh|macintel|macos/i.test(ua);
+      // Détection Safari/WebKit sur iOS
+      const isIosSafari = /iphone|ipad|ipod/i.test(ua) && /webkit/i.test(ua);
+      
+      setIsSafari(isSafariMac || isIosSafari);
+    };
+
+    checkSafari();
+  }, []);
+
   // Configuration des animations adaptées au device
   const transitionConfig = {
-    main: isMobile 
-      ? { duration: 0.25, ease: easeOut }
-      : { duration: 0.3, ease: easeOut },
-    element: isMobile
-      ? { duration: 0.2, ease: easeOut }
-      : { duration: 0.3, ease: easeOut },
+    main: isMobile || isSafari
+      ? { duration: 0.25 } // Plus rapide pour Safari/Mobile
+      : { duration: 0.3 },
+    element: isMobile || isSafari
+      ? { duration: 0.2 }
+      : { duration: 0.3 },
     delay: {
-      small: isMobile ? 0.02 : 0.05,
-      medium: isMobile ? 0.05 : 0.1,
-      large: isMobile ? 0.08 : 0.15,
+      small: (isMobile || isSafari) ? 0.02 : 0.05,
+      medium: (isMobile || isSafari) ? 0.05 : 0.1,
+      large: (isMobile || isSafari) ? 0.08 : 0.15,
     }
   };
 
@@ -298,6 +315,70 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
       <section ref={heroRef} className="relative min-h-screen pt-32 pb-20 flex items-center overflow-hidden bg-gradient-to-br from-gray-50 via-white to-blue-50">
 
         <div className="container-custom relative z-10">
+          {isSafari ? (
+            // Version simplifiée sans animations complexes pour Safari
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+              {/* Contenu Texte - Gauche */}
+              <div className="space-y-6">
+                <div>
+                  <h1 className="text-5xl lg:text-6xl xl:text-7xl font-display font-bold mb-4 leading-tight text-waw-dark transition-opacity duration-300">
+                    {heroSlides[currentSlide].title}
+                  </h1>
+                  <h2 className="text-2xl lg:text-3xl font-light text-gray-600 mb-6 transition-opacity duration-300">
+                    {heroSlides[currentSlide].subtitle}
+                  </h2>
+                </div>
+
+                <p className="text-lg lg:text-xl leading-relaxed text-gray-700 transition-opacity duration-300">
+                  {heroSlides[currentSlide].description}
+                </p>
+
+                {/* Boutons d'action */}
+                <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                  <button
+                    onClick={() => setContactModalOpen(true)}
+                    className="group bg-waw-yellow text-waw-dark px-8 py-4 rounded-2xl font-bold text-base flex items-center justify-center gap-2 shadow-[0_8px_30px_rgba(255,221,51,0.25)] hover:shadow-[0_12px_40px_rgba(255,221,51,0.4)] transition-all hover:scale-103 active:scale-97"
+                  >
+                    <span>Nous contacter</span>
+                    <ArrowRight size={18} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Images - Droite */}
+              <div className="relative">
+                {heroSlides[currentSlide].imageType === 'single' ? (
+                  <div className="relative rounded-3xl overflow-hidden shadow-2xl">
+                    <img
+                      src={heroSlides[currentSlide].image}
+                      alt={heroSlides[currentSlide].title}
+                      className="w-full h-[500px] lg:h-[600px] object-cover transition-opacity duration-300"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-waw-dark/20 to-transparent" />
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 gap-4">
+                    {heroSlides[currentSlide].images?.map((img: string, idx: number) => (
+                      <div
+                        key={idx}
+                        className={`relative rounded-2xl overflow-hidden shadow-xl transition-opacity duration-300 ${
+                          idx === 0 ? 'col-span-2 h-[280px]' : 'h-[240px]'
+                        }`}
+                      >
+                        <img
+                          src={img}
+                          alt={`Service ${idx + 1}`}
+                          className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-waw-dark/30 to-transparent" />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : (
+            // Version avec animations Framer Motion pour les navigateurs rapides
           <AnimatePresence mode="wait">
             <motion.div
               key={currentSlide}
@@ -368,7 +449,7 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
               <motion.div
                 initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, ease: 'easeOut' }}
+                transition={transitionConfig.element}
                 className="relative"
               >
                 {heroSlides[currentSlide].imageType === 'single' ? (
@@ -419,6 +500,7 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
               </motion.div>
             </motion.div>
           </AnimatePresence>
+          )}
 
           {/* Indicateurs de slide */}
           <div className="flex justify-center items-center mt-12 space-x-3">
