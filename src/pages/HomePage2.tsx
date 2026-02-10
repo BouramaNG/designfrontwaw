@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, easeOut } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import {
   Globe,
@@ -73,6 +73,20 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
   const [selectedService, setSelectedService] = useState('');
   const [formStep, setFormStep] = useState(0);
   const [showComingSoon, setShowComingSoon] = useState(false);
+  
+  // Détection mobile pour optimiser les animations
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      const isMobileDevice = /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      setIsMobile(isMobileDevice);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Modal devis state
   const [devisModalOpen, setDevisModalOpen] = useState(false);
@@ -262,6 +276,21 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
     }, 4000);
     return () => clearInterval(bgTimer);
   }, [contactBgImages.length]);
+  
+  // Configuration des animations adaptées au device
+  const transitionConfig = {
+    main: isMobile 
+      ? { duration: 0.25, ease: easeOut }
+      : { duration: 0.3, ease: easeOut },
+    element: isMobile
+      ? { duration: 0.2, ease: easeOut }
+      : { duration: 0.3, ease: easeOut },
+    delay: {
+      small: isMobile ? 0.02 : 0.05,
+      medium: isMobile ? 0.05 : 0.1,
+      large: isMobile ? 0.08 : 0.15,
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
@@ -275,14 +304,14 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.6 }}
+              transition={transitionConfig.main}
               className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center"
             >
               {/* Contenu Texte - Gauche */}
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
+                transition={transitionConfig.element}
                 className="space-y-6"
               >
                 <div>
@@ -290,7 +319,7 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                     className="text-5xl lg:text-6xl xl:text-7xl font-display font-bold mb-4 leading-tight text-waw-dark"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.3 }}
+                    transition={{ duration: 0.3, delay: 0.05 }}
                   >
                     {heroSlides[currentSlide].title}
                   </motion.h1>
@@ -298,7 +327,7 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                     className="text-2xl lg:text-3xl font-light text-gray-600 mb-6"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.4 }}
+                    transition={{ duration: 0.3, delay: 0.1 }}
                   >
                     {heroSlides[currentSlide].subtitle}
                   </motion.h2>
@@ -308,7 +337,7 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                   className="text-lg lg:text-xl leading-relaxed text-gray-700"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.5 }}
+                  transition={{ duration: 0.3, delay: 0.15 }}
                 >
                   {heroSlides[currentSlide].description}
                 </motion.p>
@@ -318,7 +347,7 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                   className="flex flex-col sm:flex-row gap-4 pt-4"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.6 }}
+                  transition={{ duration: 0.3, delay: 0.2 }}
                 >
                   <motion.button
                     onClick={() => setContactModalOpen(true)}
@@ -339,7 +368,7 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
               <motion.div
                 initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
+                transition={{ duration: 0.4, ease: 'easeOut' }}
                 className="relative"
               >
                 {heroSlides[currentSlide].imageType === 'single' ? (
@@ -347,13 +376,14 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                   <motion.div
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.6, delay: 0.4 }}
+                    transition={{ duration: 0.3, delay: 0.1 }}
                     className="relative rounded-3xl overflow-hidden shadow-2xl"
                   >
                     <img
                       src={heroSlides[currentSlide].image}
                       alt={heroSlides[currentSlide].title}
                       className="w-full h-[500px] lg:h-[600px] object-cover"
+                      style={{ willChange: 'transform' }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-waw-dark/20 to-transparent" />
                   </motion.div>
@@ -362,7 +392,7 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                   <motion.div
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.6, delay: 0.4 }}
+                    transition={{ duration: 0.3, delay: 0.1 }}
                     className="grid grid-cols-2 gap-4"
                   >
                     {heroSlides[currentSlide].images?.map((img: string, idx: number) => (
@@ -370,7 +400,7 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                         key={idx}
                         initial={{ scale: 0.8, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
-                        transition={{ duration: 0.4, delay: 0.5 + idx * 0.1 }}
+                        transition={{ duration: 0.25, delay: 0.15 + idx * 0.05 }}
                         className={`relative rounded-2xl overflow-hidden shadow-xl ${
                           idx === 0 ? 'col-span-2 h-[280px]' : 'h-[240px]'
                         }`}
@@ -379,6 +409,7 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                           src={img}
                           alt={`Service ${idx + 1}`}
                           className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                          style={{ willChange: 'transform' }}
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-waw-dark/30 to-transparent" />
                       </motion.div>
