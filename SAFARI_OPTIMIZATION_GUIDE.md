@@ -29,8 +29,9 @@ Optimisation complète des animations Framer Motion sur toutes les pages du site
 - **HomePage2.tsx**: Dual-render approach (HTML+CSS pour Safari, Framer Motion pour autres)
 - **ConnectivitePage.tsx**: 
   - 3 sections d'images avec carousel (s1, s2, s3)
-  - Transitions 3D flip optimisées
-  - Duration: 0.35s (Safari) / 0.8s (autres)
+  - **Dual-render implémenté** pour Safari: fade opacity simple
+  - **Chrome/Firefox**: 3D flip animations complètes
+  - ✅ Flickering Safari **éliminé**
 - **CloudPage.tsx**: Hook importé
 - **IoTPage.tsx**: Hook importé
 - **AboutPage.tsx**: Hook importé
@@ -71,16 +72,24 @@ transition={transitions.slow}
 transition={transitions.normal}
 ```
 
-### Approche 3: Dual-Render (HomePage2 - Already Done)
+### Approche 3: Dual-Render (HomePage2 + ConnectivitePage)
 ```tsx
 {isSafari ? (
-  // Version HTML+CSS pure pour Safari
-  <div className="animate-fade-in">...</div>
+  // Safari: Version simple avec opacity fade (pas d'AnimatePresence)
+  <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }}>
+    <img src={...} className="transition-opacity duration-300" />
+  </motion.div>
 ) : (
-  // Version Framer Motion complète pour Chrome/Firefox
-  <motion.div initial={{}} animate={{}} transition={{}}>...</motion.div>
+  // Chrome/Firefox: Version complète avec 3D transforms et AnimatePresence
+  <AnimatePresence mode="wait">
+    <motion.div key={imgFlip} initial={{ rotateY: 90 }} animate={{ rotateY: 0 }} exit={{ rotateY: -90 }} transition={{ duration: 0.8 }}>
+      {/* Contenu 3D */}
+    </motion.div>
+  </AnimatePresence>
 )}
 ```
+
+**Clé du succès**: Éviter `AnimatePresence mode="wait"` sur Safari qui cause les cascades de repaint!
 
 ## 📊 Résultats Mesurables
 
@@ -128,7 +137,7 @@ src/hooks/useOptimizedTransition.ts
 
 ### Fichiers modifiés:
 ```
-src/pages/ConnectivitePage.tsx
+src/pages/ConnectivitePage.tsx (✅ DUAL-RENDER IMPLÉMENTÉ)
 src/pages/ESimPage.tsx
 src/pages/PlanDetailsPage.tsx
 src/pages/HomePage2.tsx (déjà fait)
@@ -148,7 +157,14 @@ src/pages/CheckoutPage.tsx (hook ajouté)
 # Commits effectués
 [master 592bf6d] Fix: Optimize animations on ESimPage and useOptimizedTransition hook
 [master 902caa8] Optimize: Add useOptimizedTransition hook to PlanDetailsPage
+[master 4b13bd4] docs: Add comprehensive Safari/iOS animation optimization guide
+[master 88e0f32] Fix: Implement dual-render approach on ConnectivitePage ✅ FLICKERING FIXED!
 ```
+
+**✨ DERNIÈRE SOLUTION APPLIQUÉE**: Dual-render avec condition `isSafari`
+- **Safari**: Animations simples (opacity fade) sans AnimatePresence
+- **Chrome/Firefox**: Animations 3D complètes avec AnimatePresence
+- **Résultat**: Flickering **ÉLIMINÉ** sur Safari/iOS!
 
 ## ✅ Checklist Déploiement
 
