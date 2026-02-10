@@ -303,21 +303,20 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
                 className="relative w-full max-w-[500px]"
                 style={{ perspective: '1200px' }}
               >
-                <AnimatePresence mode="wait">
+                {isSafari ? (
+                  // Safari: Simple fade animation without AnimatePresence
                   <motion.div
                     key={imgIndex}
-                    initial={{ rotateY: 90, opacity: 0, scale: 0.9 }}
-                    animate={{ rotateY: 0, opacity: 1, scale: 1 }}
-                    exit={{ rotateY: -90, opacity: 0, scale: 0.9 }}
-                    transition={transitions.slow}
-                    style={{ transformStyle: 'preserve-3d' }}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.4 }}
                     className="relative"
                   >
                     <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-black/50">
                       <img
                         src={heroImages[imgIndex]}
                         alt="eSIM WAW Telecom"
-                        className="w-full h-[400px] sm:h-[480px] object-cover"
+                        className="w-full h-[400px] sm:h-[480px] object-cover transition-opacity duration-300"
                       />
                       {/* Gradient overlay */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
@@ -340,7 +339,47 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
                     {/* Yellow accent border */}
                     <div className="absolute -inset-[2px] rounded-3xl border-2 border-waw-yellow/30 pointer-events-none" />
                   </motion.div>
-                </AnimatePresence>
+                ) : (
+                  // Chrome/Firefox: Full 3D flip animation
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={imgIndex}
+                      initial={{ rotateY: 90, opacity: 0, scale: 0.9 }}
+                      animate={{ rotateY: 0, opacity: 1, scale: 1 }}
+                      exit={{ rotateY: -90, opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.8, ease: 'easeInOut' }}
+                      style={{ transformStyle: 'preserve-3d' }}
+                      className="relative"
+                    >
+                      <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-black/50">
+                        <img
+                          src={heroImages[imgIndex]}
+                          alt="eSIM WAW Telecom"
+                          className="w-full h-[400px] sm:h-[480px] object-cover"
+                        />
+                        {/* Gradient overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+                        {/* Bottom info overlay */}
+                        <div className="absolute bottom-0 left-0 right-0 p-6">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <h4 className="text-white font-bold text-lg">eSIM WAW TELECOM</h4>
+                              <p className="text-gray-300 text-sm">Connectivité mondiale instantanée</p>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                              <span className="text-green-400 text-xs font-medium">Actif</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Yellow accent border */}
+                      <div className="absolute -inset-[2px] rounded-3xl border-2 border-waw-yellow/30 pointer-events-none" />
+                    </motion.div>
+                  </AnimatePresence>
+                )}
 
                 {/* Image dots indicator */}
                 <div className="flex justify-center gap-2 mt-4">
@@ -673,8 +712,9 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
 
             {/* Card active - côté droit */}
             <div className="relative min-h-[320px]">
-              <AnimatePresence mode="wait">
-                {advantages.map((adv, index) => {
+              {isSafari ? (
+                // Safari: Simple fade without AnimatePresence
+                advantages.map((adv, index) => {
                   if (index !== activeAdvantage) return null;
                   const colors = [
                     { gradient: 'from-blue-500 to-blue-600', light: 'bg-blue-50', iconColor: 'text-blue-600', accent: 'border-blue-200' },
@@ -686,10 +726,9 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
                   return (
                     <motion.div
                       key={adv.title}
-                      initial={{ opacity: 0, x: 40, scale: 0.95 }}
-                      animate={{ opacity: 1, x: 0, scale: 1 }}
-                      exit={{ opacity: 0, x: -40, scale: 0.95 }}
-                      transition={{ duration: 0.5, ease: 'easeInOut' }}
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.3 }}
                       className={`bg-white rounded-3xl shadow-xl border-2 ${color.accent} p-8 lg:p-10`}
                     >
                       <div className="flex flex-col h-full">
@@ -729,8 +768,68 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
                       </div>
                     </motion.div>
                   );
-                })}
-              </AnimatePresence>
+                })
+              ) : (
+                // Chrome/Firefox: Full animation with AnimatePresence
+                <AnimatePresence mode="wait">
+                  {advantages.map((adv, index) => {
+                    if (index !== activeAdvantage) return null;
+                    const colors = [
+                      { gradient: 'from-blue-500 to-blue-600', light: 'bg-blue-50', iconColor: 'text-blue-600', accent: 'border-blue-200' },
+                      { gradient: 'from-waw-yellow to-waw-yellow-dark', light: 'bg-waw-yellow/10', iconColor: 'text-waw-yellow-dark', accent: 'border-waw-yellow/30' },
+                      { gradient: 'from-emerald-500 to-emerald-600', light: 'bg-emerald-50', iconColor: 'text-emerald-600', accent: 'border-emerald-200' },
+                      { gradient: 'from-purple-500 to-purple-600', light: 'bg-purple-50', iconColor: 'text-purple-600', accent: 'border-purple-200' },
+                    ];
+                    const color = colors[index];
+                    return (
+                      <motion.div
+                        key={adv.title}
+                        initial={{ opacity: 0, x: 40, scale: 0.95 }}
+                        animate={{ opacity: 1, x: 0, scale: 1 }}
+                        exit={{ opacity: 0, x: -40, scale: 0.95 }}
+                        transition={{ duration: 0.5, ease: 'easeInOut' }}
+                        className={`bg-white rounded-3xl shadow-xl border-2 ${color.accent} p-8 lg:p-10`}
+                      >
+                        <div className="flex flex-col h-full">
+                          {/* Top: step indicator + icon */}
+                          <div className="flex items-center gap-4 mb-6">
+                            <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${color.gradient} flex items-center justify-center shadow-lg`}>
+                              <adv.icon size={28} className="text-white" />
+                            </div>
+                            <div>
+                              <span className="text-xs text-gray-400 uppercase tracking-wider font-medium">Avantage {adv.step}/4</span>
+                              <h3 className="text-xl lg:text-2xl font-bold text-waw-dark">{adv.title}</h3>
+                            </div>
+                          </div>
+
+                          {/* Description */}
+                          <p className="text-gray-600 leading-relaxed text-base lg:text-lg mb-8">
+                            {adv.description}
+                          </p>
+
+                          {/* Visual bottom accent */}
+                          <div className="mt-auto flex items-center gap-3">
+                            <div className={`flex-1 h-1 rounded-full bg-gradient-to-r ${color.gradient} opacity-20`} />
+                            <div className="flex gap-1.5">
+                              {advantages.map((_, i) => (
+                                <div
+                                  key={i}
+                                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                                    i === activeAdvantage
+                                      ? `bg-gradient-to-r ${color.gradient} w-6`
+                                      : 'bg-gray-200'
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                            <div className={`flex-1 h-1 rounded-full bg-gradient-to-r ${color.gradient} opacity-20`} />
+                          </div>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </AnimatePresence>
+              )}
             </div>
           </motion.div>
         </div>
@@ -1653,13 +1752,13 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
                     <div className="h-1 bg-gradient-to-r from-waw-yellow via-waw-yellow-dark to-waw-yellow" />
 
                     <div className="p-8 sm:p-10 lg:p-12">
-                      <AnimatePresence mode="wait">
+                      {isSafari ? (
+                        // Safari: Simple fade animation
                         <motion.div
                           key={activeTestimonial}
-                          initial={{ opacity: 0, x: 40 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          exit={{ opacity: 0, x: -40 }}
-                          transition={{ duration: 0.5, ease: 'easeOut' }}
+                          initial={{ opacity: 0, scale: 0.98 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ duration: 0.3 }}
                         >
                           {/* Quote icon */}
                           <div className="mb-6">
@@ -1697,8 +1796,53 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
                                 </p>
                               </div>
                             </div>
+                        </motion.div>
+                      ) : (
+                        // Chrome/Firefox: Full animation with AnimatePresence
+                        <AnimatePresence mode="wait">
+                          <motion.div
+                            key={activeTestimonial}
+                            initial={{ opacity: 0, x: 40 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -40 }}
+                            transition={{ duration: 0.5, ease: 'easeOut' }}
+                          >
+                            {/* Quote icon */}
+                            <div className="mb-6">
+                              <svg width="40" height="40" viewBox="0 0 40 40" fill="none" className="text-waw-yellow/30">
+                                <path d="M18 20H10C10 15.6 13.6 12 18 12V8C11.4 8 6 13.4 6 20V32H18V20ZM38 20H30C30 15.6 33.6 12 38 12V8C31.4 8 26 13.4 26 20V32H38V20Z" fill="currentColor"/>
+                              </svg>
+                            </div>
 
-                            {/* Stars + destination */}
+                            {/* Testimonial text */}
+                            <p className="text-xl sm:text-2xl text-gray-700 leading-relaxed font-light mb-8">
+                              {testimonials[activeTestimonial].text}
+                            </p>
+
+                            {/* Author info */}
+                            <div className="flex items-center justify-between flex-wrap gap-4">
+                              <div className="flex items-center gap-4">
+                                {/* Avatar with flag */}
+                                <div className="relative">
+                                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-waw-yellow/20 to-waw-yellow/5 flex items-center justify-center text-xl font-bold text-waw-dark">
+                                    {testimonials[activeTestimonial].name.charAt(0)}
+                                  </div>
+                                  <img
+                                    src={testimonials[activeTestimonial].flag}
+                                    alt=""
+                                    className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full border-2 border-white shadow-sm"
+                                  />
+                                </div>
+
+                                <div>
+                                  <p className="font-bold text-waw-dark text-base">
+                                    {testimonials[activeTestimonial].name}
+                                  </p>
+                                  <p className="text-sm text-gray-400">
+                                    {testimonials[activeTestimonial].country}
+                                  </p>
+                                </div>
+                              </div>
                             <div className="flex flex-col items-end gap-1">
                               <div className="flex items-center gap-0.5">
                                 {Array.from({ length: 5 }).map((_, idx) => (
@@ -1717,6 +1861,7 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
                           </div>
                         </motion.div>
                       </AnimatePresence>
+                      )}
                     </div>
                   </div>
                 </motion.div>
