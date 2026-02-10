@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import useDeviceOptimization from '../hooks/useDeviceOptimization';
 import useOptimizedTransition from '../hooks/useOptimizedTransition';
+import '../styles/safari-animations.css';
 import {
   Smartphone,
   Globe,
@@ -304,19 +305,16 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
                 style={{ perspective: '1200px' }}
               >
                 {isSafari ? (
-                  // Safari: Simple fade animation without AnimatePresence
-                  <motion.div
-                    key={imgIndex}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.4 }}
-                    className="relative"
+                  // Safari: Pure CSS fade animation - NO Framer Motion
+                  <div
+                    key={`hero-safari-${imgIndex}`}
+                    className="relative safari-animate-image-fade"
                   >
                     <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-black/50">
                       <img
                         src={heroImages[imgIndex]}
                         alt="eSIM WAW Telecom"
-                        className="w-full h-[400px] sm:h-[480px] object-cover transition-opacity duration-300"
+                        className="w-full h-[400px] sm:h-[480px] object-cover"
                       />
                       {/* Gradient overlay */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
@@ -338,7 +336,7 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
 
                     {/* Yellow accent border */}
                     <div className="absolute -inset-[2px] rounded-3xl border-2 border-waw-yellow/30 pointer-events-none" />
-                  </motion.div>
+                  </div>
                 ) : (
                   // Chrome/Firefox: Full 3D flip animation
                   <AnimatePresence mode="wait">
@@ -1753,12 +1751,10 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
 
                     <div className="p-8 sm:p-10 lg:p-12">
                       {isSafari ? (
-                        // Safari: Simple fade animation
-                        <motion.div
-                          key={activeTestimonial}
-                          initial={{ opacity: 0, scale: 0.98 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ duration: 0.3 }}
+                        // Safari: Pure CSS fade animation - NO Framer Motion
+                        <div
+                          key={`testimonial-safari-${activeTestimonial}`}
+                          className="safari-animate-image-fade"
                         >
                           {/* Quote icon */}
                           <div className="mb-6">
@@ -1796,7 +1792,24 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
                                 </p>
                               </div>
                             </div>
-                        </motion.div>
+
+                            <div className="flex flex-col items-end gap-1">
+                              <div className="flex items-center gap-0.5">
+                                {Array.from({ length: 5 }).map((_, idx) => (
+                                  <Star
+                                    key={idx}
+                                    size={16}
+                                    className={idx < testimonials[activeTestimonial].stars ? 'text-waw-yellow fill-waw-yellow' : 'text-gray-200'}
+                                  />
+                                ))}
+                              </div>
+                              <div className="flex items-center gap-1 text-xs text-gray-400">
+                                <Plane size={10} />
+                                <span>{testimonials[activeTestimonial].destination}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       ) : (
                         // Chrome/Firefox: Full animation with AnimatePresence
                         <AnimatePresence mode="wait">
@@ -1843,24 +1856,25 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
                                   </p>
                                 </div>
                               </div>
-                            <div className="flex flex-col items-end gap-1">
-                              <div className="flex items-center gap-0.5">
-                                {Array.from({ length: 5 }).map((_, idx) => (
-                                  <Star
-                                    key={idx}
-                                    size={16}
-                                    className={idx < testimonials[activeTestimonial].stars ? 'text-waw-yellow fill-waw-yellow' : 'text-gray-200'}
-                                  />
-                                ))}
-                              </div>
-                              <div className="flex items-center gap-1 text-xs text-gray-400">
-                                <Plane size={10} />
-                                <span>{testimonials[activeTestimonial].destination}</span>
+
+                              <div className="flex flex-col items-end gap-1">
+                                <div className="flex items-center gap-0.5">
+                                  {Array.from({ length: 5 }).map((_, idx) => (
+                                    <Star
+                                      key={idx}
+                                      size={16}
+                                      className={idx < testimonials[activeTestimonial].stars ? 'text-waw-yellow fill-waw-yellow' : 'text-gray-200'}
+                                    />
+                                  ))}
+                                </div>
+                                <div className="flex items-center gap-1 text-xs text-gray-400">
+                                  <Plane size={10} />
+                                  <span>{testimonials[activeTestimonial].destination}</span>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </motion.div>
-                      </AnimatePresence>
+                          </motion.div>
+                        </AnimatePresence>
                       )}
                     </div>
                   </div>

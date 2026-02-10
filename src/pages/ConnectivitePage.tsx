@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import useDeviceOptimization from '../hooks/useDeviceOptimization';
+import '../styles/safari-animations.css';
 import {
   Shield,
   Network,
@@ -437,12 +438,10 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
             >
               <div className="relative h-[400px] lg:h-[480px]" style={{ transformStyle: 'preserve-3d' }}>
                 {isSafari ? (
-                  // Safari: No AnimatePresence to avoid flickering
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.4 }}
-                    className="absolute inset-0"
+                  // Safari: Pure CSS fade animation - NO Framer Motion
+                  <div 
+                    key={`s1-safari-${imgFlip}`}
+                    className={`absolute inset-0 ${imgFlip === 0 ? 'safari-animate-image-fade' : 'safari-animate-image-fade'}`}
                   >
                     <div className="relative rounded-3xl overflow-hidden shadow-[0_25px_80px_rgba(0,0,0,0.15)] h-full">
                       <img
@@ -451,7 +450,7 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
                           : 'https://images.unsplash.com/photo-1563986768609-322da13575f2?w=800&q=80'
                         }
                         alt="Connectivité sécurisée"
-                        className="w-full h-full object-cover transition-opacity duration-300"
+                        className="w-full h-full object-cover"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-waw-dark/40 via-transparent to-transparent" />
 
@@ -468,9 +467,9 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
                         </div>
                       </motion.div>
                     </div>
-                  </motion.div>
+                  </div>
                 ) : (
-                  // Chrome/Firefox: Full 3D flip animation
+                  // Chrome/Firefox: Full 3D flip animation with Framer Motion
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={`s1-${imgFlip}`}
@@ -550,12 +549,10 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
             >
               <div className="relative h-[400px] lg:h-[480px]" style={{ transformStyle: 'preserve-3d' }}>
                 {isSafari ? (
-                  // Safari: No AnimatePresence to avoid flickering
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.4 }}
-                    className="absolute inset-0"
+                  // Safari: Pure CSS fade animation - NO Framer Motion
+                  <div 
+                    key={`s2-safari-${imgFlip}`}
+                    className="absolute inset-0 safari-animate-image-fade"
                   >
                     <div className="relative rounded-3xl overflow-hidden shadow-[0_25px_80px_rgba(0,0,0,0.15)] h-full">
                       <img
@@ -564,7 +561,7 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
                           : 'https://images.unsplash.com/photo-1590959651373-a3db0f38a961?w=800&q=80'
                         }
                         alt="Réseau MPLS"
-                        className="w-full h-full object-cover transition-opacity duration-300"
+                        className="w-full h-full object-cover"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-waw-dark/40 via-transparent to-transparent" />
 
@@ -581,9 +578,9 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
                         </div>
                       </motion.div>
                     </div>
-                  </motion.div>
+                  </div>
                 ) : (
-                  // Chrome/Firefox: Full 3D flip animation
+                  // Chrome/Firefox: Full 3D flip animation with Framer Motion
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={`s2-${imgFlip}`}
@@ -770,12 +767,10 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
             >
               <div className="relative h-[400px] lg:h-[480px]" style={{ transformStyle: 'preserve-3d' }}>
                 {isSafari ? (
-                  // Safari: No AnimatePresence to avoid flickering
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.4 }}
-                    className="absolute inset-0"
+                  // Safari: Pure CSS fade animation - NO Framer Motion
+                  <div 
+                    key={`s3-safari-${imgFlip}`}
+                    className="absolute inset-0 safari-animate-image-fade"
                   >
                     <div className="relative rounded-3xl overflow-hidden shadow-[0_25px_80px_rgba(0,0,0,0.15)] h-full">
                       <img
@@ -784,7 +779,7 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
                           : 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&q=80'
                         }
                         alt="SD-WAN réseau"
-                        className="w-full h-full object-cover transition-opacity duration-300"
+                        className="w-full h-full object-cover"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-waw-dark/40 via-transparent to-transparent" />
 
@@ -801,9 +796,9 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
                         </div>
                       </motion.div>
                     </div>
-                  </motion.div>
+                  </div>
                 ) : (
-                  // Chrome/Firefox: Full 3D flip animation
+                  // Chrome/Firefox: Full 3D flip animation with Framer Motion
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={`s3-${imgFlip}`}
