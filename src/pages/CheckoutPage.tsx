@@ -51,13 +51,12 @@ const CheckoutPage = ({ onNavigate, selectedPlan }: CheckoutPageProps) => {
     setError(null);
 
     try {
-      // Préparer les données de commande
+      // Préparer les données de commande (conformes à OrderData)
       const orderData: OrderData = {
-        esim_package_id: (selectedPlan as any).id || 1, // ID du package
+        esim_package_template_id: typeof (selectedPlan as any).id === 'number' ? (selectedPlan as any).id : 1,
         email: formData.email,
-        phone: `${formData.phoneCode}${formData.phone}`,
+        phone_number: `${formData.phoneCode}${formData.phone}`,
         amount: selectedPlan.price,
-        payment_method: 'paytech',
         customer_name: formData.email.split('@')[0],
         country_code: (selectedPlan as any).country_code || selectedPlan.country
       };
