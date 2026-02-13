@@ -6,8 +6,8 @@
 
 import axios, { type AxiosInstance, type AxiosRequestConfig } from 'axios';
 
-// URL de base de l'API
-export const API_BASE_URL = 'https://esimwawtelecom.com/wawapi/api';
+// URL de base de l'API (configurable via .env / Vercel : VITE_API_BASE_URL)
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://esimwawtelecom.com/wawapi/api';
 
 // Instance Axios configurée
 class ApiClient {
