@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Smartphone, Cloud, Network, Globe, Cpu, Clock, Mail, ArrowRight, MessageCircle } from 'lucide-react';
+import { Menu, X, Smartphone, Cloud, Network, Globe, Cpu, Clock, Mail, ArrowRight, MessageCircle, Satellite } from 'lucide-react';
 import type { PageType } from '../App';
 import logoWaw from '../assets/images/Logo Waw officiel.png';
 
@@ -35,6 +35,7 @@ const Header = ({ currentPage, onNavigate }: HeaderProps) => {
     { name: 'Accueil', page: 'home2' as PageType, icon: Globe },
     { name: 'Connectivité', page: 'connectivite' as PageType, icon: Network },
     { name: 'Cloud', page: 'cloud' as PageType, icon: Cloud, comingSoon: true },
+    { name: 'Starlink', page: 'starlink' as PageType, icon: Satellite, comingSoon: true, badge: 'new' as const },
     { name: 'eSIM Travel', page: 'travel' as PageType, icon: Smartphone },
     { name: 'IoT', page: 'iot' as PageType, icon: Cpu, comingSoon: true },
     { name: 'Notre Histoire', page: 'about' as PageType, icon: Clock },
@@ -101,12 +102,17 @@ const Header = ({ currentPage, onNavigate }: HeaderProps) => {
                       className="absolute inset-0 rounded-xl bg-waw-yellow/0 group-hover:bg-waw-yellow/8 transition-colors duration-300"
                     />
 
-                    <span className={`relative z-10 transition-colors duration-300 ${
+                    <span className={`relative z-10 flex items-center gap-2 transition-colors duration-300 ${
                       currentPage === item.page
                         ? 'text-waw-dark'
                         : 'text-gray-500 group-hover:text-waw-dark'
                     }`}>
                       {item.name}
+                      {item.badge === 'new' && (
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-waw-yellow text-waw-dark text-[10px] font-bold uppercase tracking-wide">
+                          New
+                        </span>
+                      )}
                     </span>
 
                     {/* Indicateur page active */}
@@ -118,8 +124,8 @@ const Header = ({ currentPage, onNavigate }: HeaderProps) => {
                       />
                     )}
 
-                    {/* Badge Coming Soon */}
-                    {item.comingSoon && (
+                    {/* Badge Coming Soon (point orange si pas badge new) */}
+                    {item.comingSoon && !item.badge && (
                       <span className="absolute -top-1 -right-1 w-2 h-2 bg-orange-400 rounded-full" />
                     )}
                   </motion.button>
@@ -226,10 +232,15 @@ const Header = ({ currentPage, onNavigate }: HeaderProps) => {
                         <item.icon size={20} />
                       </div>
                       <div className="flex-1 text-left">
-                        <p className={`font-semibold text-sm ${
+                        <p className={`font-semibold text-sm flex items-center gap-2 ${
                           currentPage === item.page ? 'text-waw-dark' : 'text-gray-700'
                         }`}>
                           {item.name}
+                          {item.badge === 'new' && (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-waw-yellow text-waw-dark text-[10px] font-bold uppercase tracking-wide">
+                              New
+                            </span>
+                          )}
                         </p>
                         {item.comingSoon && (
                           <p className="text-[11px] text-orange-400 font-medium">Bientôt disponible</p>

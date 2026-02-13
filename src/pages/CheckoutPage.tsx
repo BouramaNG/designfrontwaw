@@ -11,6 +11,8 @@ import {
   ChevronRight
 } from 'lucide-react';
 import type { PageType } from '../App';
+import { orderService, type OrderData } from '../services/orderService';
+import { INDICATIFS } from '../utils/constants';
 
 interface CheckoutPageProps {
   onNavigate: (page: 'home' | 'home2' | 'connectivite' | 'cloud' | 'travel' | 'iot' | 'about' | 'contact' | 'plan-details' | 'checkout' | 'confirmation') => void;
@@ -32,17 +34,69 @@ const CheckoutPage = ({ onNavigate, selectedPlan }: CheckoutPageProps) => {
     phoneCode: '+221'
   });
 
-  const phoneCodes = [
-    { code: '+221', country: 'Sénégal' },
-    { code: '+237', country: 'Cameroun' },
-    { code: '+229', country: 'Bénin' },
-    { code: '+226', country: 'Burkina Faso' }
-  ];
+  const [processing, setProcessing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const phoneCodes = INDICATIFS.map(ind => ({ code: ind.ind, country: ind.pays }));
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.email && formData.phone) {
-      onNavigate('confirmation');
+
+    if (!formData.email || !formData.phone) {
+      setError('Veuillez remplir tous les champs obligatoires');
+      return;
+    }
+
+    setProcessing(true);
+    setError(null);
+
+    try {
+      // Préparer les données de commande
+      const orderData: OrderData = {
+        esim_package_id: (selectedPlan as any).id || 1, // ID du package
+        email: formData.email,
+        phone: `${formData.phoneCode}${formData.phone}`,
+        amount: selectedPlan.price,
+        payment_method: 'paytech',
+        customer_name: formData.email.split('@')[0],
+        country_code: (selectedPlan as any).country_code || selectedPlan.country
+      };
+
+      console.log('📦 Création commande:', orderData);
+
+      // 1. Créer la commande
+      const orderResponse = await orderService.createOrder(orderData);
+
+      if (!orderResponse.success) {
+        throw new Error(orderResponse.message || 'Erreur lors de la création de la commande');
+      }
+
+      console.log('✅ Commande créée:', orderResponse);
+
+      // 2. Initier le paiement
+      if (orderResponse.order_id) {
+        const paymentResponse = await orderService.initiatePayment(orderResponse.order_id);
+
+        if (!paymentResponse.success) {
+          throw new Error(paymentResponse.message || 'Erreur lors de l\'initiation du paiement');
+        }
+
+        console.log('✅ Paiement initié:', paymentResponse);
+
+        // 3. Rediriger vers PayTech ou page de confirmation
+        if (paymentResponse.payment_url) {
+          console.log('🔄 Redirection vers PayTech:', paymentResponse.payment_url);
+          window.location.href = paymentResponse.payment_url;
+        } else {
+          // Si pas de payment_url, aller directement à la confirmation
+          console.log('✅ Redirection vers confirmation');
+          onNavigate('confirmation');
+        }
+      }
+    } catch (err: any) {
+      console.error('❌ Erreur checkout:', err);
+      setError(err.message || 'Une erreur est survenue lors du paiement');
+      setProcessing(false);
     }
   };
 
@@ -128,12 +182,25 @@ const CheckoutPage = ({ onNavigate, selectedPlan }: CheckoutPageProps) => {
                 </div>
               </div>
 
+              {/* Message d'erreur */}
+              {error && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700 flex items-start gap-2">
+                  <AlertCircle size={20} className="flex-shrink-0 mt-0.5" />
+                  <span>{error}</span>
+                </div>
+              )}
+
               <div className="flex justify-end">
                 <button
                   type="submit"
-                  className="bg-waw-yellow text-waw-dark px-8 py-3 rounded-lg font-semibold hover:bg-waw-yellow-dark transition-colors"
+                  disabled={processing || !formData.email || !formData.phone}
+                  className={`px-8 py-3 rounded-lg font-semibold transition-colors ${
+                    processing || !formData.email || !formData.phone
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      : 'bg-waw-yellow text-waw-dark hover:bg-waw-yellow-dark'
+                  }`}
                 >
-                  Continuer
+                  {processing ? 'Traitement...' : 'Continuer'}
                 </button>
               </div>
             </form>
@@ -174,12 +241,30 @@ const CheckoutPage = ({ onNavigate, selectedPlan }: CheckoutPageProps) => {
 
               <div className="flex justify-center">
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-waw-yellow text-waw-dark px-12 py-4 rounded-xl font-semibold hover:bg-waw-yellow-dark transition-colors"
-                  onClick={() => onNavigate('confirmation')}
+                  whileHover={{ scale: processing ? 1 : 1.05 }}
+                  whileTap={{ scale: processing ? 1 : 0.95 }}
+                  disabled={processing || !formData.email || !formData.phone}
+                  className={`px-12 py-4 rounded-xl font-semibold transition-colors flex items-center gap-3 ${
+                    processing || !formData.email || !formData.phone
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                      : 'bg-waw-yellow text-waw-dark hover:bg-waw-yellow-dark'
+                  }`}
+                  onClick={handleSubmit}
                 >
-                  Valider votre paiement
+                  {processing ? (
+                    <>
+                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      <span>Traitement en cours...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Payer {selectedPlan.price.toLocaleString('fr-FR')} FCFA</span>
+                      <ChevronRight size={20} />
+                    </>
+                  )}
                 </motion.button>
               </div>
             </div>

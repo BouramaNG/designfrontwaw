@@ -24,6 +24,9 @@ import {
   Check
 } from 'lucide-react';
 import type { PageType } from '../App';
+import { esimService } from '../services/esimService';
+import { orderService } from '../services/orderService';
+import { PAYS, INDICATIFS } from '../utils/constants';
 
 interface Network {
   name: string;
@@ -78,20 +81,55 @@ const PlanDetailsPage = ({ onNavigate, navigateToPage, planId }: PlanDetailsPage
     threshold: 0.1,
   });
 
+  // Backend data states
+  const [packages, setPackages] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [countryInfo, setCountryInfo] = useState<any>(null);
+
   // Interactive checkout states
   const [selectedPlanId, setSelectedPlanId] = useState<number | null>(null);
   const [chatEmail, setChatEmail] = useState('');
   const [chatPhone, setChatPhone] = useState('');
-  const [emailSubmitted, setEmailSubmitted] = useState(false);
-  const [phoneSubmitted, setPhoneSubmitted] = useState(false);
-  // Modal flow states
-  const [showEmailModal, setShowEmailModal] = useState(false);
-  const [showPhoneModal, setShowPhoneModal] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [selectedIndicatif, setSelectedIndicatif] = useState('+221');
+  const [processing, setProcessing] = useState(false);
+  // Modal flow states - UNE SEULE MODALE
+  const [showCheckoutModal, setShowCheckoutModal] = useState(false);
+  // Modal "Contactez-nous" - Pas encore de prix définis
+  const [showContactModal, setShowContactModal] = useState(false);
+  // Modal de confirmation de paiement - NOUVEAU
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [confirmAction, setConfirmAction] = useState<(() => Promise<void>) | null>(null);
   // How it works interactive step
   const [activeHowStep, setActiveHowStep] = useState(0);
   const [howStepPaused, setHowStepPaused] = useState(false);
+  // Email & Phone submission tracking
+  const [emailSubmitted, setEmailSubmitted] = useState(false);
+  const [phoneSubmitted, setPhoneSubmitted] = useState(false);
   const STEP_DURATION = 4000;
+
+  // Charger les packages depuis l'API
+  useEffect(() => {
+    const loadPackages = async () => {
+      if (!planId) return;
+
+      setLoading(true);
+      try {
+        const country = PAYS.find(p => p.code === planId);
+        setCountryInfo(country);
+
+        const data = await esimService.getPackagesWithPrice(planId);
+        setPackages(data);
+      } catch (err) {
+        console.error('Erreur chargement packages:', err);
+        setError('Erreur lors du chargement des packages');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadPackages();
+  }, [planId]);
 
   // Auto-cycle how it works steps
   useEffect(() => {
@@ -402,46 +440,112 @@ const PlanDetailsPage = ({ onNavigate, navigateToPage, planId }: PlanDetailsPage
     }
   };
 
-  // Récupérer les détails du plan
-  const planDetails = plansByCountry[getPlanIdFromCountry(planId || 'États-Unis')] || plansByCountry['usa-esim-demo'];
+  // Créer planDetails depuis les vraies données
+  const planDetails = {
+    country: countryInfo?.nom || 'Destination',
+    flag: countryInfo?.drapeau || '',
+    description: `Restez connecté ${countryInfo?.nom ? `en ${countryInfo.nom}` : ''} avec notre eSIM haute performance. Activation instantanée, couverture optimale.`,
+    technicalDetails: {
+      hotspot: 'Illimité',
+      speedLimit: 'Illimitée',
+      validity: '30 jours',
+      activation: 'Instantanée'
+    },
+    plans: packages.map((pkg, idx) => ({
+      id: pkg.id,
+      data: `${(pkg.data_mb / 1024).toFixed(0)}GB`,
+      price: parseFloat(pkg.price),
+      originalPrice: null,
+      popular: idx === 1,
+      description: pkg.name || `Package ${(pkg.data_mb / 1024).toFixed(0)}GB`
+    }))
+  };
 
-  const selectedPlan = planDetails.plans.find(p => p.id === selectedPlanId) || null;
+  const selectedPlan = packages.find(p => p.id === selectedPlanId) || null;
 
-  const canCheckout = emailSubmitted && phoneSubmitted && selectedPlanId;
+  // Vérifier si l'utilisateur peut procéder au paiement
+  const canCheckout = emailSubmitted && phoneSubmitted && selectedPlanId !== null;
 
   const handleSelectPlan = (id: number) => {
     setSelectedPlanId(id);
-    // Ouvrir la modale email
-    setShowEmailModal(true);
-  };
-
-  const handleEmailSubmit = () => {
-    if (chatEmail.trim() && chatEmail.includes('@')) {
-      setEmailSubmitted(true);
-      setShowEmailModal(false);
-      // Petite pause puis ouvrir modale téléphone
-      setTimeout(() => setShowPhoneModal(true), 400);
-    }
-  };
-
-  const handlePhoneSubmit = () => {
-    if (chatPhone.trim().length >= 8) {
-      setPhoneSubmitted(true);
-      setShowPhoneModal(false);
-      // Petite pause puis afficher success
-      setTimeout(() => setShowSuccessModal(true), 400);
-    }
-  };
-
-  const handleSuccessClose = () => {
-    setShowSuccessModal(false);
+    setShowCheckoutModal(true);
   };
 
   const handleChangePlan = (id: number) => {
+    // Même chose que handleSelectPlan - change le plan sélectionné
     setSelectedPlanId(id);
-    // Si l'utilisateur a déjà rempli ses infos, pas besoin de redemander
-    if (!emailSubmitted) {
-      setShowEmailModal(true);
+  };
+
+  const handleCheckoutSubmit = async () => {
+    if (!chatEmail.trim() || !chatEmail.includes('@')) {
+      alert('Veuillez entrer un email valide');
+      return;
+    }
+
+    if (!chatPhone.trim() || chatPhone.length < 8) {
+      alert('Veuillez entrer un numéro de téléphone valide');
+      return;
+    }
+
+    if (!selectedPlan) {
+      alert('Aucun forfait sélectionné');
+      return;
+    }
+
+    setProcessing(true);
+
+    try {
+      const orderData = {
+        esim_package_template_id: selectedPlan.id,  // ← Correct field name
+        email: chatEmail,
+        phone_number: `${selectedIndicatif}${chatPhone}`,  // ← Correct field name
+        amount: selectedPlan.price
+      };
+
+      console.log('📦 Création commande:', orderData);
+      const orderResponse = await orderService.createOrder(orderData);
+
+      if (!orderResponse.success || !orderResponse.order_id) {
+        // Si erreur, afficher le modal contact avec l'erreur
+        console.warn('⚠️ Création commande échouée, affichage modal contact');
+        setShowContactModal(true);
+        setProcessing(false);
+        return;
+      }
+
+      console.log('✅ Commande créée:', orderResponse);
+      
+      // 👉 ÉTAPE 2: Afficher une modale de confirmation élégante
+      const confirmPayment = async () => {
+        setProcessing(true);
+        try {
+          // 👉 ÉTAPE 3: Initier le paiement
+          const paymentResponse = await orderService.initiatePayment(orderResponse.order_id!);
+
+          if (!paymentResponse.success || !paymentResponse.payment_url) {
+            throw new Error(paymentResponse.message || 'Erreur initiation paiement');
+          }
+
+          console.log('✅ Paiement initié, redirection vers:', paymentResponse.payment_url);
+          window.location.href = paymentResponse.payment_url;
+        } catch (err: any) {
+          console.error('❌ Erreur paiement:', err);
+          setShowConfirmModal(false);
+          setShowContactModal(true);
+          setProcessing(false);
+        }
+      };
+
+      // Afficher la modale de confirmation
+      setConfirmAction(() => confirmPayment);
+      setShowConfirmModal(true);
+      setProcessing(false);
+
+    } catch (err: any) {
+      console.error('❌ Erreur checkout:', err);
+      // Afficher le modal contact en cas d'erreur
+      setShowContactModal(true);
+      setProcessing(false);
     }
   };
 
@@ -663,14 +767,15 @@ const PlanDetailsPage = ({ onNavigate, navigateToPage, planId }: PlanDetailsPage
                     <motion.button
                       whileHover={{ scale: 1.03, y: -3 }}
                       whileTap={{ scale: 0.97 }}
-                      onClick={() => navigateToPage('checkout', selectedPlanId!.toString())}
-                      className="w-full sm:w-auto bg-gradient-to-r from-waw-yellow via-yellow-400 to-waw-yellow-dark text-waw-dark px-10 py-4.5 rounded-2xl font-bold text-base inline-flex items-center justify-center gap-3 shadow-xl shadow-waw-yellow/30 hover:shadow-2xl hover:shadow-waw-yellow/40 transition-all relative overflow-hidden group"
+                      onClick={handleCheckoutSubmit}
+                      disabled={processing}
+                      className="w-full sm:w-auto bg-gradient-to-r from-waw-yellow via-yellow-400 to-waw-yellow-dark text-waw-dark px-10 py-4.5 rounded-2xl font-bold text-base inline-flex items-center justify-center gap-3 shadow-xl shadow-waw-yellow/30 hover:shadow-2xl hover:shadow-waw-yellow/40 transition-all relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {/* Shimmer effect */}
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
                       <Lock size={18} />
-                      <span className="relative">Accéder au paiement sécurisé</span>
-                      <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                      <span className="relative">{processing ? 'Traitement...' : 'Accéder au paiement sécurisé'}</span>
+                      {!processing && <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />}
                     </motion.button>
                     <div className="flex items-center gap-4 mt-3">
                       <span className="flex items-center gap-1.5 text-xs text-gray-400">
@@ -1329,18 +1434,16 @@ const PlanDetailsPage = ({ onNavigate, navigateToPage, planId }: PlanDetailsPage
         </div>
       </section>
 
-      {/* ===================== MODALES ===================== */}
-
-      {/* MODALE 1 - EMAIL */}
+      {/* ===================== MODALE CHECKOUT ===================== */}
       <AnimatePresence>
-        {showEmailModal && (
+        {showCheckoutModal && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
             className="fixed inset-0 bg-black/40 backdrop-blur-md z-[100] flex items-center justify-center p-4"
-            onClick={() => setShowEmailModal(false)}
+            onClick={() => setShowCheckoutModal(false)}
           >
             <motion.div
               initial={{ scale: 0.85, opacity: 0, y: 40 }}
@@ -1357,7 +1460,7 @@ const PlanDetailsPage = ({ onNavigate, navigateToPage, planId }: PlanDetailsPage
               <motion.button
                 whileHover={{ scale: 1.1, rotate: 90 }}
                 whileTap={{ scale: 0.9 }}
-                onClick={() => setShowEmailModal(false)}
+                onClick={() => setShowCheckoutModal(false)}
                 className="absolute top-4 right-4 w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors z-10"
               >
                 <X size={16} className="text-gray-500" />
@@ -1404,38 +1507,90 @@ const PlanDetailsPage = ({ onNavigate, navigateToPage, planId }: PlanDetailsPage
                   transition={{ delay: 0.25 }}
                   className="text-center mb-6"
                 >
-                  <h3 className="text-xl font-bold text-waw-dark mb-1.5">Votre adresse email</h3>
-                  <p className="text-sm text-gray-500">Pour recevoir votre QR Code d'activation eSIM</p>
+                  <h3 className="text-xl font-bold text-waw-dark mb-1.5">Finaliser votre commande</h3>
+                  <p className="text-sm text-gray-500">Remplissez vos informations pour recevoir votre eSIM</p>
                 </motion.div>
 
-                {/* Input */}
+                {/* Inputs */}
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
+                  className="space-y-4"
                 >
+                  {/* Email */}
                   <div className="relative">
                     <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
                     <input
                       type="email"
                       value={chatEmail}
-                      onChange={(e) => setChatEmail(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && handleEmailSubmit()}
+                      onChange={(e) => {
+                        setChatEmail(e.target.value);
+                        // Marquer email comme soumis si valide
+                        if (e.target.value.trim() && e.target.value.includes('@')) {
+                          setEmailSubmitted(true);
+                        } else {
+                          setEmailSubmitted(false);
+                        }
+                      }}
                       placeholder="votre@email.com"
                       autoFocus
                       className="w-full pl-12 pr-4 py-4 rounded-2xl bg-gray-50 border-2 border-gray-200 text-waw-dark placeholder:text-gray-400 focus:outline-none focus:border-waw-yellow focus:ring-4 focus:ring-waw-yellow/10 transition-all text-base font-medium"
                     />
                   </div>
 
+                  {/* Phone */}
+                  <div className="flex gap-2">
+                    <select
+                      value={selectedIndicatif}
+                      onChange={(e) => setSelectedIndicatif(e.target.value)}
+                      className="w-32 px-3 py-4 rounded-2xl bg-gray-50 border-2 border-gray-200 text-waw-dark focus:outline-none focus:border-waw-yellow focus:ring-4 focus:ring-waw-yellow/10 transition-all text-base font-medium"
+                    >
+                      {INDICATIFS.map((ind) => (
+                        <option key={ind.ind} value={ind.ind}>
+                          {ind.ind}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="relative flex-1">
+                      <Phone size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                      <input
+                        type="tel"
+                        value={chatPhone}
+                        onChange={(e) => {
+                          setChatPhone(e.target.value);
+                          // Marquer phone comme soumis si valide
+                          if (e.target.value.trim() && e.target.value.length >= 8) {
+                            setPhoneSubmitted(true);
+                          } else {
+                            setPhoneSubmitted(false);
+                          }
+                        }}
+                        placeholder="77 123 45 67"
+                        className="w-full pl-12 pr-4 py-4 rounded-2xl bg-gray-50 border-2 border-gray-200 text-waw-dark placeholder:text-gray-400 focus:outline-none focus:border-waw-yellow focus:ring-4 focus:ring-waw-yellow/10 transition-all text-base font-medium"
+                      />
+                    </div>
+                  </div>
+
                   <motion.button
                     whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={handleEmailSubmit}
-                    disabled={!chatEmail.includes('@')}
+                    onClick={handleCheckoutSubmit}
+                    disabled={processing || !chatEmail.includes('@') || chatPhone.length < 8}
                     className="w-full mt-4 py-4 rounded-2xl bg-waw-dark text-white font-bold text-base flex items-center justify-center gap-2.5 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl"
                   >
-                    <span>Continuer</span>
-                    <ArrowRight size={18} />
+                    {processing ? (
+                      <>
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span>Traitement...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Confirmer et payer</span>
+                        {selectedPlan && <span className="text-waw-yellow">{formatPrice(selectedPlan.price)} FCFA</span>}
+                        <ArrowRight size={18} />
+                      </>
+                    )}
                   </motion.button>
                 </motion.div>
 
@@ -1455,16 +1610,193 @@ const PlanDetailsPage = ({ onNavigate, navigateToPage, planId }: PlanDetailsPage
         )}
       </AnimatePresence>
 
-      {/* MODALE 2 - TÉLÉPHONE */}
+      {/* ===================== MODALE CONFIRMATION PAIEMENT ===================== */}
       <AnimatePresence>
-        {showPhoneModal && (
+        {showConfirmModal && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
             className="fixed inset-0 bg-black/40 backdrop-blur-md z-[100] flex items-center justify-center p-4"
-            onClick={() => setShowPhoneModal(false)}
+            onClick={() => setShowConfirmModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.85, opacity: 0, y: 40 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              transition={{ type: 'spring', stiffness: 350, damping: 30 }}
+              className="relative bg-white rounded-3xl w-full sm:w-96 md:max-w-md overflow-hidden shadow-2xl max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Top gradient accent */}
+              <div className="h-1.5 bg-gradient-to-r from-waw-yellow via-amber-400 to-orange-400" />
+
+              {/* Close button */}
+              <motion.button
+                whileHover={{ scale: 1.1, rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setShowConfirmModal(false)}
+                className="absolute top-4 right-4 w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors z-10"
+              >
+                <X size={16} className="text-gray-500" />
+              </motion.button>
+
+              <div className="p-6 sm:p-8">
+                {/* Icon animation */}
+                <motion.div
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ delay: 0.15, type: 'spring', stiffness: 300 }}
+                  className="w-16 h-16 bg-gradient-to-br from-waw-yellow/20 to-amber-100 rounded-2xl flex items-center justify-center mx-auto mb-6"
+                >
+                  <Check size={28} className="text-waw-dark" />
+                </motion.div>
+
+                {/* Title */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="text-center mb-6"
+                >
+                  <h3 className="text-2xl font-black text-waw-dark mb-2">Confirmer votre commande</h3>
+                  <p className="text-sm text-gray-600">Récapitulatif avant paiement</p>
+                </motion.div>
+
+                {/* Summary */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.25 }}
+                  className="space-y-4 mb-6"
+                >
+                  {/* Forfait */}
+                  <div className="bg-gray-50 rounded-2xl p-4 flex items-center gap-4 border-2 border-gray-200">
+                    <div className="w-12 h-12 bg-gradient-to-br from-waw-yellow/20 to-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <Zap size={20} className="text-waw-dark" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-xs text-gray-400 font-semibold">FORFAIT</p>
+                      <p className="text-sm font-bold text-waw-dark">{selectedPlan?.data}</p>
+                      <p className="text-xs text-gray-500">{planDetails.country}</p>
+                    </div>
+                  </div>
+
+                  {/* Email */}
+                  <div className="bg-gray-50 rounded-2xl p-4 flex items-center gap-4 border-2 border-gray-200">
+                    <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <Mail size={20} className="text-blue-600" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-xs text-gray-400 font-semibold">EMAIL</p>
+                      <p className="text-sm font-bold text-waw-dark truncate">{chatEmail}</p>
+                    </div>
+                  </div>
+
+                  {/* Téléphone */}
+                  <div className="bg-gray-50 rounded-2xl p-4 flex items-center gap-4 border-2 border-gray-200">
+                    <div className="w-12 h-12 bg-gradient-to-br from-green-100 to-green-50 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <Phone size={20} className="text-green-600" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-xs text-gray-400 font-semibold">TÉLÉPHONE</p>
+                      <p className="text-sm font-bold text-waw-dark">{selectedIndicatif} {chatPhone}</p>
+                    </div>
+                  </div>
+
+                  {/* Prix */}
+                  <div className="bg-gradient-to-r from-waw-yellow/10 to-amber-100 rounded-2xl p-4 border-2 border-waw-yellow/20">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-xs text-gray-600 font-semibold">MONTANT À PAYER</p>
+                        <p className="text-lg font-black text-waw-dark mt-1">
+                          {selectedPlan && formatPrice(selectedPlan.price)} FCFA
+                        </p>
+                      </div>
+                      <CreditCard size={24} className="text-waw-dark" />
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Warning */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="bg-blue-50 border-2 border-blue-200 rounded-2xl p-4 mb-6"
+                >
+                  <p className="text-xs font-semibold text-blue-900 flex items-start gap-2">
+                    <span className="text-base mt-0.5">ℹ️</span>
+                    <span>Vous allez être redirigé vers Paytech pour effectuer le paiement de manière sécurisée</span>
+                  </p>
+                </motion.div>
+
+                {/* Action buttons */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.35 }}
+                  className="space-y-3"
+                >
+                  <motion.button
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={confirmAction || (() => {})}
+                    disabled={processing}
+                    className="w-full py-4 rounded-2xl bg-gradient-to-r from-waw-dark to-gray-800 text-white font-bold text-base flex items-center justify-center gap-2.5 disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg transition-all shadow-md"
+                  >
+                    {processing ? (
+                      <>
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span>Redirection Paytech...</span>
+                      </>
+                    ) : (
+                      <>
+                        <CreditCard size={18} />
+                        <span>Confirmer et Payer</span>
+                        <ArrowRight size={18} />
+                      </>
+                    )}
+                  </motion.button>
+
+                  <motion.button
+                    whileHover={{ y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setShowConfirmModal(false)}
+                    disabled={processing}
+                    className="w-full py-3 rounded-2xl text-gray-700 font-semibold text-sm hover:text-gray-900 hover:bg-gray-100 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Modifier ma commande
+                  </motion.button>
+                </motion.div>
+
+                {/* Trust line */}
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                  className="text-center text-[11px] text-gray-400 mt-5 flex items-center justify-center gap-1.5"
+                >
+                  <Lock size={10} />
+                  Connexion sécurisée avec SSL 256-bit
+                </motion.p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ===================== MODALE CONTACT (Prices not defined) ===================== */}
+      <AnimatePresence>
+        {showContactModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="fixed inset-0 bg-black/40 backdrop-blur-md z-[100] flex items-center justify-center p-4"
+            onClick={() => setShowContactModal(false)}
           >
             <motion.div
               initial={{ scale: 0.85, opacity: 0, y: 40 }}
@@ -1475,259 +1807,133 @@ const PlanDetailsPage = ({ onNavigate, navigateToPage, planId }: PlanDetailsPage
               onClick={(e) => e.stopPropagation()}
             >
               {/* Top gradient accent */}
-              <div className="h-1.5 bg-gradient-to-r from-emerald-400 via-green-400 to-teal-400" />
+              <div className="h-1.5 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400" />
 
               {/* Close button */}
               <motion.button
                 whileHover={{ scale: 1.1, rotate: 90 }}
                 whileTap={{ scale: 0.9 }}
-                onClick={() => setShowPhoneModal(false)}
+                onClick={() => setShowContactModal(false)}
                 className="absolute top-4 right-4 w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition-colors z-10"
               >
                 <X size={16} className="text-gray-500" />
               </motion.button>
 
               <div className="p-8">
-                {/* Step indicator */}
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center justify-center gap-2 mb-6"
-                >
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-6 h-6 rounded-full bg-emerald-500 flex items-center justify-center">
-                      <Check size={12} className="text-white" strokeWidth={3} />
-                    </div>
-                    <span className="text-xs text-emerald-600 font-semibold">Email</span>
-                  </div>
-                  <div className="w-8 h-0.5 bg-emerald-200 rounded-full" />
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-6 h-6 rounded-full bg-waw-dark flex items-center justify-center">
-                      <span className="text-white text-[10px] font-bold">2</span>
-                    </div>
-                    <span className="text-xs text-waw-dark font-semibold">Téléphone</span>
-                  </div>
-                </motion.div>
-
-                {/* Icon animation */}
+                {/* Icon animation with pulsing effect */}
                 <motion.div
                   initial={{ scale: 0, rotate: -180 }}
                   animate={{ scale: 1, rotate: 0 }}
                   transition={{ delay: 0.15, type: 'spring', stiffness: 300 }}
-                  className="w-16 h-16 bg-gradient-to-br from-emerald-100 to-green-50 rounded-2xl flex items-center justify-center mx-auto mb-6"
+                  className="w-16 h-16 bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-6 relative"
                 >
-                  <Phone size={28} className="text-emerald-600" />
+                  <Sparkles size={28} className="text-blue-600" />
+                  <motion.div
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="absolute inset-0 bg-blue-400/20 rounded-2xl"
+                  />
                 </motion.div>
 
-                {/* Email confirmed pill */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.1 }}
-                  className="flex items-center justify-center gap-2 mb-5"
-                >
-                  <div className="inline-flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 rounded-full px-3 py-1">
-                    <CheckCircle size={12} className="text-emerald-500" />
-                    <span className="text-xs text-emerald-700 font-medium">{chatEmail}</span>
-                  </div>
-                </motion.div>
-
-                {/* Title */}
+                {/* Title with gradient */}
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
                   className="text-center mb-6"
                 >
-                  <h3 className="text-xl font-bold text-waw-dark mb-1.5">Votre numéro de téléphone</h3>
-                  <p className="text-sm text-gray-500">Pour le suivi de votre commande et votre QR Code par SMS</p>
+                  <h3 className="text-2xl font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                    Commande en attente
+                  </h3>
+                  <p className="text-sm text-gray-600">Nos forfaits arrivent bientôt! 🚀</p>
                 </motion.div>
 
-                {/* Input */}
+                {/* Description */}
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.25 }}
+                  className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-5 mb-6 border border-blue-100"
                 >
-                  <div className="relative">
-                    <Phone size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-                    <input
-                      type="tel"
-                      value={chatPhone}
-                      onChange={(e) => setChatPhone(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && handlePhoneSubmit()}
-                      placeholder="+221 7X XXX XX XX"
-                      autoFocus
-                      className="w-full pl-12 pr-4 py-4 rounded-2xl bg-gray-50 border-2 border-gray-200 text-waw-dark placeholder:text-gray-400 focus:outline-none focus:border-emerald-400 focus:ring-4 focus:ring-emerald-400/10 transition-all text-base font-medium"
-                    />
+                  <div className="space-y-4">
+                    <div className="flex gap-3">
+                      <Check size={20} className="text-green-500 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="font-semibold text-waw-dark text-sm">Forfait sélectionné</p>
+                        {selectedPlan && (
+                          <p className="text-xs text-gray-600 mt-1">
+                            {selectedPlan.data} pour {planDetails.country} - <span className="font-bold text-waw-dark">{formatPrice(selectedPlan.price)} FCFA</span>
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex gap-3">
+                      <Check size={20} className="text-green-500 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="font-semibold text-waw-dark text-sm">Vos informations</p>
+                        <p className="text-xs text-gray-600 mt-1">{chatEmail}</p>
+                        <p className="text-xs text-gray-600">{selectedIndicatif} {chatPhone}</p>
+                      </div>
+                    </div>
                   </div>
-
-                  <motion.button
-                    whileHover={{ scale: 1.02, y: -2 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={handlePhoneSubmit}
-                    disabled={chatPhone.trim().length < 8}
-                    className="w-full mt-4 py-4 rounded-2xl bg-emerald-600 text-white font-bold text-base flex items-center justify-center gap-2.5 disabled:opacity-30 disabled:cursor-not-allowed hover:bg-emerald-700 transition-all shadow-lg hover:shadow-xl"
-                  >
-                    <span>Valider</span>
-                    <CheckCircle size={18} />
-                  </motion.button>
                 </motion.div>
 
-                {/* Back link */}
-                <motion.button
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.35 }}
-                  onClick={() => { setShowPhoneModal(false); setShowEmailModal(true); }}
-                  className="w-full text-center text-xs text-gray-400 mt-4 hover:text-gray-600 transition-colors flex items-center justify-center gap-1"
-                >
-                  <ArrowLeft size={12} />
-                  Modifier l'adresse email
-                </motion.button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* MODALE 3 - SUCCESS */}
-      <AnimatePresence>
-        {showSuccessModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            className="fixed inset-0 bg-black/40 backdrop-blur-md z-[100] flex items-center justify-center p-4"
-            onClick={handleSuccessClose}
-          >
-            <motion.div
-              initial={{ scale: 0.7, opacity: 0, y: 50 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-              className="relative bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Success gradient top */}
-              <div className="h-1.5 bg-gradient-to-r from-emerald-400 via-green-400 to-waw-yellow" />
-
-              <div className="p-8 text-center">
-                {/* Animated success icon */}
+                {/* Message */}
                 <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: [0, 1.2, 1] }}
-                  transition={{ delay: 0.15, duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }}
-                  className="w-20 h-20 bg-gradient-to-br from-emerald-400 to-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl shadow-emerald-500/30"
-                >
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.5, type: 'spring', stiffness: 500 }}
-                  >
-                    <CheckCircle size={36} className="text-white" />
-                  </motion.div>
-                </motion.div>
-
-                {/* Confetti-like particles */}
-                {[...Array(6)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 0, x: 0 }}
-                    animate={{
-                      opacity: [0, 1, 0],
-                      y: [-20, -60 - i * 10],
-                      x: [0, (i % 2 === 0 ? 1 : -1) * (20 + i * 15)],
-                    }}
-                    transition={{ delay: 0.4 + i * 0.08, duration: 0.8 }}
-                    className="absolute top-1/3 left-1/2 w-2 h-2 rounded-full"
-                    style={{
-                      backgroundColor: ['#FCD34D', '#34D399', '#60A5FA', '#F472B6', '#A78BFA', '#FB923C'][i],
-                    }}
-                  />
-                ))}
-
-                <motion.div
-                  initial={{ opacity: 0, y: 15 }}
+                  initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 }}
+                  transition={{ delay: 0.3 }}
+                  className="bg-amber-50 border-2 border-amber-200 rounded-2xl p-5 mb-6"
                 >
-                  <h3 className="text-2xl font-bold text-waw-dark mb-2">Tout est prêt !</h3>
-                  <p className="text-gray-500 text-sm mb-6 max-w-xs mx-auto">
-                    Vous pouvez maintenant procéder au paiement sécurisé pour activer votre eSIM.
+                  <p className="text-sm font-semibold text-amber-900 mb-3">⚡ Actuellement en configuration</p>
+                  <p className="text-sm text-amber-800 leading-relaxed">
+                    Nos forfaits de données arrivent prochainement! Pendant ce temps, veuillez contacter notre équipe pour finaliser votre commande.
                   </p>
                 </motion.div>
 
-                {/* Summary */}
-                {selectedPlan && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6 }}
-                    className="bg-gray-50 rounded-2xl p-4 mb-4"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <img
-                          src={planDetails.flag}
-                          alt={planDetails.country}
-                          className="w-8 h-8 rounded-lg object-cover"
-                        />
-                        <div className="text-left">
-                          <p className="text-sm font-bold text-waw-dark">{selectedPlan.data} - {planDetails.country}</p>
-                          <p className="text-[11px] text-gray-400">{planDetails.technicalDetails.validity}</p>
-                        </div>
-                      </div>
-                      <p className="text-lg font-black text-waw-dark">{formatPrice(selectedPlan.price)} <span className="text-xs font-normal text-gray-400">FCFA</span></p>
-                    </div>
-                  </motion.div>
-                )}
-
-                {/* User info recap */}
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.65 }}
-                  className="space-y-2 mb-6"
+                {/* Contact CTA */}
+                <motion.a
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  href="mailto:contact@wawtelecom.com"
+                  className="w-full block py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold text-base flex items-center justify-center gap-2.5 hover:shadow-lg transition-all shadow-md"
                 >
-                  <div className="flex items-center gap-3 bg-white border border-gray-100 rounded-xl px-4 py-3">
-                    <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Mail size={14} className="text-blue-500" />
-                    </div>
-                    <div className="text-left min-w-0">
-                      <p className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Email</p>
-                      <p className="text-sm font-medium text-waw-dark truncate">{chatEmail}</p>
-                    </div>
-                    <CheckCircle size={16} className="text-emerald-500 flex-shrink-0 ml-auto" />
-                  </div>
-                  <div className="flex items-center gap-3 bg-white border border-gray-100 rounded-xl px-4 py-3">
-                    <div className="w-8 h-8 bg-emerald-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Phone size={14} className="text-emerald-500" />
-                    </div>
-                    <div className="text-left min-w-0">
-                      <p className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold">Téléphone</p>
-                      <p className="text-sm font-medium text-waw-dark truncate">{chatPhone}</p>
-                    </div>
-                    <CheckCircle size={16} className="text-emerald-500 flex-shrink-0 ml-auto" />
-                  </div>
-                </motion.div>
+                  <Mail size={18} />
+                  <span>Envoyer un email</span>
+                  <ArrowRight size={18} />
+                </motion.a>
 
+                {/* Alternative contact info */}
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.35 }}
+                  className="text-center text-xs text-gray-500 mt-5"
+                >
+                  📧 <span className="font-bold text-waw-dark">contact@wawtelecom.com</span>
+                </motion.p>
+
+                {/* Secondary action */}
                 <motion.button
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.7 }}
-                  whileHover={{ scale: 1.03, y: -2 }}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => {
-                    handleSuccessClose();
-                  }}
-                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-waw-yellow via-yellow-400 to-amber-400 text-waw-dark font-bold text-base flex items-center justify-center gap-2.5 shadow-xl shadow-waw-yellow/30 hover:shadow-2xl transition-all relative overflow-hidden group"
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setShowContactModal(false)}
+                  className="w-full mt-4 py-3 rounded-2xl text-gray-600 font-semibold text-sm hover:text-gray-800 hover:bg-gray-100 transition-all"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
-                  <Sparkles size={18} />
-                  <span className="relative">C'est parti !</span>
+                  Continuer à explorer
                 </motion.button>
+
+                {/* Trust line */}
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                  className="text-center text-[11px] text-gray-400 mt-4 flex items-center justify-center gap-1.5"
+                >
+                  <Lock size={10} />
+                  Vos informations seront sauvegardées
+                </motion.p>
               </div>
             </motion.div>
           </motion.div>

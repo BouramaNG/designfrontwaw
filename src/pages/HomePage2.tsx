@@ -36,12 +36,14 @@ import {
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { sendPublicContact } from '../services/contactService';
 import logoWaw from '../assets/images/Logo Waw officiel.png';
 import backbone from '../assets/images/backbone.png';
 import ingenieur from '../assets/images/ingenieurs .png';
 import images4 from '../assets/images/Images4.png';
 import technicien from '../assets/images/technicien.png';
 import slide1 from '../assets/images/slide1.png';
+import starlinkImage from '../assets/images/exemple.png';
 
 // Custom marker icon for Leaflet
 const customMarkerIcon = L.divIcon({
@@ -80,12 +82,15 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
   const [devisLocation, setDevisLocation] = useState('');
   const [devisMarkerPos, setDevisMarkerPos] = useState<[number, number] | null>(null);
   const [devisForm, setDevisForm] = useState({ nom: '', email: '', telephone: '', entreprise: '', role: 'direct' as 'direct' | 'dsi' });
+  const [isSubmittingDevis, setIsSubmittingDevis] = useState(false);
+  const [devisError, setDevisError] = useState<string | null>(null);
 
   const openDevisModal = useCallback(() => {
     setDevisStep(1);
     setDevisLocation('');
     setDevisMarkerPos(null);
     setDevisForm({ nom: '', email: '', telephone: '', entreprise: '', role: 'direct' });
+    setDevisError(null);
     setDevisModalOpen(true);
   }, []);
 
@@ -94,14 +99,63 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
   const [contactModalStep, setContactModalStep] = useState<'choose' | 'form' | 'done'>('choose');
   const [selectedTeam, setSelectedTeam] = useState('');
   const [expertForm, setExpertForm] = useState({ nom: '', email: '', telephone: '', entreprise: '' });
+  const [isSubmittingContact, setIsSubmittingContact] = useState(false);
+  const [contactError, setContactError] = useState<string | null>(null);
 
   const handleTeamSelect = (team: string) => {
     setSelectedTeam(team);
     setContactModalStep('form');
+    setContactError(null);
   };
 
-  const handleExpertSubmit = () => {
-    setContactModalStep('done');
+  const handleExpertSubmit = async () => {
+    const { nom, email, telephone, entreprise } = expertForm;
+    if (!nom?.trim() || !email?.trim()) {
+      setContactError('Veuillez remplir au moins le nom et l\'email.');
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      setContactError('Veuillez saisir une adresse email valide.');
+      return;
+    }
+
+    setContactError(null);
+    setIsSubmittingContact(true);
+
+    const contactType = selectedTeam === 'Technique' ? 'support' : 'sales';
+    const message = `Demande de contact via formulaire - Équipe ${selectedTeam}. Nom: ${nom}, Email: ${email}, Téléphone: ${telephone || 'Non renseigné'}, Entreprise: ${entreprise || 'Non renseignée'}.`;
+
+    try {
+      const response = await sendPublicContact({
+        name: nom.trim(),
+        email: email.trim(),
+        phone: telephone?.trim() || undefined,
+        company: entreprise?.trim() || undefined,
+        contact_type: contactType,
+        service: selectedTeam === 'Technique' ? 'Support technique' : 'Commercial',
+        message,
+        source_page: 'home-page-2',
+      });
+
+      if (response?.success) {
+        setContactModalStep('done');
+      } else {
+        setContactError(response?.message || 'Une erreur est survenue.');
+      }
+    } catch (err: unknown) {
+      const e = err as { response?: { status?: number; data?: { message?: string; errors?: Record<string, string[]> } } };
+      if (e.response?.status === 422 && e.response?.data?.errors) {
+        const messages = Object.values(e.response.data.errors).flat().join(' ');
+        setContactError(messages || 'Erreur de validation.');
+      } else if (e.response?.status === 0) {
+        setContactError('Serveur inaccessible. Vérifiez votre connexion.');
+      } else {
+        setContactError(e.response?.data?.message || 'Une erreur est survenue. Réessayez.');
+      }
+    } finally {
+      setIsSubmittingContact(false);
+    }
   };
 
   const closeContactModal = () => {
@@ -109,7 +163,16 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
     setContactModalStep('choose');
     setSelectedTeam('');
     setExpertForm({ nom: '', email: '', telephone: '', entreprise: '' });
+    setContactError(null);
   };
+
+  /** Ouvre le modal contact directement sur le formulaire (équipe Sales), sans l’étape de choix Technique/Sales */
+  const openContactModalForStudy = useCallback(() => {
+    setSelectedTeam('Sales');
+    setContactModalStep('form');
+    setContactError(null);
+    setContactModalOpen(true);
+  }, []);
 
   const handleDevisMapClick = useCallback((lat: number, lng: number) => {
     setDevisMarkerPos([lat, lng]);
@@ -133,14 +196,71 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
     }, 3000);
   }, [devisMarkerPos, devisLocation]);
 
-  const handleDevisSubmit = useCallback(() => {
-    setDevisStep(5);
-  }, []);
+  const handleDevisSubmit = useCallback(async () => {
+    const { nom, email, telephone, entreprise, role } = devisForm;
+    if (!nom?.trim() || !email?.trim()) {
+      setDevisError('Veuillez remplir au moins le nom et l\'email.');
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      setDevisError('Veuillez saisir une adresse email valide.');
+      return;
+    }
+
+    setDevisError(null);
+    setIsSubmittingDevis(true);
+
+    const messageDetails = [
+      'Demande de devis via formulaire accueil.',
+      `Localisation: ${devisLocation || 'Non spécifiée'}`,
+      devisMarkerPos ? `Coordonnées: ${devisMarkerPos[0].toFixed(6)}, ${devisMarkerPos[1].toFixed(6)}` : 'Coordonnées: Non spécifiées',
+      `Rôle: ${role === 'direct' ? 'Décideur direct' : 'DSI / Responsable IT'}`,
+      `Entreprise: ${entreprise || 'Non spécifiée'}`,
+      `Nom: ${nom}, Email: ${email}, Téléphone: ${telephone || 'Non renseigné'}.`,
+    ].join('\n');
+
+    try {
+      const response = await sendPublicContact({
+        name: nom.trim(),
+        email: email.trim(),
+        phone: telephone?.trim() || undefined,
+        company: entreprise?.trim() || undefined,
+        subject: 'Demande de devis',
+        contact_type: 'sales',
+        service: 'Demande de devis',
+        message: messageDetails,
+        source_page: 'home-devis-modal',
+      });
+
+      if (response?.success) {
+        setDevisStep(5);
+      } else {
+        setDevisError(response?.message || 'Une erreur est survenue.');
+      }
+    } catch (err: unknown) {
+      const e = err as { response?: { status?: number; data?: { message?: string; errors?: Record<string, string[]> } } };
+      if (e.response?.status === 422 && e.response?.data?.errors) {
+        const messages = Object.values(e.response.data.errors).flat().join(' ');
+        setDevisError(messages || 'Erreur de validation.');
+      } else if (e.response?.status === 0) {
+        setDevisError('Serveur inaccessible. Vérifiez votre connexion.');
+      } else {
+        setDevisError(e.response?.data?.message || 'Une erreur est survenue. Réessayez.');
+      }
+    } finally {
+      setIsSubmittingDevis(false);
+    }
+  }, [devisForm, devisLocation, devisMarkerPos]);
 
   const closeDevisModal = useCallback(() => {
     setDevisModalOpen(false);
     setDevisStep(1);
+    setDevisError(null);
   }, []);
+
+  // Starlink Modal State
+  const [starlinkModalOpen, setStarlinkModalOpen] = useState(true);
 
   const [heroRef, heroInView] = useInView({ triggerOnce: true, threshold: 0.1 });
   const [statsRef, statsInView] = useInView({ triggerOnce: true, threshold: 0.3 });
@@ -150,6 +270,16 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
 
 
   const heroSlides = [
+    {
+      title: "WAW est Revendeur Autorisé Starlink au Sénégal",
+      subtitle: "",
+      description: "Bénéficiez d’une connexion haut débit par satellite partout au Sénégal. Solutions professionnelles, installation et accompagnement par nos équipes.",
+      image: starlinkImage,
+      imageType: "single",
+      eyebrow: "Revendeur Autorisé au Sénégal",
+      ctaLabel: "Demander une étude personnalisée",
+      ctaType: "devis" as const
+    },
     {
       title: "La connectivité intelligente au service de vos ambitions",
       subtitle: "Ensemble, façonnons l'avenir digital de votre entreprise",
@@ -247,13 +377,14 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
     'https://wawtelecom.com/operateurs.jpg',
   ];
 
-  // Auto-slide pour le hero
+  // Auto-slide pour le hero : slide Starlink (0) = 8 s, les autres = 5 s
   useEffect(() => {
-    const timer = setInterval(() => {
+    const delay = currentSlide === 0 ? 8000 : 5000;
+    const timer = setTimeout(() => {
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [heroSlides.length]);
+    }, delay);
+    return () => clearTimeout(timer);
+  }, [currentSlide, heroSlides.length]);
 
   // Auto-slide pour le background contact
   useEffect(() => {
@@ -282,16 +413,109 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+      {/* Modal d'accueil Starlink - affiché au chargement */}
+      <AnimatePresence>
+        {starlinkModalOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+              className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm"
+              onClick={() => setStarlinkModalOpen(false)}
+              aria-hidden
+            />
+            {/* Conteneur qui centre le modal au milieu de l'écran */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-[101] flex items-center justify-center p-4 pointer-events-none"
+              aria-hidden
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.92 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.96 }}
+                transition={{ type: 'spring', damping: 26, stiffness: 300, mass: 0.8 }}
+                className="w-full max-w-[900px] max-h-[calc(100vh-2rem)] flex flex-col rounded-2xl md:rounded-3xl overflow-hidden bg-white shadow-2xl pointer-events-auto"
+                style={{ width: 'calc(100vw - 2rem)' }}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="modal-starlink-title"
+                onClick={(e) => e.stopPropagation()}
+              >
+              <div className="flex flex-col min-h-0 flex-1 overflow-y-auto">
+              {/* Bouton fermer */}
+              <button
+                type="button"
+                onClick={() => setStarlinkModalOpen(false)}
+                className="absolute top-3 right-3 z-20 w-10 h-10 rounded-full bg-white/90 hover:bg-white shadow-lg flex items-center justify-center text-waw-dark transition-colors"
+                aria-label="Fermer"
+              >
+                <X size={20} strokeWidth={2.5} />
+              </button>
+
+              {/* Image bannière */}
+              <div className="relative flex-shrink-0 bg-gray-100">
+                <img
+                  src={starlinkImage}
+                  alt="WAW Revendeur Autorisé Starlink au Sénégal"
+                  className="w-full h-auto max-h-[50vh] object-contain object-center"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
+                <div className="absolute top-3 right-12 md:top-4 md:right-16 flex items-center gap-1.5 md:gap-2 bg-white/95 backdrop-blur-sm border border-waw-yellow md:border-2 text-waw-dark rounded-lg md:rounded-xl px-2 py-1.5 md:px-3 md:py-2.5 shadow-lg">
+                  <Shield className="w-3.5 h-3.5 md:w-[18px] md:h-[18px] flex-shrink-0 text-waw-yellow" aria-hidden />
+                  <div className="text-left">
+                    <span className="block text-[9px] md:text-xs font-bold leading-tight">Authorized Reseller</span>
+                    <span className="block text-[8px] md:text-[10px] font-semibold text-gray-600 uppercase tracking-wide">Sénégal — Revendeur certifié</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Texte + CTA */}
+              <div className="flex flex-col items-center text-center px-5 py-5 md:px-8 md:py-6 flex-shrink-0 bg-white">
+                <p id="modal-starlink-title" className="text-sm md:text-base text-gray-700 mb-4 max-w-xl leading-relaxed">
+                  <span className="font-bold text-waw-dark">WAW est Revendeur Autorisé Starlink au Sénégal.</span>
+                  {' '}
+                  Connectivité satellitaire professionnelle pour entreprises et sites stratégiques.
+                </p>
+                <motion.button
+                  type="button"
+                  onClick={() => { setStarlinkModalOpen(false); openContactModalForStudy(); }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="bg-waw-yellow text-waw-dark font-bold text-sm md:text-base px-6 py-3.5 md:px-8 md:py-4 rounded-2xl shadow-lg hover:shadow-xl transition-shadow inline-flex items-center gap-2"
+                >
+                  <span>Demander une étude personnalisée</span>
+                  <ArrowRight size={18} />
+                </motion.button>
+              </div>
+              </div>
+              </motion.div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
       {/* Hero Section avec Slider */}
       <section ref={heroRef} className="relative min-h-screen pt-20 md:pt-28 lg:pt-32 pb-12 md:pb-20 flex items-center overflow-hidden bg-gradient-to-br from-gray-50 via-white to-blue-50">
 
         <div className="container-custom relative z-10">
           {isSafari ? (
             // Version simplifiée optimisée pour Safari/WebKit avec GPU acceleration
-            <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center">
+            <div className={`flex flex-col lg:grid gap-8 items-center ${currentSlide === 0 ? 'lg:grid-cols-[0.4fr_0.6fr] lg:gap-8' : 'lg:grid-cols-2 lg:gap-12 xl:gap-16'}`}>
               {/* Contenu Texte - Gauche */}
               <div className="space-y-6 order-1 lg:order-none safari-slide-content">
                 <div>
+                  {'eyebrow' in heroSlides[currentSlide] && heroSlides[currentSlide].eyebrow && (
+                    <span className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-waw-yellow text-waw-dark font-bold text-sm md:text-base shadow-lg shadow-waw-yellow/30 border-2 border-waw-dark/10">
+                      <Shield className="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" aria-hidden />
+                      {heroSlides[currentSlide].eyebrow}
+                    </span>
+                  )}
                   <h1
                     className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold mb-4 leading-tight text-waw-dark"
                     style={{
@@ -302,16 +526,18 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                   >
                     {heroSlides[currentSlide].title}
                   </h1>
-                  <h2
-                    className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-light text-gray-600 mb-6"
-                    style={{
-                      willChange: 'auto',
-                      transform: 'translate3d(0, 0, 0)',
-                      WebkitTransform: 'translate3d(0, 0, 0)'
-                    }}
-                  >
-                    {heroSlides[currentSlide].subtitle}
-                  </h2>
+                  {heroSlides[currentSlide].subtitle && (
+                    <h2
+                      className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-light text-gray-600 mb-6"
+                      style={{
+                        willChange: 'auto',
+                        transform: 'translate3d(0, 0, 0)',
+                        WebkitTransform: 'translate3d(0, 0, 0)'
+                      }}
+                    >
+                      {heroSlides[currentSlide].subtitle}
+                    </h2>
+                  )}
                 </div>
 
                 <p
@@ -328,30 +554,42 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                 {/* Boutons d'action - visible seulement sur desktop */}
                 <div className="hidden lg:flex flex-col sm:flex-row gap-4 pt-4">
                   <button
-                    onClick={() => setContactModalOpen(true)}
+                    onClick={'ctaType' in heroSlides[currentSlide] && heroSlides[currentSlide].ctaType === 'devis' ? openDevisModal : () => setContactModalOpen(true)}
                     className="group bg-waw-yellow text-waw-dark px-6 py-4 md:px-8 md:py-4 min-h-[48px] rounded-2xl font-bold text-base flex items-center justify-center gap-2 shadow-[0_8px_30px_rgba(255,221,51,0.25)] hover:shadow-[0_12px_40px_rgba(255,221,51,0.4)] transition-all hover:scale-103 active:scale-97"
                   >
-                    <span>Nous contacter</span>
+                    <span>{'ctaLabel' in heroSlides[currentSlide] && heroSlides[currentSlide].ctaLabel ? heroSlides[currentSlide].ctaLabel : 'Nous contacter'}</span>
                     <ArrowRight size={18} />
                   </button>
                 </div>
               </div>
 
               {/* Images - Droite (order-2 sur mobile) */}
-              <div className="relative order-2 lg:order-none safari-fade-content">
+              <div className="relative order-2 lg:order-none safari-fade-content w-full min-w-0">
                 {heroSlides[currentSlide].imageType === 'single' ? (
-                  <div className="relative rounded-2xl md:rounded-3xl overflow-hidden shadow-xl md:shadow-2xl gpu-accelerated">
+                  <div className={`relative rounded-2xl md:rounded-3xl overflow-hidden shadow-xl md:shadow-2xl gpu-accelerated w-full ${currentSlide === 0 ? '' : ''}`}>
                     <img
                       src={heroSlides[currentSlide].image}
                       alt={heroSlides[currentSlide].title}
-                      className="w-full h-[300px] sm:h-[400px] lg:h-[600px] object-cover"
+                      className={currentSlide === 0
+                        ? 'w-full h-auto max-w-full block'
+                        : 'w-full h-[300px] sm:h-[400px] lg:h-[600px] object-cover'
+                      }
                       style={{
                         transform: 'translate3d(0, 0, 0)',
                         WebkitTransform: 'translate3d(0, 0, 0)',
                         willChange: 'auto'
                       }}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-waw-dark/20 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-waw-dark/20 to-transparent pointer-events-none" />
+                    {currentSlide === 0 && (
+                      <div className="absolute top-2 right-2 md:top-5 md:right-5 z-10 flex items-center gap-1.5 md:gap-2 bg-white/95 backdrop-blur-sm border border-waw-yellow md:border-2 text-waw-dark rounded-lg md:rounded-xl px-2 py-1.5 md:px-3 md:py-2.5 shadow-lg">
+                        <Shield className="w-3.5 h-3.5 md:w-[18px] md:h-[18px] flex-shrink-0 text-waw-yellow" aria-hidden />
+                        <div className="text-left">
+                          <span className="block text-[9px] md:text-xs font-bold leading-tight">Authorized Reseller</span>
+                          <span className="block text-[8px] md:text-[10px] font-semibold text-gray-600 uppercase tracking-wide">Sénégal — Revendeur certifié</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
@@ -382,10 +620,10 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
               {/* Bouton CTA - Mobile uniquement (order-3, après les images) */}
               <div className="flex lg:hidden flex-col sm:flex-row gap-4 order-3 w-full">
                 <button
-                  onClick={() => setContactModalOpen(true)}
+                  onClick={'ctaType' in heroSlides[currentSlide] && heroSlides[currentSlide].ctaType === 'devis' ? openDevisModal : () => setContactModalOpen(true)}
                   className="group bg-waw-yellow text-waw-dark px-6 py-4 min-h-[48px] rounded-2xl font-bold text-base flex items-center justify-center gap-2 shadow-[0_8px_30px_rgba(255,221,51,0.25)] hover:shadow-[0_12px_40px_rgba(255,221,51,0.4)] transition-all active:scale-97"
                 >
-                  <span>Nous contacter</span>
+                  <span>{'ctaLabel' in heroSlides[currentSlide] && heroSlides[currentSlide].ctaLabel ? heroSlides[currentSlide].ctaLabel : 'Nous contacter'}</span>
                   <ArrowRight size={18} />
                 </button>
               </div>
@@ -402,7 +640,7 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                 duration: 0.4,
                 ease: [0.4, 0, 0.2, 1]
               }}
-              className="flex flex-col lg:grid lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center"
+              className={`flex flex-col lg:grid gap-8 items-center ${currentSlide === 0 ? 'lg:grid-cols-[0.4fr_0.6fr] lg:gap-8' : 'lg:grid-cols-2 lg:gap-12 xl:gap-16'}`}
               style={{
                 willChange: 'opacity',
                 transform: 'translate3d(0, 0, 0)'
@@ -413,13 +651,24 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                 initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-                className="space-y-6 order-1 lg:order-none"
+                className="space-y-6 order-1 lg:order-none min-w-0"
                 style={{
                   willChange: 'opacity, transform',
                   transform: 'translate3d(0, 0, 0)'
                 }}
               >
                 <div>
+                  {'eyebrow' in heroSlides[currentSlide] && heroSlides[currentSlide].eyebrow && (
+                    <motion.span
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-waw-yellow text-waw-dark font-bold text-sm md:text-base shadow-lg shadow-waw-yellow/30 border-2 border-waw-dark/10"
+                    >
+                      <Shield className="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" aria-hidden />
+                      {heroSlides[currentSlide].eyebrow}
+                    </motion.span>
+                  )}
                   <motion.h1
                     className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold mb-4 leading-tight text-waw-dark"
                     initial={{ opacity: 0, y: 20 }}
@@ -428,14 +677,16 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                   >
                     {heroSlides[currentSlide].title}
                   </motion.h1>
-                  <motion.h2
-                    className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-light text-gray-600 mb-6"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: 0.1 }}
-                  >
-                    {heroSlides[currentSlide].subtitle}
-                  </motion.h2>
+                  {heroSlides[currentSlide].subtitle && (
+                    <motion.h2
+                      className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-light text-gray-600 mb-6"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: 0.1 }}
+                    >
+                      {heroSlides[currentSlide].subtitle}
+                    </motion.h2>
+                  )}
                 </div>
 
                 <motion.p
@@ -455,12 +706,12 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                   transition={{ duration: 0.3, delay: 0.2 }}
                 >
                   <motion.button
-                    onClick={() => setContactModalOpen(true)}
+                    onClick={'ctaType' in heroSlides[currentSlide] && heroSlides[currentSlide].ctaType === 'devis' ? openDevisModal : () => setContactModalOpen(true)}
                     whileHover={{ scale: 1.03, y: -2 }}
                     whileTap={{ scale: 0.97 }}
                     className="group bg-waw-yellow text-waw-dark px-6 py-4 md:px-8 md:py-4 min-h-[48px] rounded-2xl font-bold text-base flex items-center justify-center gap-2 shadow-[0_8px_30px_rgba(255,221,51,0.25)] hover:shadow-[0_12px_40px_rgba(255,221,51,0.4)] transition-all"
                   >
-                    <span>Nous contacter</span>
+                    <span>{'ctaLabel' in heroSlides[currentSlide] && heroSlides[currentSlide].ctaLabel ? heroSlides[currentSlide].ctaLabel : 'Nous contacter'}</span>
                     <motion.div animate={{ x: [0, 4, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
                       <ArrowRight size={18} />
                     </motion.div>
@@ -474,19 +725,19 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                 initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-                className="relative order-2 lg:order-none"
+                className="relative order-2 lg:order-none w-full min-w-0"
                 style={{
                   willChange: 'opacity, transform',
                   transform: 'translate3d(0, 0, 0)'
                 }}
               >
                 {heroSlides[currentSlide].imageType === 'single' ? (
-                  /* Image unique */
+                  /* Image unique - slide Starlink (0) : div à la taille de l'image + badge */
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.3, delay: 0.1 }}
-                    className="relative rounded-2xl md:rounded-3xl overflow-hidden shadow-xl md:shadow-2xl"
+                    className={`relative rounded-2xl md:rounded-3xl overflow-hidden shadow-xl md:shadow-2xl w-full ${currentSlide === 0 ? 'inline-block w-full' : ''}`}
                     style={{
                       willChange: 'opacity',
                       transform: 'translate3d(0, 0, 0)'
@@ -495,14 +746,26 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                     <img
                       src={heroSlides[currentSlide].image}
                       alt={heroSlides[currentSlide].title}
-                      className="w-full h-[300px] sm:h-[400px] lg:h-[600px] object-cover"
+                      className={currentSlide === 0
+                        ? 'w-full h-auto max-w-full block'
+                        : 'w-full h-[300px] sm:h-[400px] lg:h-[600px] object-cover'
+                      }
                       style={{
                         willChange: 'auto',
                         transform: 'translate3d(0, 0, 0)',
                         WebkitTransform: 'translate3d(0, 0, 0)'
                       }}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-waw-dark/20 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-waw-dark/20 to-transparent pointer-events-none" />
+                    {currentSlide === 0 && (
+                      <div className="absolute top-2 right-2 md:top-5 md:right-5 z-10 flex items-center gap-1.5 md:gap-2 bg-white/95 backdrop-blur-sm border border-waw-yellow md:border-2 text-waw-dark rounded-lg md:rounded-xl px-2 py-1.5 md:px-3 md:py-2.5 shadow-lg">
+                        <Shield className="w-3.5 h-3.5 md:w-[18px] md:h-[18px] flex-shrink-0 text-waw-yellow" aria-hidden />
+                        <div className="text-left">
+                          <span className="block text-[9px] md:text-xs font-bold leading-tight">Authorized Reseller</span>
+                          <span className="block text-[8px] md:text-[10px] font-semibold text-gray-600 uppercase tracking-wide">Sénégal — Revendeur certifié</span>
+                        </div>
+                      </div>
+                    )}
                   </motion.div>
                 ) : (
                   /* Collage d'images */
@@ -555,11 +818,11 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                 transition={{ duration: 0.3, delay: 0.3 }}
               >
                 <motion.button
-                  onClick={() => setContactModalOpen(true)}
+                  onClick={'ctaType' in heroSlides[currentSlide] && heroSlides[currentSlide].ctaType === 'devis' ? openDevisModal : () => setContactModalOpen(true)}
                   whileTap={{ scale: 0.97 }}
                   className="group bg-waw-yellow text-waw-dark px-6 py-4 min-h-[48px] rounded-2xl font-bold text-base flex items-center justify-center gap-2 shadow-[0_8px_30px_rgba(255,221,51,0.25)] active:shadow-[0_12px_40px_rgba(255,221,51,0.4)] transition-all"
                 >
-                  <span>Nous contacter</span>
+                  <span>{'ctaLabel' in heroSlides[currentSlide] && heroSlides[currentSlide].ctaLabel ? heroSlides[currentSlide].ctaLabel : 'Nous contacter'}</span>
                   <ArrowRight size={18} />
                 </motion.button>
               </motion.div>
@@ -1726,14 +1989,19 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                         </div>
                       </div>
 
+                      {devisError && (
+                        <p className="mt-3 text-sm text-red-600 bg-red-50 px-3 py-2 rounded-xl">{devisError}</p>
+                      )}
+
                       <motion.button
-                        whileHover={{ scale: 1.02, y: -1 }}
-                        whileTap={{ scale: 0.98 }}
+                        whileHover={!isSubmittingDevis ? { scale: 1.02, y: -1 } : undefined}
+                        whileTap={!isSubmittingDevis ? { scale: 0.98 } : undefined}
                         onClick={handleDevisSubmit}
-                        className="w-full mt-6 bg-waw-dark text-white py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all"
+                        disabled={isSubmittingDevis}
+                        className="w-full mt-6 bg-waw-dark text-white py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all disabled:opacity-70 disabled:cursor-not-allowed"
                       >
-                        <Send size={16} />
-                        <span>Envoyer ma demande</span>
+                        {isSubmittingDevis ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+                        <span>{isSubmittingDevis ? 'Envoi en cours...' : 'Envoyer ma demande'}</span>
                       </motion.button>
                     </motion.div>
                   )}
@@ -2014,14 +2282,19 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                         </div>
                       </div>
 
+                      {contactError && (
+                        <p className="mt-3 text-sm text-red-600 bg-red-50 px-3 py-2 rounded-xl">{contactError}</p>
+                      )}
+
                       <motion.button
-                        whileHover={{ scale: 1.02, y: -1 }}
-                        whileTap={{ scale: 0.98 }}
+                        whileHover={!isSubmittingContact ? { scale: 1.02, y: -1 } : undefined}
+                        whileTap={!isSubmittingContact ? { scale: 0.98 } : undefined}
                         onClick={handleExpertSubmit}
-                        className="w-full mt-6 bg-waw-dark text-white py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all"
+                        disabled={isSubmittingContact}
+                        className="w-full mt-6 bg-waw-dark text-white py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all disabled:opacity-70 disabled:cursor-not-allowed"
                       >
-                        <Send size={16} />
-                        <span>Envoyer</span>
+                        {isSubmittingContact ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+                        <span>{isSubmittingContact ? 'Envoi en cours...' : 'Envoyer'}</span>
                       </motion.button>
 
                       <motion.button

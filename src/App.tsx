@@ -21,7 +21,7 @@ import HomePage2 from './pages/HomePage2';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 
-export type PageType = 'home' | 'home2' | 'connectivite' | 'cloud' | 'travel' | 'iot' | 'about' | 'contact' | 'plan-details' | 'checkout' | 'confirmation' | 'login' | 'register';
+export type PageType = 'home' | 'home2' | 'connectivite' | 'cloud' | 'starlink' | 'travel' | 'iot' | 'about' | 'contact' | 'plan-details' | 'checkout' | 'confirmation' | 'login' | 'register';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<PageType>('home2');

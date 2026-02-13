@@ -5,6 +5,8 @@ import { useInView } from 'react-intersection-observer';
 import useDeviceOptimization from '../hooks/useDeviceOptimization';
 import useOptimizedTransition from '../hooks/useOptimizedTransition';
 import '../styles/safari-animations.css';
+import { esimService, type ESimPackage } from '../services/esimService';
+import { PAYS, CONTINENTS } from '../utils/constants';
 import {
   Smartphone,
   Globe,
@@ -72,11 +74,50 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
   // Comment ça marche - active step
   const [activeStep, setActiveStep] = useState(0);
 
+  // Destinations avec packages
+  const [destinations, setDestinations] = useState<any[]>([]);
+  const [loadingPackages, setLoadingPackages] = useState(true);
+  const [errorPackages, setErrorPackages] = useState<string | null>(null);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setImgIndex((prev) => (prev + 1) % heroImages.length);
     }, 4000);
     return () => clearInterval(interval);
+  }, []);
+
+  // Charger les packages pour chaque destination
+  useEffect(() => {
+    const loadDestinationsWithPackages = async () => {
+      setLoadingPackages(true);
+      try {
+        const destinationsWithPackages = await Promise.all(
+          PAYS.map(async (pays) => {
+            try {
+              const packages = await esimService.getPackagesWithPrice(pays.code);
+              return {
+                ...pays,
+                packages: packages || []
+              };
+            } catch (err) {
+              return {
+                ...pays,
+                packages: []
+              };
+            }
+          })
+        );
+        setDestinations(destinationsWithPackages);
+      } catch (err) {
+        console.error('Erreur chargement destinations:', err);
+        setErrorPackages('Erreur lors du chargement des destinations');
+        setDestinations(PAYS.map(p => ({ ...p, packages: [] })));
+      } finally {
+        setLoadingPackages(false);
+      }
+    };
+
+    loadDestinationsWithPackages();
   }, []);
 
   // Auto-cycle advantages every 5s unless user interacts
@@ -171,28 +212,27 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
     }
   ];
 
-  // Destinations populaires avec drapeaux
-  const destinations = [
-    { country: 'France', flag: '/flags/fr.svg', price: '600 FCFA', duration: '30 jours', popular: true, continent: 'Europe', data: '5 Go' },
-    { country: 'États-Unis', flag: '/flags/us.svg', price: '800 FCFA', duration: '30 jours', popular: true, continent: 'Amérique', data: '3 Go' },
-    { country: 'Royaume-Uni', flag: '/flags/gb.svg', price: '700 FCFA', duration: '30 jours', popular: true, continent: 'Europe', data: '5 Go' },
-    { country: 'Allemagne', flag: '/flags/de.svg', price: '650 FCFA', duration: '30 jours', popular: true, continent: 'Europe', data: '5 Go' },
-    { country: 'Espagne', flag: '/flags/es.svg', price: '650 FCFA', duration: '30 jours', popular: true, continent: 'Europe', data: '5 Go' },
-    { country: 'Italie', flag: '/flags/it.svg', price: '650 FCFA', duration: '30 jours', popular: true, continent: 'Europe', data: '5 Go' },
-    { country: 'Japon', flag: '/flags/jp.svg', price: '1000 FCFA', duration: '30 jours', popular: true, continent: 'Asie', data: '3 Go' },
-    { country: 'Canada', flag: '/flags/ca.svg', price: '800 FCFA', duration: '30 jours', popular: true, continent: 'Amérique', data: '3 Go' },
-    { country: 'Australie', flag: '/flags/au.svg', price: '1200 FCFA', duration: '30 jours', popular: true, continent: 'Océanie', data: '2 Go' },
-    { country: 'Brésil', flag: '/flags/br.svg', price: '900 FCFA', duration: '30 jours', popular: false, continent: 'Amérique', data: '3 Go' },
-    { country: 'Turquie', flag: '/flags/tr.svg', price: '750 FCFA', duration: '30 jours', popular: false, continent: 'Europe', data: '5 Go' },
-    { country: 'Maroc', flag: '/flags/ma.svg', price: '850 FCFA', duration: '30 jours', popular: false, continent: 'Afrique', data: '3 Go' },
-  ];
+  const continents = CONTINENTS;
 
-  const continents = ['Tous', 'Europe', 'Amérique', 'Asie', 'Afrique', 'Océanie'];
+  // Filtrer les destinations selon le continent et la recherche
+  const filteredDestinations = destinations.filter((country) => {
+    // Filtre continent
+    if (activeContinent !== 'Tous') {
+      if (country.continent !== activeContinent) {
+        return false;
+      }
+    }
 
-  const filteredDestinations = destinations.filter((d) => {
-    const matchesSearch = d.country.toLowerCase().includes(destSearch.toLowerCase());
-    const matchesContinent = activeContinent === 'Tous' || d.continent === activeContinent;
-    return matchesSearch && matchesContinent;
+    // Filtre recherche
+    if (destSearch) {
+      const searchLower = destSearch.toLowerCase();
+      return (
+        country.nom.toLowerCase().includes(searchLower) ||
+        country.code.toLowerCase().includes(searchLower)
+      );
+    }
+
+    return true;
   });
 
   const howItWorks = [
@@ -1256,103 +1296,122 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
             </div>
           </motion.div>
 
+          {/* Loading state */}
+          {loadingPackages && (
+            <div className="text-center py-16">
+              <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-waw-yellow mb-4"></div>
+              <p className="text-gray-600">Chargement des destinations...</p>
+            </div>
+          )}
+
+          {/* Error state */}
+          {errorPackages && !loadingPackages && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700 max-w-2xl mx-auto">
+              ⚠️ {errorPackages}
+            </div>
+          )}
+
           {/* Destinations Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 max-w-6xl mx-auto">
+          {!loadingPackages && !errorPackages && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 max-w-6xl mx-auto">
             <AnimatePresence mode="popLayout">
-              {filteredDestinations.map((destination, index) => (
-                <motion.div
-                  key={destination.country}
-                  layout
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.35, delay: index * 0.04 }}
-                  className="group relative"
-                >
-                  <div
-                    className="relative bg-white rounded-2xl border border-gray-100 p-5 hover:border-waw-yellow/40 hover:shadow-xl transition-all cursor-pointer overflow-hidden"
-                    style={{ perspective: '800px' }}
+              {filteredDestinations.map((country, index) => {
+                const flagUrl = country.drapeau;
+                const countryName = country.nom;
+                const continent = country.continent;
+
+                return (
+                  <motion.div
+                    key={`${country.code}-${country.id}`}
+                    layout
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.35, delay: index * 0.04 }}
+                    className="group relative"
                   >
-                    {/* Popular badge */}
-                    {destination.popular && (
+                    <div
+                      className="relative bg-white rounded-2xl border border-gray-100 p-5 hover:border-waw-yellow/40 hover:shadow-xl transition-all cursor-pointer overflow-hidden"
+                      style={{ perspective: '800px' }}
+                    >
+                      {/* Badge disponible */}
                       <div className="absolute top-3 right-3 z-10">
                         <span className="bg-waw-yellow text-waw-dark px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wide flex items-center gap-1">
                           <Star size={10} />
-                          Populaire
+                          Disponible
                         </span>
                       </div>
-                    )}
 
-                    {/* Top: flag + country */}
-                    <div className="flex items-center gap-4 mb-4">
-                      <div className="w-12 h-12 rounded-xl overflow-hidden border border-gray-100 flex-shrink-0 shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all">
-                        <img
-                          src={destination.flag}
-                          alt={destination.country}
-                          className="w-full h-full object-cover"
-                        />
+                      {/* Top: flag + country */}
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="w-12 h-12 rounded-xl overflow-hidden border border-gray-100 flex-shrink-0 shadow-sm group-hover:shadow-md group-hover:scale-105 transition-all">
+                          <img
+                            src={flagUrl}
+                            alt={countryName}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = 'https://flagcdn.com/w320/ww.png';
+                            }}
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-bold text-waw-dark text-[15px] truncate">{countryName}</h3>
+                          <p className="text-xs text-gray-400">{continent}</p>
+                        </div>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-bold text-waw-dark text-[15px] truncate">{destination.country}</h3>
-                        <p className="text-xs text-gray-400">{destination.continent}</p>
-                      </div>
-                    </div>
 
-                    {/* Info row */}
-                    <div className="grid grid-cols-3 gap-2 mb-4">
-                      <div className="bg-gray-50 rounded-xl p-2.5 text-center group-hover:bg-waw-yellow/5 transition-colors">
-                        <p className="text-[10px] text-gray-400 uppercase tracking-wide mb-0.5">Data</p>
-                        <p className="text-xs font-bold text-waw-dark">{destination.data}</p>
+                      {/* Info row - Packages disponibles */}
+                      <div className="bg-gray-50 rounded-xl p-3 mb-4 text-center group-hover:bg-waw-yellow/5 transition-colors">
+                        <p className="text-[10px] text-gray-400 uppercase tracking-wide mb-1">Packages disponibles</p>
+                        {country.packages && country.packages.length > 0 ? (
+                          <>
+                            <p className="text-sm font-bold text-waw-dark">
+                              {country.packages.length} {country.packages.length === 1 ? 'offre' : 'offres'}
+                            </p>
+                            <p className="text-xs text-gray-500 mt-0.5">
+                              À partir de {Math.min(...country.packages.map((p: any) => p.price || 0)).toLocaleString('fr-FR')} FCFA
+                            </p>
+                          </>
+                        ) : (
+                          <>
+                            <p className="text-sm font-bold text-gray-400">Bientôt disponible</p>
+                            <p className="text-xs text-gray-400 mt-0.5">-</p>
+                          </>
+                        )}
                       </div>
-                      <div className="bg-gray-50 rounded-xl p-2.5 text-center group-hover:bg-waw-yellow/5 transition-colors">
-                        <p className="text-[10px] text-gray-400 uppercase tracking-wide mb-0.5">Durée</p>
-                        <p className="text-xs font-bold text-waw-dark">{destination.duration}</p>
-                      </div>
-                      <div className="bg-gray-50 rounded-xl p-2.5 text-center group-hover:bg-waw-yellow/5 transition-colors">
-                        <p className="text-[10px] text-gray-400 uppercase tracking-wide mb-0.5">Réseau</p>
-                        <p className="text-xs font-bold text-waw-dark">4G/5G</p>
-                      </div>
-                    </div>
 
-                    {/* Price + CTA */}
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-[10px] text-gray-400 uppercase tracking-wide">À partir de</p>
-                        <p className="text-lg font-bold text-waw-dark">{destination.price}</p>
-                      </div>
+                      {/* CTA - Voir les packages */}
                       <motion.button
-                        whileHover={{ scale: 1.05, x: 2 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => onNavigateWithPlan?.('plan-details', destination.country)}
-                        className="bg-waw-dark text-white px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 group-hover:bg-waw-yellow group-hover:text-waw-dark transition-colors shadow-sm"
+                        whileHover={{ scale: 1.02, y: -2 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => onNavigateWithPlan?.('plan-details', country.code)}
+                        disabled={!country.packages || country.packages.length === 0}
+                        className={`w-full py-3 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-colors shadow-sm ${
+                          country.packages && country.packages.length > 0
+                            ? 'bg-waw-dark text-white group-hover:bg-waw-yellow group-hover:text-waw-dark'
+                            : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                        }`}
                       >
-                        <Plane size={12} />
-                        <span>Voir</span>
-                        <ArrowRight size={12} className="group-hover:translate-x-0.5 transition-transform" />
+                        <Plane size={14} />
+                        <span>Voir les packages</span>
+                        <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                       </motion.button>
+
+                      {/* Hover accent line */}
+                      <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-gradient-to-r from-waw-yellow to-waw-yellow-dark scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
                     </div>
-
-                    {/* Hover accent line */}
-                    <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-gradient-to-r from-waw-yellow to-waw-yellow-dark scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                );
+              })}
             </AnimatePresence>
-          </div>
 
-          {/* Empty state */}
-          {filteredDestinations.length === 0 && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-16"
-            >
-              <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <Search size={24} className="text-gray-400" />
+            {/* Empty state si pas de résultats */}
+            {filteredDestinations.length === 0 && (
+              <div className="col-span-full text-center py-16">
+                <p className="text-gray-500 text-lg">Aucune destination trouvée pour cette recherche</p>
               </div>
-              <p className="text-gray-500 font-medium mb-1">Aucune destination trouvée</p>
-              <p className="text-sm text-gray-400">Essayez un autre pays ou changez de continent</p>
-            </motion.div>
+            )}
+            </div>
           )}
 
           {/* Bottom CTA */}

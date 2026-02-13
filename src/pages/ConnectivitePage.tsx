@@ -32,6 +32,7 @@ import {
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { sendPublicContact } from '../services/contactService';
 import type { PageType } from '../App';
 
 // Custom marker icon for Leaflet (default icons break with bundlers)
@@ -71,6 +72,8 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
   const [selectedLocation, setSelectedLocation] = useState('');
   const [markerPos, setMarkerPos] = useState<[number, number] | null>(null);
   const [contactForm, setContactForm] = useState({ nom: '', email: '', telephone: '', entreprise: '', role: 'direct' as 'direct' | 'dsi' });
+  const [isSubmittingService, setIsSubmittingService] = useState(false);
+  const [serviceError, setServiceError] = useState<string | null>(null);
 
   const openServiceModal = (service: string) => {
     setSelectedService(service);
@@ -78,6 +81,7 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
     setSelectedLocation('');
     setMarkerPos(null);
     setContactForm({ nom: '', email: '', telephone: '', entreprise: '', role: 'direct' });
+    setServiceError(null);
     setModalOpen(true);
   };
 
@@ -105,13 +109,66 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
     }, 3000);
   };
 
-  const handleContactSubmit = () => {
-    setModalStep(5);
+  const handleContactSubmit = async () => {
+    const { nom, email, telephone, entreprise, role } = contactForm;
+    if (!nom?.trim() || !email?.trim()) {
+      setServiceError('Veuillez remplir au moins le nom et l\'email.');
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      setServiceError('Veuillez saisir une adresse email valide.');
+      return;
+    }
+
+    setServiceError(null);
+    setIsSubmittingService(true);
+
+    const messageDetails = [
+      `Service demandé: ${selectedService}`,
+      `Localisation: ${selectedLocation || 'Non spécifiée'}`,
+      markerPos ? `Coordonnées: ${markerPos[0].toFixed(6)}, ${markerPos[1].toFixed(6)}` : 'Coordonnées: Non spécifiées',
+      `Rôle: ${role === 'direct' ? 'Décideur direct' : 'DSI / Responsable IT'}`,
+      `Entreprise: ${entreprise || 'Non spécifiée'}`,
+    ].join('\n');
+
+    try {
+      const response = await sendPublicContact({
+        name: nom.trim(),
+        email: email.trim(),
+        phone: telephone?.trim() || undefined,
+        company: entreprise?.trim() || undefined,
+        subject: `Demande ${selectedService}`,
+        contact_type: 'sales',
+        service: selectedService,
+        message: messageDetails,
+        source_page: 'connectivite-service-modal',
+      });
+
+      if (response?.success) {
+        setModalStep(5);
+      } else {
+        setServiceError(response?.message || 'Une erreur est survenue.');
+      }
+    } catch (err: unknown) {
+      const e = err as { response?: { status?: number; data?: { message?: string; errors?: Record<string, string[]> } } };
+      if (e.response?.status === 422 && e.response?.data?.errors) {
+        const messages = Object.values(e.response.data.errors).flat().join(' ');
+        setServiceError(messages || 'Erreur de validation.');
+      } else if (e.response?.status === 0) {
+        setServiceError('Serveur inaccessible. Vérifiez votre connexion.');
+      } else {
+        setServiceError(e.response?.data?.message || 'Une erreur est survenue. Réessayez.');
+      }
+    } finally {
+      setIsSubmittingService(false);
+    }
   };
 
   const closeModal = () => {
     setModalOpen(false);
     setModalStep(1);
+    setServiceError(null);
   };
 
   // Contact expert modal state
@@ -119,14 +176,63 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
   const [contactModalStep, setContactModalStep] = useState<'choose' | 'form' | 'done'>('choose');
   const [selectedTeam, setSelectedTeam] = useState('');
   const [expertForm, setExpertForm] = useState({ nom: '', email: '', telephone: '', entreprise: '' });
+  const [isSubmittingContact, setIsSubmittingContact] = useState(false);
+  const [contactError, setContactError] = useState<string | null>(null);
 
   const handleTeamSelect = (team: string) => {
     setSelectedTeam(team);
     setContactModalStep('form');
+    setContactError(null);
   };
 
-  const handleExpertSubmit = () => {
-    setContactModalStep('done');
+  const handleExpertSubmit = async () => {
+    const { nom, email, telephone, entreprise } = expertForm;
+    if (!nom?.trim() || !email?.trim()) {
+      setContactError('Veuillez remplir au moins le nom et l\'email.');
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      setContactError('Veuillez saisir une adresse email valide.');
+      return;
+    }
+
+    setContactError(null);
+    setIsSubmittingContact(true);
+
+    const contactType = selectedTeam === 'Technique' ? 'support' : 'sales';
+    const message = `Demande de contact via formulaire - Équipe ${selectedTeam}. Nom: ${nom}, Email: ${email}, Téléphone: ${telephone || 'Non renseigné'}, Entreprise: ${entreprise || 'Non renseignée'}.`;
+
+    try {
+      const response = await sendPublicContact({
+        name: nom.trim(),
+        email: email.trim(),
+        phone: telephone?.trim() || undefined,
+        company: entreprise?.trim() || undefined,
+        contact_type: contactType,
+        service: selectedTeam === 'Technique' ? 'Support technique' : 'Commercial',
+        message,
+        source_page: 'connectivite',
+      });
+
+      if (response?.success) {
+        setContactModalStep('done');
+      } else {
+        setContactError(response?.message || 'Une erreur est survenue.');
+      }
+    } catch (err: unknown) {
+      const e = err as { response?: { status?: number; data?: { message?: string; errors?: Record<string, string[]> } } };
+      if (e.response?.status === 422 && e.response?.data?.errors) {
+        const messages = Object.values(e.response.data.errors).flat().join(' ');
+        setContactError(messages || 'Erreur de validation.');
+      } else if (e.response?.status === 0) {
+        setContactError('Serveur inaccessible. Vérifiez votre connexion.');
+      } else {
+        setContactError(e.response?.data?.message || 'Une erreur est survenue. Réessayez.');
+      }
+    } finally {
+      setIsSubmittingContact(false);
+    }
   };
 
   const closeContactModal = () => {
@@ -134,6 +240,7 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
     setContactModalStep('choose');
     setSelectedTeam('');
     setExpertForm({ nom: '', email: '', telephone: '', entreprise: '' });
+    setContactError(null);
   };
 
   const [heroRef, heroInView] = useInView({ triggerOnce: true, threshold: 0.1 });
@@ -1347,14 +1454,19 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
                         </div>
                       </div>
 
+                      {serviceError && (
+                        <p className="mt-3 text-sm text-red-600 bg-red-50 px-3 py-2 rounded-xl">{serviceError}</p>
+                      )}
+
                       <motion.button
-                        whileHover={{ scale: 1.02, y: -1 }}
-                        whileTap={{ scale: 0.98 }}
+                        whileHover={!isSubmittingService ? { scale: 1.02, y: -1 } : undefined}
+                        whileTap={!isSubmittingService ? { scale: 0.98 } : undefined}
                         onClick={handleContactSubmit}
-                        className="w-full mt-6 bg-waw-dark text-white py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all"
+                        disabled={isSubmittingService}
+                        className="w-full mt-6 bg-waw-dark text-white py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all disabled:opacity-70 disabled:cursor-not-allowed"
                       >
-                        <Send size={16} />
-                        <span>Envoyer ma demande</span>
+                        {isSubmittingService ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+                        <span>{isSubmittingService ? 'Envoi en cours...' : 'Envoyer ma demande'}</span>
                       </motion.button>
                     </motion.div>
                   )}
@@ -1596,14 +1708,19 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
                         </div>
                       </div>
 
+                      {contactError && (
+                        <p className="mt-3 text-sm text-red-600 bg-red-50 px-3 py-2 rounded-xl">{contactError}</p>
+                      )}
+
                       <motion.button
-                        whileHover={{ scale: 1.02, y: -1 }}
-                        whileTap={{ scale: 0.98 }}
+                        whileHover={!isSubmittingContact ? { scale: 1.02, y: -1 } : undefined}
+                        whileTap={!isSubmittingContact ? { scale: 0.98 } : undefined}
                         onClick={handleExpertSubmit}
-                        className="w-full mt-6 bg-waw-dark text-white py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all"
+                        disabled={isSubmittingContact}
+                        className="w-full mt-6 bg-waw-dark text-white py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-all disabled:opacity-70 disabled:cursor-not-allowed"
                       >
-                        <Send size={16} />
-                        <span>Envoyer</span>
+                        {isSubmittingContact ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+                        <span>{isSubmittingContact ? 'Envoi en cours...' : 'Envoyer'}</span>
                       </motion.button>
 
                       <button
