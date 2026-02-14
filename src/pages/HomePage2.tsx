@@ -505,61 +505,40 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
 
         <div className="container-custom relative z-10">
           {isSafari ? (
-            // Version simplifiée optimisée pour Safari/WebKit avec GPU acceleration
+            // Version simplifiée optimisée pour Safari/WebKit (sans compositing sur le texte pour éviter le mélange de slides sur iOS)
             <div className={`flex flex-col lg:grid gap-8 items-center ${currentSlide === 0 ? 'lg:grid-cols-[0.4fr_0.6fr] lg:gap-8' : 'lg:grid-cols-2 lg:gap-12 xl:gap-16'}`}>
-              {/* Contenu Texte - Gauche */}
+              {/* Contenu Texte - Gauche : key pour remount complet à chaque slide (évite repaint bug iOS) */}
               <div className="space-y-6 order-1 lg:order-none safari-slide-content">
-                <div>
+                <div key={currentSlide}>
                   {'eyebrow' in heroSlides[currentSlide] && heroSlides[currentSlide].eyebrow && (
                     <span className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-waw-yellow text-waw-dark font-bold text-sm md:text-base shadow-lg shadow-waw-yellow/30 border-2 border-waw-dark/10">
                       <Shield className="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" aria-hidden />
                       {heroSlides[currentSlide].eyebrow}
                     </span>
                   )}
-                  <h1
-                    className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold mb-4 leading-tight text-waw-dark"
-                    style={{
-                      willChange: 'auto',
-                      transform: 'translate3d(0, 0, 0)',
-                      WebkitTransform: 'translate3d(0, 0, 0)'
-                    }}
-                  >
+                  <h1 className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold mb-4 leading-tight text-waw-dark">
                     {heroSlides[currentSlide].title}
                   </h1>
                   {heroSlides[currentSlide].subtitle && (
-                    <h2
-                      className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-light text-gray-600 mb-6"
-                      style={{
-                        willChange: 'auto',
-                        transform: 'translate3d(0, 0, 0)',
-                        WebkitTransform: 'translate3d(0, 0, 0)'
-                      }}
-                    >
+                    <h2 className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-light text-gray-600 mb-6">
                       {heroSlides[currentSlide].subtitle}
                     </h2>
                   )}
-                </div>
 
-                <p
-                  className="text-lg lg:text-xl leading-relaxed text-gray-700"
-                  style={{
-                    willChange: 'auto',
-                    transform: 'translate3d(0, 0, 0)',
-                    WebkitTransform: 'translate3d(0, 0, 0)'
-                  }}
-                >
-                  {heroSlides[currentSlide].description}
-                </p>
+                  <p className="text-lg lg:text-xl leading-relaxed text-gray-700">
+                    {heroSlides[currentSlide].description}
+                  </p>
 
-                {/* Boutons d'action - visible seulement sur desktop */}
-                <div className="hidden lg:flex flex-col sm:flex-row gap-4 pt-4">
-                  <button
-                    onClick={'ctaType' in heroSlides[currentSlide] && heroSlides[currentSlide].ctaType === 'devis' ? openDevisModal : () => setContactModalOpen(true)}
-                    className="group bg-waw-yellow text-waw-dark px-6 py-4 md:px-8 md:py-4 min-h-[48px] rounded-2xl font-bold text-base flex items-center justify-center gap-2 shadow-[0_8px_30px_rgba(255,221,51,0.25)] hover:shadow-[0_12px_40px_rgba(255,221,51,0.4)] transition-all hover:scale-103 active:scale-97"
-                  >
-                    <span>{'ctaLabel' in heroSlides[currentSlide] && heroSlides[currentSlide].ctaLabel ? heroSlides[currentSlide].ctaLabel : 'Nous contacter'}</span>
-                    <ArrowRight size={18} />
-                  </button>
+                  {/* Boutons d'action - visible seulement sur desktop */}
+                  <div className="hidden lg:flex flex-col sm:flex-row gap-4 pt-4">
+                    <button
+                      onClick={'ctaType' in heroSlides[currentSlide] && heroSlides[currentSlide].ctaType === 'devis' ? openDevisModal : () => setContactModalOpen(true)}
+                      className="group bg-waw-yellow text-waw-dark px-6 py-4 md:px-8 md:py-4 min-h-[48px] rounded-2xl font-bold text-base flex items-center justify-center gap-2 shadow-[0_8px_30px_rgba(255,221,51,0.25)] hover:shadow-[0_12px_40px_rgba(255,221,51,0.4)] transition-all hover:scale-103 active:scale-97"
+                    >
+                      <span>{'ctaLabel' in heroSlides[currentSlide] && heroSlides[currentSlide].ctaLabel ? heroSlides[currentSlide].ctaLabel : 'Nous contacter'}</span>
+                      <ArrowRight size={18} />
+                    </button>
+                  </div>
                 </div>
               </div>
 
