@@ -440,7 +440,7 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.96 }}
                 transition={{ type: 'spring', damping: 26, stiffness: 300, mass: 0.8 }}
-                className="w-full max-w-[900px] max-h-[calc(100vh-2rem)] flex flex-col rounded-2xl md:rounded-3xl overflow-hidden bg-white shadow-2xl pointer-events-auto"
+                className="w-full max-w-[900px] max-h-[calc(100vh-2rem)] md:h-[calc(100vh-2rem)] flex flex-col rounded-2xl md:rounded-3xl overflow-hidden bg-white shadow-2xl pointer-events-auto"
                 style={{ width: 'calc(100vw - 2rem)' }}
                 role="dialog"
                 aria-modal="true"
@@ -452,18 +452,19 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
               <button
                 type="button"
                 onClick={() => setStarlinkModalOpen(false)}
-                className="absolute top-3 right-3 z-20 w-10 h-10 rounded-full bg-white/90 hover:bg-white shadow-lg flex items-center justify-center text-waw-dark transition-colors"
+                className="absolute top-2 right-2 md:top-2.5 md:right-2.5 z-20 rounded-full bg-white/95 hover:bg-white shadow-lg border border-gray-100 flex items-center gap-2 pl-3 pr-3.5 py-2 text-waw-dark font-medium text-sm transition-colors"
                 aria-label="Fermer"
               >
-                <X size={20} strokeWidth={2.5} />
+                <X size={18} strokeWidth={2.5} />
+                <span>Fermer</span>
               </button>
 
-              {/* Image bannière */}
-              <div className="relative flex-shrink-0 bg-gray-100">
+              {/* Image bannière : sur desktop occupe toute la zone du modal, sur mobile hauteur limitée */}
+              <div className="relative flex-shrink-0 bg-gray-100 md:flex-1 md:min-h-0 md:min-w-0 flex items-center justify-center">
                 <img
                   src={starlinkImage}
                   alt="WAW Revendeur Autorisé Starlink au Sénégal"
-                  className="w-full h-auto max-h-[50vh] object-contain object-center"
+                  className="w-full h-auto max-h-[50vh] md:max-h-none md:w-full md:h-full md:object-cover md:object-center"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
                 <div className="absolute top-3 right-12 md:top-4 md:right-16 flex items-center gap-1.5 md:gap-2 bg-white/95 backdrop-blur-sm border border-waw-yellow md:border-2 text-waw-dark rounded-lg md:rounded-xl px-2 py-1.5 md:px-3 md:py-2.5 shadow-lg">
@@ -475,24 +476,33 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                 </div>
               </div>
 
-              {/* Texte + CTA */}
-              <div className="flex flex-col items-center text-center px-5 py-5 md:px-8 md:py-6 flex-shrink-0 bg-white">
-                <p id="modal-starlink-title" className="text-sm md:text-base text-gray-700 mb-4 max-w-xl leading-relaxed">
-                  <span className="font-bold text-waw-dark">WAW est Revendeur Autorisé Starlink au Sénégal.</span>
-                  {' '}
-                  Connectivité satellitaire professionnelle pour entreprises et sites stratégiques.
+              {/* Texte + CTA — bloc moderne et professionnel */}
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+                className="flex flex-col items-center text-center px-6 py-6 md:px-10 md:py-8 flex-shrink-0 bg-gradient-to-b from-white to-gray-50/80 border-t border-gray-100"
+              >
+                <p id="modal-starlink-title" className="max-w-xl space-y-3 mb-6">
+                  <span className="block text-base md:text-lg font-display font-bold text-waw-dark tracking-tight leading-snug">
+                    WAW est Revendeur Autorisé Starlink au Sénégal
+                  </span>
+                  <span className="block text-sm md:text-base text-gray-600 leading-relaxed font-normal">
+                    Connectivité satellitaire professionnelle pour entreprises et sites stratégiques.
+                  </span>
                 </p>
                 <motion.button
                   type="button"
                   onClick={() => { setStarlinkModalOpen(false); openContactModalForStudy(); }}
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: 1.02, boxShadow: '0 20px 40px -12px rgba(0,0,0,0.15)' }}
                   whileTap={{ scale: 0.98 }}
-                  className="bg-waw-yellow text-waw-dark font-bold text-sm md:text-base px-6 py-3.5 md:px-8 md:py-4 rounded-2xl shadow-lg hover:shadow-xl transition-shadow inline-flex items-center gap-2"
+                  transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                  className="group bg-waw-yellow text-waw-dark font-bold text-sm md:text-base px-7 py-3.5 md:px-9 md:py-4 rounded-2xl shadow-lg hover:shadow-xl border-2 border-waw-dark/10 transition-all duration-300 inline-flex items-center gap-2.5"
                 >
                   <span>Demander une étude personnalisée</span>
-                  <ArrowRight size={18} />
+                  <ArrowRight size={18} className="transition-transform duration-300 group-hover:translate-x-0.5" />
                 </motion.button>
-              </div>
+              </motion.div>
               </div>
               </motion.div>
             </motion.div>

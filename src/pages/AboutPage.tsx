@@ -62,11 +62,6 @@ const AboutPage = ({ onNavigate }: AboutPageProps) => {
     threshold: 0.1,
   });
 
-  const [testimonialsRef, testimonialsInView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
-
   const [coverageRef, coverageInView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -174,54 +169,10 @@ const AboutPage = ({ onNavigate }: AboutPageProps) => {
     }
   ];
 
-  // Témoignages clients
-  const testimonials = [
-    {
-      id: 1,
-      name: 'Amadou Diallo',
-      position: 'Directeur IT',
-      company: 'Banque Atlantique Sénégal',
-      image: 'https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?w=150&h=150&fit=crop&crop=face',
-      content: 'WAW TELECOM a transformé notre infrastructure IT. Depuis l\'installation de leur solution fibre, nos opérations bancaires sont 3x plus rapides. Un partenaire de confiance.',
-      rating: 5,
-      service: 'Connectivité Entreprise'
-    },
-    {
-      id: 2,
-      name: 'Fatou Mbaye',
-      position: 'CEO',
-      company: 'Digital Innovation Hub',
-      image: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=150&h=150&fit=crop&crop=face',
-      content: 'Grâce à leurs solutions cloud, nous avons pu déployer notre startup tech rapidement. Le support 24/7 est exceptionnel, même pendant nos pics d\'activité.',
-      rating: 5,
-      service: 'Solutions Cloud'
-    },
-    {
-      id: 3,
-      name: 'Moussa Kane',
-      position: 'Responsable Voyage',
-      company: 'Sénégal Tours International',
-      image: 'https://images.unsplash.com/photo-1522529599102-193c0d76b5b6?w=150&h=150&fit=crop&crop=face',
-      content: 'Les eSIM WAW nous ont révolutionné ! Nos clients voyagent maintenant connectés partout dans le monde. Commande en 2 minutes, activation instantanée.',
-      rating: 5,
-      service: 'eSIM Travel'
-    },
-    {
-      id: 4,
-      name: 'Dr. Aïssatou Sow',
-      position: 'Directrice Médicale',
-      company: 'Hôpital Principal de Dakar',
-      image: 'https://images.unsplash.com/photo-1589156280159-27698a70f29e?w=150&h=150&fit=crop&crop=face',
-      content: 'L\'installation fibre de WAW a permis de connecter tous nos services médicaux. Les téléconsultations et le partage de données se font maintenant en temps réel.',
-      rating: 5,
-      service: 'Infrastructure Santé'
-    }
-  ];
-
-  // Partenaires & Certifications
+  // Partenaires
   const partners = [
     { name: 'AFR-IX', logo: 'https://th.bing.com/th/id/OIP.k7KepE5VmbaTp6nrkv4R5QHaDG?w=295&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3' },
-    { name: 'Banque Atlantique', logo: 'data:image/webp;base64,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' },
+    { name: 'Banque Atlantique', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Banque_Atlantique_logo.svg/200px-Banque_Atlantique_logo.svg.png' },
     { name: 'Delta Air Lines', logo: 'https://tse4.mm.bing.net/th/id/OIP.73-rMILC_coF_Tspzo2XuQHaE7?w=1250&h=833&rs=1&pid=ImgDetMain&o=7&rm=3' },
     { name: 'AIBD', logo: 'https://th.bing.com/th/id/OIP.jUbihA3tOKXmeAH72vg5cgHaDm?w=319&h=170&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3' },
     { name: 'BNDE', logo: 'https://www.bnde.sn/sites/default/files/2024-06/Logo%20BNDE%20OK_Plan%20de%20travail%201.jpg' }
@@ -985,179 +936,62 @@ Cordialement,`);
       {/* Nos Infrastructures */}
       <NosInfrastructures />
 
-      {/* Témoignages Clients */}
+      {/* Nos partenaires de confiance */}
       <section className="relative py-24 overflow-hidden bg-gradient-to-br from-white via-gray-50/80 to-amber-50/20">
-        {/* Background */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute inset-0 opacity-[0.025]" style={{
             backgroundImage: 'radial-gradient(circle, #1a1a2e 1px, transparent 1px)',
             backgroundSize: '40px 40px'
           }} />
-          <motion.div
-            animate={{ scale: [1, 1.15, 1], opacity: [0.15, 0.25, 0.15] }}
-            transition={{ duration: 10, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut' }}
-            className="absolute -top-32 left-1/4 w-[500px] h-[500px] bg-gradient-to-br from-waw-yellow/10 to-amber-100/10 rounded-full blur-3xl"
-          />
-          <motion.div
-            animate={{ scale: [1, 1.1, 1], opacity: [0.1, 0.2, 0.1] }}
-            transition={{ duration: 12, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut', delay: 4 }}
-            className="absolute -bottom-32 right-1/4 w-[400px] h-[400px] bg-gradient-to-tl from-amber-100/15 to-transparent rounded-full blur-3xl"
-          />
         </div>
-
         <div className="container-custom relative z-10">
-          {/* Header */}
-          <motion.div
-            ref={testimonialsRef}
-            variants={containerVariants}
-            initial="hidden"
-            animate={testimonialsInView ? 'visible' : 'hidden'}
-            className="text-center mb-16"
-          >
-            <motion.span
-              variants={itemVariants}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold bg-waw-yellow/10 text-waw-dark border border-waw-yellow/20"
-            >
-              <MessageCircle size={14} className="text-waw-yellow" />
-              TÉMOIGNAGES
-            </motion.span>
-
-            <motion.h2
-              variants={itemVariants}
-              className="mt-8 text-4xl lg:text-5xl font-display font-bold text-waw-dark leading-tight"
-            >
-              Ce que disent nos{' '}
-              <span className="gradient-text">clients</span>
-            </motion.h2>
-
-            <motion.p
-              variants={itemVariants}
-              className="mt-6 text-lg text-gray-500 leading-relaxed max-w-2xl mx-auto"
-            >
-              La satisfaction de nos clients est notre plus belle récompense.
-            </motion.p>
-          </motion.div>
-
-          {/* Testimonials - Bento-style Grid */}
-          <div className="grid md:grid-cols-2 gap-6">
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={testimonial.id}
-                initial={{ opacity: 0, y: 40 }}
-                animate={testimonialsInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: 0.2 + index * 0.12 }}
-                whileHover={{ y: -4 }}
-                className="group relative rounded-3xl p-8 bg-white border border-gray-100 shadow-sm hover:shadow-xl hover:border-waw-yellow/20 transition-all duration-500"
-              >
-                {/* Hover glow */}
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-waw-yellow/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                <div className="relative z-10">
-                  {/* Top row: Avatar + Info + Rating */}
-                  <div className="flex items-start justify-between mb-6">
-                    <div className="flex items-center gap-4">
-                      <div className="relative">
-                        <img
-                          src={testimonial.image}
-                          alt={testimonial.name}
-                          className="w-14 h-14 rounded-2xl object-cover ring-2 ring-gray-100"
-                        />
-                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-400 rounded-full border-2 border-white" />
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-waw-dark text-lg">{testimonial.name}</h4>
-                        <p className="text-gray-500 text-sm">{testimonial.position}</p>
-                        <p className="text-waw-yellow text-sm font-medium">{testimonial.company}</p>
-                      </div>
-                    </div>
-                    {/* Stars */}
-                    <div className="flex items-center gap-0.5">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} size={14} className="text-waw-yellow fill-waw-yellow" />
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Quote */}
-                  <div className="relative">
-                    <Quote size={28} className="absolute -top-1 -left-1 text-gray-100" />
-                    <p className="text-gray-600 leading-relaxed pl-6 text-[15px]">
-                      {testimonial.content}
-                    </p>
-                  </div>
-
-                  {/* Service Tag */}
-                  <div className="mt-6 flex items-center justify-between">
-                    <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-100 text-xs font-semibold text-gray-600">
-                      <CheckCircle size={12} className="text-waw-yellow" />
-                      {testimonial.service}
-                    </span>
-                    <span className="text-xs text-gray-400">Client vérifié</span>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Partners Section */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
-            animate={testimonialsInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.8 }}
-            className="mt-20"
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-10"
           >
-            <div className="text-center mb-10">
-              <h3 className="text-2xl font-bold text-waw-dark mb-2">Nos partenaires de confiance</h3>
-              <p className="text-gray-500 text-sm">Nous collaborons avec les leaders technologiques</p>
-            </div>
-
-            {/* Logos défilants */}
-            <div className="relative overflow-hidden">
-              <motion.div
-                animate={{
-                  x: [0, -100 * partners.length],
-                }}
-                transition={{
-                  duration: 15,
-                  repeat: Number.POSITIVE_INFINITY,
-                  ease: 'linear',
-                }}
-                className="flex space-x-6"
-                style={{ width: `${200 * partners.length}%` }}
-              >
-                {partners.map((partner) => (
-                  <div
-                    key={`first-${partner.name}`}
-                    className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm flex items-center justify-center flex-shrink-0 hover:shadow-md hover:border-waw-yellow/20 transition-all"
-                    style={{ width: '180px', height: '100px' }}
-                  >
-                    <img
-                      src={partner.logo}
-                      alt={`Logo ${partner.name}`}
-                      className="max-h-14 max-w-full object-contain hover:brightness-110 transition-all"
-                    />
-                  </div>
-                ))}
-                {partners.map((partner) => (
-                  <div
-                    key={`second-${partner.name}`}
-                    className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm flex items-center justify-center flex-shrink-0 hover:shadow-md hover:border-waw-yellow/20 transition-all"
-                    style={{ width: '180px', height: '100px' }}
-                  >
-                    <img
-                      src={partner.logo}
-                      alt={`Logo ${partner.name}`}
-                      className="max-h-14 max-w-full object-contain hover:brightness-110 transition-all"
-                    />
-                  </div>
-                ))}
-              </motion.div>
-
-              {/* Gradient fade */}
-              <div className="absolute left-0 top-0 w-24 h-full bg-gradient-to-r from-white to-transparent z-10" />
-              <div className="absolute right-0 top-0 w-24 h-full bg-gradient-to-l from-gray-50 to-transparent z-10" />
-            </div>
+            <h3 className="text-2xl font-bold text-waw-dark mb-2">Nos partenaires de confiance</h3>
+            <p className="text-gray-500 text-sm">Nous collaborons avec les leaders technologiques</p>
           </motion.div>
+          <div className="relative overflow-hidden">
+            <motion.div
+              animate={{ x: [0, -180 * partners.length] }}
+              transition={{ duration: 20, repeat: Number.POSITIVE_INFINITY, ease: 'linear' }}
+              className="flex gap-6"
+              style={{ width: 'max-content' }}
+            >
+              {partners.map((partner) => (
+                <div
+                  key={`first-${partner.name}`}
+                  className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm flex items-center justify-center flex-shrink-0 hover:shadow-md hover:border-waw-yellow/20 transition-all"
+                  style={{ width: '180px', height: '100px' }}
+                >
+                  <img
+                    src={partner.logo}
+                    alt={`Logo ${partner.name}`}
+                    className="max-h-14 max-w-full object-contain"
+                  />
+                </div>
+              ))}
+              {partners.map((partner) => (
+                <div
+                  key={`second-${partner.name}`}
+                  className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm flex items-center justify-center flex-shrink-0 hover:shadow-md hover:border-waw-yellow/20 transition-all"
+                  style={{ width: '180px', height: '100px' }}
+                >
+                  <img
+                    src={partner.logo}
+                    alt={`Logo ${partner.name}`}
+                    className="max-h-14 max-w-full object-contain"
+                  />
+                </div>
+              ))}
+            </motion.div>
+            <div className="absolute left-0 top-0 w-24 h-full bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+            <div className="absolute right-0 top-0 w-24 h-full bg-gradient-to-l from-gray-50/80 to-transparent z-10 pointer-events-none" />
+          </div>
         </div>
       </section>
 
