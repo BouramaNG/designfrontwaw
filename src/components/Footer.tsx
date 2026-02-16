@@ -12,7 +12,8 @@ import {
   Heart,
   Linkedin,
   Instagram,
-  Facebook
+  Facebook,
+  Twitter
 } from 'lucide-react';
 import type { PageType } from '../App';
 
@@ -49,6 +50,12 @@ const Footer = ({ onNavigate }: FooterProps) => {
       icon: Linkedin,
       name: 'LinkedIn',
       url: 'https://www.linkedin.com/company/wawtelecom',
+      color: 'hover:text-waw-yellow'
+    },
+    {
+      icon: Twitter,
+      name: 'Twitter',
+      url: 'https://x.com/wawtelecom',
       color: 'hover:text-waw-yellow'
     },
     {
