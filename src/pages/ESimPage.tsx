@@ -196,7 +196,9 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
       step: '2',
       icon: CreditCard,
       title: "Tarification claire & accessible",
-      description: "Des forfaits dès 1 000 FCFA, pensés pour tous. Maîtrisez votre budget, profitez d'une expérience premium."
+      // TODO: Réactiver quand les prix sont définis
+      // description: "Des forfaits dès 1 000 FCFA, pensés pour tous. Maîtrisez votre budget, profitez d'une expérience premium."
+      description: "Des forfaits pensés pour tous. Maîtrisez votre budget, profitez d'une expérience premium."
     },
     {
       step: '3',
@@ -313,11 +315,13 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
               </motion.div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-display font-bold leading-[1.1] text-white">
-                Votre eSIM dès{' '}
+                {/* TODO: Réactiver quand les prix sont définis */}
+                {/* Votre eSIM dès{' '}
                 <span className="bg-gradient-to-r from-waw-yellow to-waw-yellow-dark bg-clip-text text-transparent">
                   1 000 FCFA
                 </span>{' '}
-                internationale
+                internationale */}
+                Votre eSIM internationale
               </h1>
 
               <p className="text-lg lg:text-xl text-gray-400 leading-relaxed max-w-xl">
@@ -1368,8 +1372,12 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
                             <p className="text-sm font-bold text-waw-dark">
                               {country.packages.length} {country.packages.length === 1 ? 'offre' : 'offres'}
                             </p>
-                            <p className="text-xs text-gray-500 mt-0.5">
+                            {/* TODO: Réactiver quand les prix sont définis */}
+                            {/* <p className="text-xs text-gray-500 mt-0.5">
                               À partir de {Math.min(...country.packages.map((p: any) => p.price || 0)).toLocaleString('fr-FR')} FCFA
+                            </p> */}
+                            <p className="text-xs text-gray-500 mt-0.5">
+                              Tarifs sur demande
                             </p>
                           </>
                         ) : (

@@ -36,67 +36,71 @@ const CheckoutPage = ({ onNavigate, selectedPlan }: CheckoutPageProps) => {
 
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showContactMessage, setShowContactMessage] = useState(false);
 
   const phoneCodes = INDICATIFS.map(ind => ({ code: ind.ind, country: ind.pays }));
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
 
     if (!formData.email || !formData.phone) {
       setError('Veuillez remplir tous les champs obligatoires');
       return;
     }
 
-    setProcessing(true);
+    // Bloquer le paiement et afficher le message de contact sales
+    setShowContactMessage(true);
     setError(null);
+    setProcessing(false);
 
-    try {
-      // Préparer les données de commande (conformes à OrderData)
-      const orderData: OrderData = {
-        esim_package_template_id: typeof (selectedPlan as any).id === 'number' ? (selectedPlan as any).id : 1,
-        email: formData.email,
-        phone_number: `${formData.phoneCode}${formData.phone}`,
-        amount: selectedPlan.price,
-        customer_name: formData.email.split('@')[0],
-        country_code: (selectedPlan as any).country_code || selectedPlan.country
-      };
+    // TODO: Réactiver le paiement quand les prix sont définis
+    // try {
+    //   // Préparer les données de commande (conformes à OrderData)
+    //   const orderData: OrderData = {
+    //     esim_package_template_id: typeof (selectedPlan as any).id === 'number' ? (selectedPlan as any).id : 1,
+    //     email: formData.email,
+    //     phone_number: `${formData.phoneCode}${formData.phone}`,
+    //     amount: selectedPlan.price,
+    //     customer_name: formData.email.split('@')[0],
+    //     country_code: (selectedPlan as any).country_code || selectedPlan.country
+    //   };
 
-      console.log('📦 Création commande:', orderData);
+    //   console.log('📦 Création commande:', orderData);
 
-      // 1. Créer la commande
-      const orderResponse = await orderService.createOrder(orderData);
+    //   // 1. Créer la commande
+    //   const orderResponse = await orderService.createOrder(orderData);
 
-      if (!orderResponse.success) {
-        throw new Error(orderResponse.message || 'Erreur lors de la création de la commande');
-      }
+    //   if (!orderResponse.success) {
+    //     throw new Error(orderResponse.message || 'Erreur lors de la création de la commande');
+    //   }
 
-      console.log('✅ Commande créée:', orderResponse);
+    //   console.log('✅ Commande créée:', orderResponse);
 
-      // 2. Initier le paiement
-      if (orderResponse.order_id) {
-        const paymentResponse = await orderService.initiatePayment(orderResponse.order_id);
+    //   // 2. Initier le paiement
+    //   if (orderResponse.order_id) {
+    //     const paymentResponse = await orderService.initiatePayment(orderResponse.order_id);
 
-        if (!paymentResponse.success) {
-          throw new Error(paymentResponse.message || 'Erreur lors de l\'initiation du paiement');
-        }
+    //     if (!paymentResponse.success) {
+    //       throw new Error(paymentResponse.message || 'Erreur lors de l\'initiation du paiement');
+    //     }
 
-        console.log('✅ Paiement initié:', paymentResponse);
+    //     console.log('✅ Paiement initié:', paymentResponse);
 
-        // 3. Rediriger vers PayTech ou page de confirmation
-        if (paymentResponse.payment_url) {
-          console.log('🔄 Redirection vers PayTech:', paymentResponse.payment_url);
-          window.location.href = paymentResponse.payment_url;
-        } else {
-          // Si pas de payment_url, aller directement à la confirmation
-          console.log('✅ Redirection vers confirmation');
-          onNavigate('confirmation');
-        }
-      }
-    } catch (err: any) {
-      console.error('❌ Erreur checkout:', err);
-      setError(err.message || 'Une erreur est survenue lors du paiement');
-      setProcessing(false);
-    }
+    //     // 3. Rediriger vers PayTech ou page de confirmation
+    //     if (paymentResponse.payment_url) {
+    //       console.log('🔄 Redirection vers PayTech:', paymentResponse.payment_url);
+    //       window.location.href = paymentResponse.payment_url;
+    //     } else {
+    //       // Si pas de payment_url, aller directement à la confirmation
+    //       console.log('✅ Redirection vers confirmation');
+    //       onNavigate('confirmation');
+    //     }
+    //   }
+    // } catch (err: any) {
+    //   console.error('❌ Erreur checkout:', err);
+    //   setError(err.message || 'Une erreur est survenue lors du paiement');
+    //   setProcessing(false);
+    // }
   };
 
   return (
@@ -189,17 +193,35 @@ const CheckoutPage = ({ onNavigate, selectedPlan }: CheckoutPageProps) => {
                 </div>
               )}
 
+              {/* Message contact sales */}
+              {showContactMessage && (
+                <div className="bg-waw-yellow/10 border-2 border-waw-yellow rounded-lg p-5 text-waw-dark flex flex-col gap-3">
+                  <div className="flex items-start gap-3">
+                    <Mail size={24} className="flex-shrink-0 text-waw-yellow" />
+                    <div className="flex-1">
+                      <h3 className="font-bold text-lg mb-1">Veuillez contacter les sales pour votre achat</h3>
+                      <p className="text-sm text-gray-700">
+                        Pour finaliser votre commande, contactez notre équipe commerciale à{' '}
+                        <a href="mailto:contact@wawtelecom.com" className="font-semibold text-waw-dark underline hover:text-waw-yellow transition-colors">
+                          contact@wawtelecom.com
+                        </a>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="flex justify-end">
                 <button
                   type="submit"
-                  disabled={processing || !formData.email || !formData.phone}
+                  disabled={processing || !formData.email || !formData.phone || showContactMessage}
                   className={`px-8 py-3 rounded-lg font-semibold transition-colors ${
-                    processing || !formData.email || !formData.phone
+                    processing || !formData.email || !formData.phone || showContactMessage
                       ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                       : 'bg-waw-yellow text-waw-dark hover:bg-waw-yellow-dark'
                   }`}
                 >
-                  {processing ? 'Traitement...' : 'Continuer'}
+                  {processing ? 'Traitement...' : showContactMessage ? 'Contactez les sales' : 'Continuer'}
                 </button>
               </div>
             </form>
@@ -238,17 +260,32 @@ const CheckoutPage = ({ onNavigate, selectedPlan }: CheckoutPageProps) => {
                 </div>
               </div>
 
+              {/* Message contact sales dans le résumé */}
+              {showContactMessage && (
+                <div className="bg-waw-yellow/10 border-2 border-waw-yellow rounded-lg p-5 text-waw-dark mb-4">
+                  <div className="flex items-start gap-3">
+                    <Mail size={20} className="flex-shrink-0 text-waw-yellow mt-0.5" />
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold mb-1">Veuillez contacter les sales pour votre achat</p>
+                      <a href="mailto:contact@wawtelecom.com" className="text-sm text-waw-dark underline hover:text-waw-yellow transition-colors">
+                        contact@wawtelecom.com
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <div className="flex justify-center">
                 <motion.button
-                  whileHover={{ scale: processing ? 1 : 1.05 }}
-                  whileTap={{ scale: processing ? 1 : 0.95 }}
-                  disabled={processing || !formData.email || !formData.phone}
+                  whileHover={{ scale: processing || showContactMessage ? 1 : 1.05 }}
+                  whileTap={{ scale: processing || showContactMessage ? 1 : 0.95 }}
+                  disabled={processing || !formData.email || !formData.phone || showContactMessage}
                   className={`px-12 py-4 rounded-xl font-semibold transition-colors flex items-center gap-3 ${
-                    processing || !formData.email || !formData.phone
+                    processing || !formData.email || !formData.phone || showContactMessage
                       ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                       : 'bg-waw-yellow text-waw-dark hover:bg-waw-yellow-dark'
                   }`}
-                  onClick={handleSubmit}
+                  onClick={() => handleSubmit()}
                 >
                   {processing ? (
                     <>
@@ -257,6 +294,11 @@ const CheckoutPage = ({ onNavigate, selectedPlan }: CheckoutPageProps) => {
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                       </svg>
                       <span>Traitement en cours...</span>
+                    </>
+                  ) : showContactMessage ? (
+                    <>
+                      <Mail size={20} />
+                      <span>Contactez les sales</span>
                     </>
                   ) : (
                     <>

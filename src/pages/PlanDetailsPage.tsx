@@ -492,61 +492,67 @@ const PlanDetailsPage = ({ onNavigate, navigateToPage, planId }: PlanDetailsPage
       return;
     }
 
-    setProcessing(true);
+    // Bloquer le paiement et afficher le message de contact sales
+    setShowCheckoutModal(false);
+    setShowContactModal(true);
+    setProcessing(false);
 
-    try {
-      const orderData = {
-        esim_package_template_id: selectedPlan.id,  // ← Correct field name
-        email: chatEmail,
-        phone_number: `${selectedIndicatif}${chatPhone}`,  // ← Correct field name
-        amount: selectedPlan.price
-      };
+    // TODO: Réactiver le paiement quand les prix sont définis
+    // setProcessing(true);
 
-      console.log('📦 Création commande:', orderData);
-      const orderResponse = await orderService.createOrder(orderData);
+    // try {
+    //   const orderData = {
+    //     esim_package_template_id: selectedPlan.id,  // ← Correct field name
+    //     email: chatEmail,
+    //     phone_number: `${selectedIndicatif}${chatPhone}`,  // ← Correct field name
+    //     amount: selectedPlan.price
+    //   };
 
-      if (!orderResponse.success || !orderResponse.order_id) {
-        // Si erreur, afficher le modal contact avec l'erreur
-        console.warn('⚠️ Création commande échouée, affichage modal contact');
-        setShowContactModal(true);
-        setProcessing(false);
-        return;
-      }
+    //   console.log('📦 Création commande:', orderData);
+    //   const orderResponse = await orderService.createOrder(orderData);
 
-      console.log('✅ Commande créée:', orderResponse);
+    //   if (!orderResponse.success || !orderResponse.order_id) {
+    //     // Si erreur, afficher le modal contact avec l'erreur
+    //     console.warn('⚠️ Création commande échouée, affichage modal contact');
+    //     setShowContactModal(true);
+    //     setProcessing(false);
+    //     return;
+    //   }
+
+    //   console.log('✅ Commande créée:', orderResponse);
       
-      // 👉 ÉTAPE 2: Afficher une modale de confirmation élégante
-      const confirmPayment = async () => {
-        setProcessing(true);
-        try {
-          // 👉 ÉTAPE 3: Initier le paiement
-          const paymentResponse = await orderService.initiatePayment(orderResponse.order_id!);
+    //   // 👉 ÉTAPE 2: Afficher une modale de confirmation élégante
+    //   const confirmPayment = async () => {
+    //     setProcessing(true);
+    //     try {
+    //       // 👉 ÉTAPE 3: Initier le paiement
+    //       const paymentResponse = await orderService.initiatePayment(orderResponse.order_id!);
 
-          if (!paymentResponse.success || !paymentResponse.payment_url) {
-            throw new Error(paymentResponse.message || 'Erreur initiation paiement');
-          }
+    //       if (!paymentResponse.success || !paymentResponse.payment_url) {
+    //         throw new Error(paymentResponse.message || 'Erreur initiation paiement');
+    //       }
 
-          console.log('✅ Paiement initié, redirection vers:', paymentResponse.payment_url);
-          window.location.href = paymentResponse.payment_url;
-        } catch (err: any) {
-          console.error('❌ Erreur paiement:', err);
-          setShowConfirmModal(false);
-          setShowContactModal(true);
-          setProcessing(false);
-        }
-      };
+    //       console.log('✅ Paiement initié, redirection vers:', paymentResponse.payment_url);
+    //       window.location.href = paymentResponse.payment_url;
+    //     } catch (err: any) {
+    //       console.error('❌ Erreur paiement:', err);
+    //       setShowConfirmModal(false);
+    //       setShowContactModal(true);
+    //       setProcessing(false);
+    //     }
+    //   };
 
-      // Afficher la modale de confirmation
-      setConfirmAction(() => confirmPayment);
-      setShowConfirmModal(true);
-      setProcessing(false);
+    //   // Afficher la modale de confirmation
+    //   setConfirmAction(() => confirmPayment);
+    //   setShowConfirmModal(true);
+    //   setProcessing(false);
 
-    } catch (err: any) {
-      console.error('❌ Erreur checkout:', err);
-      // Afficher le modal contact en cas d'erreur
-      setShowContactModal(true);
-      setProcessing(false);
-    }
+    // } catch (err: any) {
+    //   console.error('❌ Erreur checkout:', err);
+    //   // Afficher le modal contact en cas d'erreur
+    //   setShowContactModal(true);
+    //   setProcessing(false);
+    // }
   };
 
   const howItWorks = [
@@ -1884,11 +1890,14 @@ const PlanDetailsPage = ({ onNavigate, navigateToPage, planId }: PlanDetailsPage
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
-                  className="bg-amber-50 border-2 border-amber-200 rounded-2xl p-5 mb-6"
+                  className="bg-waw-yellow/10 border-2 border-waw-yellow rounded-2xl p-5 mb-6"
                 >
-                  <p className="text-sm font-semibold text-amber-900 mb-3">⚡ Actuellement en configuration</p>
-                  <p className="text-sm text-amber-800 leading-relaxed">
-                    Nos forfaits de données arrivent prochainement! Pendant ce temps, veuillez contacter notre équipe pour finaliser votre commande.
+                  <p className="text-sm font-bold text-waw-dark mb-2">Veuillez contacter les sales pour votre achat</p>
+                  <p className="text-sm text-gray-700 leading-relaxed">
+                    Pour finaliser votre commande, contactez notre équipe commerciale à{' '}
+                    <a href="mailto:contact@wawtelecom.com" className="font-semibold text-waw-dark underline hover:text-waw-yellow transition-colors">
+                      contact@wawtelecom.com
+                    </a>
                   </p>
                 </motion.div>
 
