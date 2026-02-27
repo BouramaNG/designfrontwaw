@@ -93,6 +93,8 @@ const PlanDetailsPage = ({ onNavigate, navigateToPage, planId }: PlanDetailsPage
   const [chatPhone, setChatPhone] = useState('');
   const [selectedIndicatif, setSelectedIndicatif] = useState('+221');
   const [processing, setProcessing] = useState(false);
+  const [emailSubmitted, setEmailSubmitted] = useState(false);
+  const [phoneSubmitted, setPhoneSubmitted] = useState(false);
   // Modal flow states - UNE SEULE MODALE
   const [showCheckoutModal, setShowCheckoutModal] = useState(false);
   // Modal "Contactez-nous" - Pas encore de prix définis
@@ -103,9 +105,6 @@ const PlanDetailsPage = ({ onNavigate, navigateToPage, planId }: PlanDetailsPage
   // How it works interactive step
   const [activeHowStep, setActiveHowStep] = useState(0);
   const [howStepPaused, setHowStepPaused] = useState(false);
-  // Email & Phone submission tracking
-  const [emailSubmitted, setEmailSubmitted] = useState(false);
-  const [phoneSubmitted, setPhoneSubmitted] = useState(false);
   const STEP_DURATION = 4000;
 
   // Charger les packages depuis l'API

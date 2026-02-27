@@ -37,13 +37,14 @@ import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { sendPublicContact } from '../services/contactService';
+import type { PageType } from '../App';
 import logoWaw from '../assets/images/Logo Waw officiel.png';
 import backbone from '../assets/images/backbone.png';
 import ingenieur from '../assets/images/ingenieurs .png';
 import images4 from '../assets/images/Images4.png';
 import technicien from '../assets/images/technicien.png';
 import slide1 from '../assets/images/slide1.png';
-import starlinkImage from '../assets/images/exemple.png';
+import starlinkImage from '../assets/images/sanscta.png';
 
 // Custom marker icon for Leaflet
 const customMarkerIcon = L.divIcon({
@@ -65,8 +66,10 @@ function HomeMapClickHandler({ onMapClick }: { onMapClick: (lat: number, lng: nu
   return null;
 }
 
+import type { PageType } from '../App';
+
 interface HomePage2Props {
-  onNavigate: (page: 'home' | 'connectivite' | 'cloud' | 'travel' | 'iot' | 'about' | 'contact') => void;
+  onNavigate: (page: PageType) => void;
 }
 
 const HomePage2 = ({ onNavigate }: HomePage2Props) => {
@@ -75,6 +78,9 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
   const [selectedService, setSelectedService] = useState('');
   const [formStep, setFormStep] = useState(0);
   const [showComingSoon, setShowComingSoon] = useState(false);
+
+  // Modal Starlink (bannière d'accueil)
+  const [starlinkModalOpen, setStarlinkModalOpen] = useState(true);
 
   // Modal devis state
   const [devisModalOpen, setDevisModalOpen] = useState(false);
@@ -268,18 +274,30 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
 
   const heroSlides = [
     {
-      title: "La connectivité intelligente au service de vos ambitions",
-      subtitle: "Ensemble, façonnons l'avenir digital de votre entreprise",
-      description: "Grâce à nos technologies de pointe — fibre optique, cloud souverain, eSIM et IoT — nous vous connectons au monde avec performance, sécurité et simplicité.",
+      title: "WAW est Revendeur Autorisé Starlink au Sénégal",
+      subtitle: "Internet haut débit par satellite, partout au Sénégal",
+      description: "Accédez à une connectivité satellitaire professionnelle pour vos sites d'entreprise, zones rurales et sites stratégiques. Installation clé en main et support premium par les équipes WAW.",
+      image: starlinkImage,
+      imageType: "single"
+    },
+    {
+      badge: "Fibre · Cloud · IoT · SD-WAN",
+      titleLine1: "La connectivité",
+      titleAccent: "intelligente",
+      titleLine2: "pour vos ambitions",
+      tagline: "Fibre optique · Cloud souverain · eSIM · IoT",
+      description: "Nous connectons votre entreprise au monde avec performance, sécurité et simplicité.",
       image: backbone,
       imageType: "single"
     },
     {
-      title: "Nos solutions complètes pour votre réussite",
-      subtitle: "De la connectivité au cloud, tout pour votre entreprise",
-      description: "Découvrez notre gamme complète de services professionnels : connectivité fibre, solutions cloud, eSIM international, et infrastructure IoT adaptés à vos besoins.",
+      badge: "Solutions Entreprises",
+      titleLine1: "Tout ce dont vous avez",
+      titleAccent: "besoin",
+      titleLine2: "en un seul partenaire",
+      tagline: "Connectivité · Cloud · eSIM · Infrastructure IoT",
+      description: "Une gamme complète de services professionnels, adaptés à chaque stade de votre croissance.",
       images: [
-        "https://images.unsplash.com/photo-1573164713988-8665fc963095?w=800&q=80",
         ingenieur,
         images4,
         technicien
@@ -287,9 +305,12 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
       imageType: "collage"
     },
     {
-      title: "Restez connecté partout dans le monde",
-      subtitle: "L'eSIM nouvelle génération pour vos voyages",
-      description: "Voyagez sans frontières avec notre eSIM internationale. Activation instantanée, couverture mondiale, et tarifs transparents pour rester connecté où que vous soyez.",
+      badge: "eSIM Internationale",
+      titleLine1: "Restez connecté",
+      titleAccent: "partout",
+      titleLine2: "dans le monde",
+      tagline: "Activation instantanée · Couverture mondiale · Sans SIM physique",
+      description: "Notre eSIM nouvelle génération — voyagez sans frontières, sans changer de carte.",
       image: slide1,
       imageType: "single"
     }
@@ -400,8 +421,99 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+      {/* Modal d'accueil Starlink */}
+      <AnimatePresence>
+        {starlinkModalOpen && (
+          <motion.div
+            className="fixed inset-0 z-[100] flex items-center justify-center px-4 py-6 bg-black/55 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+            onClick={() => setStarlinkModalOpen(false)}
+          >
+            <div className="relative w-full max-w-4xl md:max-w-5xl pointer-events-auto">
+              {/* Bouton fermer — en dehors du modal, coin haut-droit, ne chevauche rien */}
+              <button
+                type="button"
+                onClick={() => setStarlinkModalOpen(false)}
+                className="absolute -top-4 -right-4 z-30 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white text-gray-700 text-xs font-medium shadow-lg border border-gray-200 hover:bg-gray-50 transition-colors"
+                aria-label="Fermer"
+              >
+                <X size={14} />
+                <span>Fermer</span>
+              </button>
+            <motion.div
+              className="relative w-full bg-white rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row"
+              initial={{ opacity: 0, y: 24, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 16, scale: 0.97 }}
+              transition={{ duration: 0.28, ease: [0.25, 0.8, 0.25, 1] }}
+              onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="starlink-modal-title"
+            >
+              {/* Image */}
+              <div className="relative md:w-1/2 bg-black">
+                <img
+                  src={starlinkImage}
+                  alt="Solution Starlink par WAW Telecom"
+                  className="w-full h-56 md:h-[360px] object-contain"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/10 to-transparent pointer-events-none" />
+                {/* Badge déplacé dans la zone de texte */}
+              </div>
+
+              {/* Contenu texte */}
+              <div className="md:w-1/2 flex flex-col justify-center px-5 py-5 md:px-7 md:py-7 gap-4">
+                <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-waw-yellow text-waw-dark text-[11px] md:text-xs font-semibold shadow-md border border-waw-dark/15">
+                  <Shield className="w-3.5 h-3.5 text-waw-dark" aria-hidden />
+                  <span className="tracking-wide uppercase">Revendeur Autorisé Starlink</span>
+                </span>
+                <h2
+                  id="starlink-modal-title"
+                  className="text-xl md:text-2xl font-display font-bold text-waw-dark leading-snug"
+                >
+                  Connectivité Starlink pour vos sites stratégiques
+                </h2>
+                <p className="text-sm md:text-base text-gray-700 leading-relaxed">
+                  WAW accompagne les entreprises et organisations au Sénégal pour déployer Starlink sur leurs sites
+                  distants, agences et infrastructures critiques, avec un service clé en main et un support local.
+                </p>
+                <div className="mt-3 flex flex-col sm:flex-row gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setStarlinkModalOpen(false);
+                      openContactModalForStudy();
+                    }}
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl bg-waw-yellow text-waw-dark font-semibold text-sm md:text-base shadow-[0_10px_30px_rgba(0,0,0,0.25)] hover:shadow-[0_14px_40px_rgba(0,0,0,0.35)] transition-all"
+                  >
+                    <CheckCircle size={16} className="text-waw-dark" />
+                    <span>Demander une étude personnalisée</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setStarlinkModalOpen(false);
+                      onNavigate('starlink-press');
+                    }}
+                    className="inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-2xl border border-gray-200 text-gray-700 text-sm md:text-base bg-white hover:bg-gray-50 shadow-sm hover:shadow-md transition-all"
+                  >
+                    <CheckCircle size={16} className="text-waw-yellow" />
+                    <span>Lire le communiqué de presse</span>
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Hero Section avec Slider */}
-      <section ref={heroRef} className="relative min-h-screen pt-20 md:pt-28 lg:pt-32 pb-12 md:pb-20 flex items-center overflow-hidden bg-gradient-to-br from-gray-50 via-white to-blue-50">
+      <section ref={heroRef} className="relative min-h-screen pt-28 md:pt-32 lg:pt-36 pb-12 md:pb-20 flex items-center overflow-hidden bg-gradient-to-br from-gray-50 via-white to-blue-50">
 
         <div className="container-custom relative z-10">
           {isSafari ? (
@@ -410,35 +522,84 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
               {/* Contenu Texte - Gauche : key pour remount complet à chaque slide (évite repaint bug iOS) */}
               <div className="space-y-6 order-1 lg:order-none safari-slide-content">
                 <div key={currentSlide}>
-                  {'eyebrow' in heroSlides[currentSlide] && heroSlides[currentSlide].eyebrow && (
-                    <span className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-waw-yellow text-waw-dark font-bold text-sm md:text-base shadow-lg shadow-waw-yellow/30 border-2 border-waw-dark/10">
-                      <Shield className="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" aria-hidden />
-                      {heroSlides[currentSlide].eyebrow}
-                    </span>
-                  )}
-                  <h1 className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold mb-4 leading-tight text-waw-dark">
-                    {heroSlides[currentSlide].title}
-                  </h1>
-                  {heroSlides[currentSlide].subtitle && (
-                    <h2 className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-light text-gray-600 mb-6">
-                      {heroSlides[currentSlide].subtitle}
-                    </h2>
-                  )}
+                  {currentSlide === 0 ? (
+                    <>
+                      {/* Badge Starlink Safari */}
+                      <div className="inline-flex items-center gap-2 mb-5 px-4 py-2 rounded-full bg-waw-dark text-waw-yellow text-[11px] md:text-xs font-bold tracking-widest uppercase shadow-lg border border-waw-yellow/20">
+                        <span className="relative flex h-2 w-2">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-waw-yellow opacity-75" />
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-waw-yellow" />
+                        </span>
+                        Revendeur Officiel Starlink · Sénégal
+                      </div>
 
-                  <p className="text-lg lg:text-xl leading-relaxed text-gray-700">
-                    {heroSlides[currentSlide].description}
-                  </p>
+                      <h1
+                        className="font-display font-black leading-[1.1] tracking-tight text-waw-dark mb-4"
+                        style={{ fontSize: 'clamp(2rem, 5vw, 4rem)' }}
+                      >
+                        Internet satellite<br />
+                        <span className="text-waw-yellow" style={{ WebkitTextStroke: '1px #E6C300' }}>
+                          haut débit
+                        </span>{' '}
+                        partout au Sénégal
+                      </h1>
 
-                  {/* Boutons d'action - visible seulement sur desktop */}
-                  <div className="hidden lg:flex flex-col sm:flex-row gap-4 pt-4">
-                    <button
-                      onClick={'ctaType' in heroSlides[currentSlide] && heroSlides[currentSlide].ctaType === 'devis' ? openDevisModal : () => setContactModalOpen(true)}
-                      className="group bg-waw-yellow text-waw-dark px-6 py-4 md:px-8 md:py-4 min-h-[48px] rounded-2xl font-bold text-base flex items-center justify-center gap-2 shadow-[0_8px_30px_rgba(255,221,51,0.25)] hover:shadow-[0_12px_40px_rgba(255,221,51,0.4)] transition-all hover:scale-103 active:scale-97"
-                    >
-                      <span>{'ctaLabel' in heroSlides[currentSlide] && heroSlides[currentSlide].ctaLabel ? heroSlides[currentSlide].ctaLabel : 'Nous contacter'}</span>
-                      <ArrowRight size={18} />
-                    </button>
-                  </div>
+                      <p className="text-base md:text-lg font-medium text-waw-dark/60 mb-2 leading-snug">
+                        Sites distants · Zones rurales · Infrastructures critiques
+                      </p>
+
+                      <p className="text-base md:text-lg text-gray-600 leading-relaxed max-w-md">
+                        WAW déploie Starlink pour vos entreprises — installation clé en main, support local premium.
+                      </p>
+
+                      <div className="hidden lg:flex flex-col sm:flex-row gap-4 pt-5">
+                        <button
+                          onClick={openContactModalForStudy}
+                          className="relative overflow-hidden bg-waw-yellow text-waw-dark px-8 py-4 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center justify-center gap-3 shadow-[0_8px_32px_rgba(255,221,51,0.45)] hover:shadow-[0_16px_48px_rgba(255,221,51,0.6)] transition-all hover:scale-[1.04] hover:-translate-y-1 active:scale-97"
+                        >
+                          <span>Demander une étude</span>
+                          <ArrowRight size={18} />
+                        </button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      {/* Badge Safari slides 1-3 */}
+                      <div className="inline-flex items-center gap-2 mb-5 px-4 py-2 rounded-full bg-waw-dark text-waw-yellow text-[11px] md:text-xs font-bold tracking-widest uppercase shadow-lg border border-waw-yellow/20">
+                        <Zap className="w-3 h-3" />
+                        {'badge' in heroSlides[currentSlide] ? (heroSlides[currentSlide] as { badge: string }).badge : ''}
+                      </div>
+
+                      <h1
+                        className="font-display font-black leading-[1.1] tracking-tight text-waw-dark mb-4"
+                        style={{ fontSize: 'clamp(2rem, 5vw, 4rem)' }}
+                      >
+                        {'titleLine1' in heroSlides[currentSlide] && (heroSlides[currentSlide] as { titleLine1: string }).titleLine1}<br />
+                        <span className="text-waw-yellow" style={{ WebkitTextStroke: '1px #E6C300' }}>
+                          {'titleAccent' in heroSlides[currentSlide] && (heroSlides[currentSlide] as { titleAccent: string }).titleAccent}
+                        </span>{' '}
+                        {'titleLine2' in heroSlides[currentSlide] && (heroSlides[currentSlide] as { titleLine2: string }).titleLine2}
+                      </h1>
+
+                      <p className="text-base md:text-lg font-medium text-waw-dark/60 mb-2 leading-snug">
+                        {'tagline' in heroSlides[currentSlide] ? (heroSlides[currentSlide] as { tagline: string }).tagline : ''}
+                      </p>
+
+                      <p className="text-base md:text-lg text-gray-600 leading-relaxed max-w-md">
+                        {heroSlides[currentSlide].description}
+                      </p>
+
+                      <div className="hidden lg:flex flex-col sm:flex-row gap-4 pt-5">
+                        <button
+                          onClick={() => setContactModalOpen(true)}
+                          className="relative overflow-hidden bg-waw-yellow text-waw-dark px-8 py-4 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center justify-center gap-3 shadow-[0_8px_32px_rgba(255,221,51,0.45)] hover:shadow-[0_16px_48px_rgba(255,221,51,0.6)] transition-all hover:scale-[1.04] hover:-translate-y-1 active:scale-97"
+                        >
+                          <span>Nous contacter</span>
+                          <ArrowRight size={18} />
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -460,6 +621,16 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                       }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-waw-dark/20 to-transparent pointer-events-none" />
+                    {currentSlide === 0 && (
+                      <button
+                        type="button"
+                        onClick={openContactModalForStudy}
+                        className="inline-flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-5 md:py-3 rounded-2xl bg-waw-yellow text-waw-dark font-semibold text-[11px] md:text-sm shadow-[0_8px_24px_rgba(0,0,0,0.35)] hover:shadow-[0_12px_36px_rgba(0,0,0,0.45)] transition-all absolute bottom-2 left-3 md:bottom-6 md:left-6"
+                      >
+                        <span>Demander une étude personnalisée</span>
+                        <ArrowRight size={14} className="md:w-4 md:h-4" />
+                      </button>
+                    )}
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
@@ -490,10 +661,14 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
               {/* Bouton CTA - Mobile uniquement (order-3, après les images) */}
               <div className="flex lg:hidden flex-col sm:flex-row gap-4 order-3 w-full">
                 <button
-                  onClick={'ctaType' in heroSlides[currentSlide] && heroSlides[currentSlide].ctaType === 'devis' ? openDevisModal : () => setContactModalOpen(true)}
-                  className="group bg-waw-yellow text-waw-dark px-6 py-4 min-h-[48px] rounded-2xl font-bold text-base flex items-center justify-center gap-2 shadow-[0_8px_30px_rgba(255,221,51,0.25)] hover:shadow-[0_12px_40px_rgba(255,221,51,0.4)] transition-all active:scale-97"
+                  onClick={currentSlide === 0 ? openContactModalForStudy : ('ctaType' in heroSlides[currentSlide] && heroSlides[currentSlide].ctaType === 'devis' ? openDevisModal : () => setContactModalOpen(true))}
+                  className={`flex items-center justify-center gap-3 w-full min-h-[52px] rounded-2xl font-black text-sm uppercase tracking-widest transition-all active:scale-97 ${
+                    currentSlide === 0
+                      ? 'bg-waw-yellow text-waw-dark shadow-[0_8px_32px_rgba(255,221,51,0.45)]'
+                      : 'bg-waw-yellow text-waw-dark shadow-[0_8px_30px_rgba(255,221,51,0.25)]'
+                  }`}
                 >
-                  <span>{'ctaLabel' in heroSlides[currentSlide] && heroSlides[currentSlide].ctaLabel ? heroSlides[currentSlide].ctaLabel : 'Nous contacter'}</span>
+                  <span>{currentSlide === 0 ? 'Demander une étude' : 'Nous contacter'}</span>
                   <ArrowRight size={18} />
                 </button>
               </div>
@@ -528,65 +703,143 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                 }}
               >
                 <div>
-                  {'eyebrow' in heroSlides[currentSlide] && heroSlides[currentSlide].eyebrow && (
-                    <motion.span
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-waw-yellow text-waw-dark font-bold text-sm md:text-base shadow-lg shadow-waw-yellow/30 border-2 border-waw-dark/10"
-                    >
-                      <Shield className="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" aria-hidden />
-                      {heroSlides[currentSlide].eyebrow}
-                    </motion.span>
-                  )}
-                  <motion.h1
-                    className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold mb-4 leading-tight text-waw-dark"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: 0.05 }}
-                  >
-                    {heroSlides[currentSlide].title}
-                  </motion.h1>
-                  {heroSlides[currentSlide].subtitle && (
-                    <motion.h2
-                      className="text-lg md:text-xl lg:text-2xl xl:text-3xl font-light text-gray-600 mb-6"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: 0.1 }}
-                    >
-                      {heroSlides[currentSlide].subtitle}
-                    </motion.h2>
+                  {currentSlide === 0 ? (
+                    <>
+                      {/* Badge Starlink — slide 0 */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.35, ease: [0.25, 0.8, 0.25, 1] }}
+                        className="inline-flex items-center gap-2 mb-5 px-4 py-2 rounded-full bg-waw-dark text-waw-yellow text-[11px] md:text-xs font-bold tracking-widest uppercase shadow-lg border border-waw-yellow/20"
+                      >
+                        <span className="relative flex h-2 w-2">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-waw-yellow opacity-75" />
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-waw-yellow" />
+                        </span>
+                        Revendeur Officiel Starlink · Sénégal
+                      </motion.div>
+
+                      {/* Titre slide 0 — splitté avec accent couleur */}
+                      <motion.h1
+                        className="font-display font-black leading-[1.1] tracking-tight text-waw-dark mb-4"
+                        style={{ fontSize: 'clamp(2rem, 5vw, 4rem)' }}
+                        initial={{ opacity: 0, y: 24 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.45, delay: 0.08, ease: [0.25, 0.8, 0.25, 1] }}
+                      >
+                        Internet satellite<br />
+                        <span className="text-waw-yellow" style={{ WebkitTextStroke: '1px #E6C300' }}>
+                          haut débit
+                        </span>{' '}
+                        <span className="relative">
+                          partout
+                          <motion.span
+                            className="absolute -bottom-1 left-0 h-[3px] bg-waw-yellow rounded-full"
+                            initial={{ width: 0 }}
+                            animate={{ width: '100%' }}
+                            transition={{ duration: 0.5, delay: 0.55, ease: [0.25, 0.8, 0.25, 1] }}
+                          />
+                        </span>{' '}
+                        au Sénégal
+                      </motion.h1>
+
+                      {/* Subtitle slide 0 */}
+                      <motion.p
+                        className="text-base md:text-lg font-medium text-waw-dark/60 mb-2 leading-snug"
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.35, delay: 0.18, ease: [0.25, 0.8, 0.25, 1] }}
+                      >
+                        Sites distants · Zones rurales · Infrastructures critiques
+                      </motion.p>
+                    </>
+                  ) : (
+                    <>
+                      {/* Badge slides 1-3 */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.35, ease: [0.25, 0.8, 0.25, 1] }}
+                        className="inline-flex items-center gap-2 mb-5 px-4 py-2 rounded-full bg-waw-dark text-waw-yellow text-[11px] md:text-xs font-bold tracking-widest uppercase shadow-lg border border-waw-yellow/20"
+                      >
+                        <Zap className="w-3 h-3" />
+                        {'badge' in heroSlides[currentSlide] ? (heroSlides[currentSlide] as { badge: string }).badge : ''}
+                      </motion.div>
+
+                      {/* Titre slides 1-3 — même traitement que slide 0 */}
+                      <motion.h1
+                        className="font-display font-black leading-[1.1] tracking-tight text-waw-dark mb-4"
+                        style={{ fontSize: 'clamp(2rem, 5vw, 4rem)' }}
+                        initial={{ opacity: 0, y: 24 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.45, delay: 0.08, ease: [0.25, 0.8, 0.25, 1] }}
+                      >
+                        {'titleLine1' in heroSlides[currentSlide] && (heroSlides[currentSlide] as { titleLine1: string }).titleLine1}<br />
+                        <span className="text-waw-yellow" style={{ WebkitTextStroke: '1px #E6C300' }}>
+                          {'titleAccent' in heroSlides[currentSlide] && (heroSlides[currentSlide] as { titleAccent: string }).titleAccent}
+                        </span>{' '}
+                        <span className="relative">
+                          {'titleLine2' in heroSlides[currentSlide] && (heroSlides[currentSlide] as { titleLine2: string }).titleLine2}
+                          <motion.span
+                            className="absolute -bottom-1 left-0 h-[3px] bg-waw-yellow rounded-full"
+                            initial={{ width: 0 }}
+                            animate={{ width: '100%' }}
+                            transition={{ duration: 0.5, delay: 0.55, ease: [0.25, 0.8, 0.25, 1] }}
+                          />
+                        </span>
+                      </motion.h1>
+
+                      {/* Tagline slides 1-3 */}
+                      <motion.p
+                        className="text-base md:text-lg font-medium text-waw-dark/60 mb-2 leading-snug"
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.35, delay: 0.18, ease: [0.25, 0.8, 0.25, 1] }}
+                      >
+                        {'tagline' in heroSlides[currentSlide] ? (heroSlides[currentSlide] as { tagline: string }).tagline : ''}
+                      </motion.p>
+                    </>
                   )}
                 </div>
 
+                {/* Description — même style pour tous les slides */}
                 <motion.p
-                  className="text-lg lg:text-xl leading-relaxed text-gray-700"
-                  initial={{ opacity: 0, y: 20 }}
+                  className="text-base md:text-lg text-gray-600 leading-relaxed max-w-md"
+                  initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.15 }}
+                  transition={{ duration: 0.35, delay: 0.25, ease: [0.25, 0.8, 0.25, 1] }}
                 >
                   {heroSlides[currentSlide].description}
                 </motion.p>
 
-                {/* Boutons d'action - Desktop uniquement */}
+                {/* Bouton — même style pour tous les slides */}
                 <motion.div
                   className="hidden lg:flex flex-col sm:flex-row gap-4 pt-4"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.2 }}
+                  transition={{ duration: 0.35, delay: 0.35, ease: [0.25, 0.8, 0.25, 1] }}
                 >
                   <motion.button
-                    onClick={'ctaType' in heroSlides[currentSlide] && heroSlides[currentSlide].ctaType === 'devis' ? openDevisModal : () => setContactModalOpen(true)}
-                    whileHover={{ scale: 1.03, y: -2 }}
+                    onClick={currentSlide === 0 ? openContactModalForStudy : () => setContactModalOpen(true)}
+                    whileHover={{ scale: 1.04, y: -3 }}
                     whileTap={{ scale: 0.97 }}
-                    className="group bg-waw-yellow text-waw-dark px-6 py-4 md:px-8 md:py-4 min-h-[48px] rounded-2xl font-bold text-base flex items-center justify-center gap-2 shadow-[0_8px_30px_rgba(255,221,51,0.25)] hover:shadow-[0_12px_40px_rgba(255,221,51,0.4)] transition-all"
+                    className="group relative overflow-hidden bg-waw-yellow text-waw-dark px-8 py-4 rounded-2xl font-black text-sm uppercase tracking-widest flex items-center justify-center gap-3 shadow-[0_8px_32px_rgba(255,221,51,0.45)] hover:shadow-[0_16px_48px_rgba(255,221,51,0.6)] transition-shadow"
                   >
-                    <span>{'ctaLabel' in heroSlides[currentSlide] && heroSlides[currentSlide].ctaLabel ? heroSlides[currentSlide].ctaLabel : 'Nous contacter'}</span>
-                    <motion.div animate={{ x: [0, 4, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
+                    <motion.span
+                      className="absolute inset-0 bg-white/20"
+                      initial={{ x: '-100%' }}
+                      whileHover={{ x: '100%' }}
+                      transition={{ duration: 0.4, ease: 'easeInOut' }}
+                    />
+                    <span className="relative z-10">{currentSlide === 0 ? 'Demander une étude' : 'Nous contacter'}</span>
+                    <motion.div
+                      className="relative z-10"
+                      animate={{ x: [0, 5, 0] }}
+                      transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+                    >
                       <ArrowRight size={18} />
                     </motion.div>
                   </motion.button>
-
                 </motion.div>
               </motion.div>
 
@@ -602,7 +855,7 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                 }}
               >
                 {heroSlides[currentSlide].imageType === 'single' ? (
-                  /* Image unique - slide Starlink (0) : div à la taille de l'image + badge */
+                  /* Image unique - slide Starlink (0) : div à la taille de l'image + CTA */
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -627,6 +880,18 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                       }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-waw-dark/20 to-transparent pointer-events-none" />
+                    {currentSlide === 0 && (
+                      <motion.button
+                        type="button"
+                        onClick={openContactModalForStudy}
+                        whileHover={{ scale: 1.03, y: -2 }}
+                        whileTap={{ scale: 0.97 }}
+                        className="inline-flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-5 md:py-3 rounded-2xl bg-waw-yellow text-waw-dark font-semibold text-[11px] md:text-sm shadow-[0_8px_24px_rgba(0,0,0,0.35)] hover:shadow-[0_12px_36px_rgba(0,0,0,0.45)] transition-all absolute bottom-2 left-3 md:bottom-6 md:left-6"
+                      >
+                        <span>Demander une étude personnalisée</span>
+                        <ArrowRight size={14} className="md:w-4 md:h-4" />
+                      </motion.button>
+                    )}
                   </motion.div>
                 ) : (
                   /* Collage d'images */
@@ -679,11 +944,15 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                 transition={{ duration: 0.3, delay: 0.3 }}
               >
                 <motion.button
-                  onClick={'ctaType' in heroSlides[currentSlide] && heroSlides[currentSlide].ctaType === 'devis' ? openDevisModal : () => setContactModalOpen(true)}
+                  onClick={currentSlide === 0 ? openContactModalForStudy : ('ctaType' in heroSlides[currentSlide] && heroSlides[currentSlide].ctaType === 'devis' ? openDevisModal : () => setContactModalOpen(true))}
                   whileTap={{ scale: 0.97 }}
-                  className="group bg-waw-yellow text-waw-dark px-6 py-4 min-h-[48px] rounded-2xl font-bold text-base flex items-center justify-center gap-2 shadow-[0_8px_30px_rgba(255,221,51,0.25)] active:shadow-[0_12px_40px_rgba(255,221,51,0.4)] transition-all"
+                  className={`w-full min-h-[52px] rounded-2xl font-black text-sm uppercase tracking-widest flex items-center justify-center gap-3 transition-all ${
+                    currentSlide === 0
+                      ? 'bg-waw-yellow text-waw-dark shadow-[0_8px_32px_rgba(255,221,51,0.45)]'
+                      : 'bg-waw-yellow text-waw-dark shadow-[0_8px_30px_rgba(255,221,51,0.25)]'
+                  }`}
                 >
-                  <span>{'ctaLabel' in heroSlides[currentSlide] && heroSlides[currentSlide].ctaLabel ? heroSlides[currentSlide].ctaLabel : 'Nous contacter'}</span>
+                  <span>{currentSlide === 0 ? 'Demander une étude' : 'Nous contacter'}</span>
                   <ArrowRight size={18} />
                 </motion.button>
               </motion.div>

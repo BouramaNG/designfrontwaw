@@ -35,7 +35,7 @@ const Header = ({ currentPage, onNavigate }: HeaderProps) => {
     { name: 'Accueil', page: 'home2' as PageType, icon: Globe },
     { name: 'Connectivité', page: 'connectivite' as PageType, icon: Network },
     { name: 'Cloud', page: 'cloud' as PageType, icon: Cloud, comingSoon: true },
-    { name: 'Starlink', page: 'starlink' as PageType, icon: Satellite, comingSoon: true, badge: 'new' as const },
+    { name: 'Starlink', page: 'starlink' as PageType, icon: Satellite, comingSoon: true },
     { name: 'eSIM Travel', page: 'travel' as PageType, icon: Smartphone },
     { name: 'IoT', page: 'iot' as PageType, icon: Cpu, comingSoon: true },
     { name: 'Notre Histoire', page: 'about' as PageType, icon: Clock },
@@ -102,17 +102,14 @@ const Header = ({ currentPage, onNavigate }: HeaderProps) => {
                       className="absolute inset-0 rounded-xl bg-waw-yellow/0 group-hover:bg-waw-yellow/8 transition-colors duration-300"
                     />
 
-                    <span className={`relative z-10 flex items-center gap-2 transition-colors duration-300 ${
-                      currentPage === item.page
-                        ? 'text-waw-dark'
-                        : 'text-gray-500 group-hover:text-waw-dark'
-                    }`}>
+                    <span
+                      className={`relative z-10 flex items-center gap-2 transition-colors duration-300 ${
+                        currentPage === item.page
+                          ? 'text-waw-dark'
+                          : 'text-gray-500 group-hover:text-waw-dark'
+                      }`}
+                    >
                       {item.name}
-                      {item.badge === 'new' && (
-                        <span className="inline-flex items-center px-1.5 py-0.5 rounded-md bg-waw-yellow text-waw-dark text-[10px] font-bold uppercase tracking-wide">
-                          New
-                        </span>
-                      )}
                     </span>
 
                     {/* Indicateur page active */}
@@ -124,8 +121,15 @@ const Header = ({ currentPage, onNavigate }: HeaderProps) => {
                       />
                     )}
 
-                    {/* Badge Coming Soon (point orange si pas badge new) */}
-                    {item.comingSoon && !item.badge && (
+                    {/* Badge NEW au-dessus de l'onglet Starlink */}
+                    {item.page === 'starlink' && (
+                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 inline-flex items-center px-2 py-0.5 rounded-full bg-waw-yellow text-waw-dark text-[10px] font-bold uppercase tracking-wide shadow-sm">
+                        New
+                      </span>
+                    )}
+
+                    {/* Badge Coming Soon */}
+                    {item.comingSoon && (
                       <span className="absolute -top-1 -right-1 w-2 h-2 bg-orange-400 rounded-full" />
                     )}
                   </motion.button>
@@ -232,15 +236,17 @@ const Header = ({ currentPage, onNavigate }: HeaderProps) => {
                         <item.icon size={20} />
                       </div>
                       <div className="flex-1 text-left">
-                        <p className={`font-semibold text-sm flex items-center gap-2 ${
-                          currentPage === item.page ? 'text-waw-dark' : 'text-gray-700'
-                        }`}>
+                        {item.page === 'starlink' && (
+                          <span className="inline-flex items-center px-2 py-0.5 mb-0.5 rounded-md bg-waw-yellow text-waw-dark text-[10px] font-bold uppercase tracking-wide">
+                            New
+                          </span>
+                        )}
+                        <p
+                          className={`font-semibold text-sm flex items-center gap-2 ${
+                            currentPage === item.page ? 'text-waw-dark' : 'text-gray-700'
+                          }`}
+                        >
                           {item.name}
-                          {item.badge === 'new' && (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-waw-yellow text-waw-dark text-[10px] font-bold uppercase tracking-wide">
-                              New
-                            </span>
-                          )}
                         </p>
                         {item.comingSoon && (
                           <p className="text-[11px] text-orange-400 font-medium">Bientôt disponible</p>
