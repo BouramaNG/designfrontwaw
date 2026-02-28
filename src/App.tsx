@@ -21,6 +21,7 @@ import HomePage2 from './pages/HomePage2';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import StarlinkPressPage from './pages/StarlinkPressPage';
+import StarlinkPage from './pages/StarlinkPage';
 
 export type PageType = 'home' | 'home2' | 'connectivite' | 'cloud' | 'starlink' | 'starlink-press' | 'travel' | 'iot' | 'about' | 'contact' | 'plan-details' | 'checkout' | 'confirmation' | 'login' | 'register';
 
@@ -68,6 +69,8 @@ function App() {
         return <ConfirmationPage onNavigate={setCurrentPage} />;
       case 'contact':
         return <ContactPage onNavigate={setCurrentPage} />;
+      case 'starlink':
+        return <StarlinkPage onNavigate={setCurrentPage} />;
       case 'starlink-press':
         return <StarlinkPressPage onNavigate={setCurrentPage} />;
       case 'login':

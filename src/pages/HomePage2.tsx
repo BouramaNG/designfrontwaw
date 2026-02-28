@@ -66,8 +66,6 @@ function HomeMapClickHandler({ onMapClick }: { onMapClick: (lat: number, lng: nu
   return null;
 }
 
-import type { PageType } from '../App';
-
 interface HomePage2Props {
   onNavigate: (page: PageType) => void;
 }
@@ -459,7 +457,7 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                 <img
                   src={starlinkImage}
                   alt="Solution Starlink par WAW Telecom"
-                  className="w-full h-56 md:h-[360px] object-contain"
+                  className="w-full h-56 md:h-[360px] object-cover object-center"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/10 to-transparent pointer-events-none" />
                 {/* Badge déplacé dans la zone de texte */}

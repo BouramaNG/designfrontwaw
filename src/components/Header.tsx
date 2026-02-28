@@ -35,7 +35,7 @@ const Header = ({ currentPage, onNavigate }: HeaderProps) => {
     { name: 'Accueil', page: 'home2' as PageType, icon: Globe },
     { name: 'Connectivité', page: 'connectivite' as PageType, icon: Network },
     { name: 'Cloud', page: 'cloud' as PageType, icon: Cloud, comingSoon: true },
-    { name: 'Starlink', page: 'starlink' as PageType, icon: Satellite, comingSoon: true },
+    { name: 'Starlink', page: 'starlink' as PageType, icon: Satellite },
     { name: 'eSIM Travel', page: 'travel' as PageType, icon: Smartphone },
     { name: 'IoT', page: 'iot' as PageType, icon: Cpu, comingSoon: true },
     { name: 'Notre Histoire', page: 'about' as PageType, icon: Clock },
