@@ -34,6 +34,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { sendPublicContact } from '../services/contactService';
 import type { PageType } from '../App';
+import { applySeo } from '../utils/seo';
 
 // Custom marker icon for Leaflet (default icons break with bundlers)
 const customMarkerIcon = L.divIcon({
@@ -61,6 +62,62 @@ function MapClickHandler({ onMapClick }: { onMapClick: (lat: number, lng: number
 
 const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
   const [imgFlip, setImgFlip] = useState(0);
+
+  useEffect(() => {
+    applySeo({
+      title: 'Connectivité entreprise Sénégal | Fibre, SD‑WAN & MPLS — WAW Telecom',
+      description:
+        'WAW Telecom : fibre optique dédiée entreprise, interconnexion de sites MPLS, solution SD-WAN, backup internet et bande passante garantie au Sénégal. Opérateur télécom professionnel B2B à Dakar.',
+      canonicalPath: '/connectivite',
+      keywords:
+        'fibre optique dédiée entreprise Sénégal, interconnexion sites MPLS Dakar, solution SD-WAN Sénégal, backup internet entreprise, fournisseur accès internet B2B Sénégal, opérateur télécom professionnel Dakar, bande passante garantie Sénégal, SLA internet entreprise, liaison spécialisée Sénégal, prix liaison spécialisée Sénégal 2026, Quel est le meilleur FAI pour PME Dakar, Pourquoi SD-WAN interconnecter filiales Afrique de l\'Ouest',
+      jsonLd: [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'Service',
+          name: 'Connectivité Pro — Fibre, SD-WAN & MPLS — WAW Telecom',
+          description: 'Fibre dédiée, interconnexion MPLS, SD-WAN et bande passante garantie pour entreprises au Sénégal',
+          provider: {
+            '@type': 'Organization',
+            name: 'WAW Telecom',
+            url: 'https://www.wawtelecom.com',
+          },
+          areaServed: { '@type': 'Country', name: 'Sénégal' },
+          serviceType: 'Connectivité entreprise B2B',
+        },
+        {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: [
+            {
+              '@type': 'Question',
+              name: 'Quel est le meilleur FAI pour une PME à Dakar ?',
+              acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'WAW Telecom propose des solutions sur mesure pour les PME à Dakar : fibre dédiée avec SLA garanti, SD-WAN pour multi-sites et backup internet satellitaire Starlink. Contactez-nous pour une étude gratuite.',
+              },
+            },
+            {
+              '@type': 'Question',
+              name: 'Pourquoi choisir le SD-WAN pour interconnecter mes filiales en Afrique de l\'Ouest ?',
+              acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'Le SD-WAN optimise le trafic entre sites distants en Afrique de l\'Ouest, réduit les coûts des liaisons MPLS et garantit la continuité de service via des liens de secours automatiques. WAW Telecom déploie et maintient ces solutions au Sénégal.',
+              },
+            },
+            {
+              '@type': 'Question',
+              name: 'Prix d\'une liaison spécialisée (LS) au Sénégal en 2026',
+              acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'Le prix d\'une liaison spécialisée au Sénégal dépend du débit, de la technologie (fibre, radio, satellite) et de la localisation. Contactez WAW Telecom pour un devis personnalisé avec SLA garanti.',
+              },
+            },
+          ],
+        },
+      ],
+    });
+  }, []);
   
   // Optimisation device
   const { isSafari, isMobile, transitionConfig } = useDeviceOptimization();
@@ -340,11 +397,11 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
                 <motion.button
                   whileHover={{ scale: 1.03, y: -2 }}
                   whileTap={{ scale: 0.97 }}
-                  onClick={() => window.open('tel:+221338601929')}
+                  onClick={() => window.open('tel:+221769291717')}
                   className="group bg-white/[0.06] backdrop-blur-sm text-white px-8 py-4 rounded-2xl font-bold text-base flex items-center justify-center gap-2 border border-white/[0.08] transition-all hover:bg-white/[0.1] hover:border-white/[0.15]"
                 >
                   <Phone size={18} />
-                  <span>+221 33 860 19 29</span>
+                  <span>+221 76 929 17 17</span>
                 </motion.button>
               </motion.div>
             </motion.div>
@@ -997,7 +1054,7 @@ const ConnectivitePage = ({ onNavigate }: ConnectivitePageProps) => {
           {/* Contact row */}
           <div className="grid sm:grid-cols-3 gap-4 mb-12">
             {[
-              { icon: Phone, label: 'Appelez-nous', value: '+221 33 860 19 29', link: 'tel:+221338601929' },
+              { icon: Phone, label: 'Appelez-nous', value: '+221 76 929 17 17', link: 'tel:+221769291717' },
               { icon: Mail, label: 'Email', value: 'contact@wawtelecom.com', link: 'mailto:contact@wawtelecom.com' },
               { icon: MessageCircle, label: 'WhatsApp', value: 'Réponse rapide', link: 'https://wa.me/221769291717' },
             ].map((item, i) => (

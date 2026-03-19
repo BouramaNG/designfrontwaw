@@ -37,6 +37,7 @@ import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { sendPublicContact } from '../services/contactService';
+import { applySeo } from '../utils/seo';
 import type { PageType } from '../App';
 import logoWaw from '../assets/images/Logo Waw officiel.png';
 import backbone from '../assets/images/backbone.png';
@@ -71,6 +72,29 @@ interface HomePage2Props {
 }
 
 const HomePage2 = ({ onNavigate }: HomePage2Props) => {
+  useEffect(() => {
+    applySeo({
+      title: 'WAW Telecom Sénégal | Revendeur Starlink, Fibre, Cloud & eSIM — Dakar',
+      description:
+        'WAW Telecom, opérateur télécom professionnel à Dakar : revendeur agréé Starlink Business, fibre dédiée entreprise, SD-WAN, cloud souverain, IoT et eSIM travel. Devis gratuit.',
+      canonicalPath: '/',
+      keywords:
+        'service WAW Telecom, Starlink Sénégal, revendeur agréé Starlink Sénégal, internet satellite Sénégal, fibre optique entreprise Sénégal, opérateur télécom professionnel Dakar, cloud souverain Sénégal, eSIM Sénégal, SD-WAN Sénégal, fournisseur accès internet B2B Sénégal',
+      jsonLd: {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: 'WAW Telecom',
+        url: 'https://www.wawtelecom.com',
+        description: 'Opérateur télécom professionnel au Sénégal — Starlink Business, Fibre dédiée, SD-WAN, Cloud & eSIM Travel',
+        potentialAction: {
+          '@type': 'SearchAction',
+          target: 'https://www.wawtelecom.com/?q={search_term_string}',
+          'query-input': 'required name=search_term_string',
+        },
+      },
+    });
+  }, []);
+
   const [currentSlide, setCurrentSlide] = useState(0);
   const [bgSlide, setBgSlide] = useState(0);
   const [selectedService, setSelectedService] = useState('');
@@ -102,7 +126,7 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
   const [contactModalOpen, setContactModalOpen] = useState(false);
   const [contactModalStep, setContactModalStep] = useState<'choose' | 'form' | 'done'>('choose');
   const [selectedTeam, setSelectedTeam] = useState('');
-  const [expertForm, setExpertForm] = useState({ nom: '', email: '', telephone: '', entreprise: '' });
+  const [expertForm, setExpertForm] = useState({ nom: '', email: '', telephone: '', entreprise: '', message: '' });
   const [isSubmittingContact, setIsSubmittingContact] = useState(false);
   const [contactError, setContactError] = useState<string | null>(null);
 
@@ -124,11 +148,15 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
       return;
     }
 
+    const { message: userMessage } = expertForm;
+
     setContactError(null);
     setIsSubmittingContact(true);
 
     const contactType = selectedTeam === 'Technique' ? 'support' : 'sales';
-    const message = `Demande de contact via formulaire - Équipe ${selectedTeam}. Nom: ${nom}, Email: ${email}, Téléphone: ${telephone || 'Non renseigné'}, Entreprise: ${entreprise || 'Non renseignée'}.`;
+    const message = userMessage?.trim()
+      ? userMessage.trim()
+      : `Demande de contact via formulaire - Équipe ${selectedTeam}. Nom: ${nom}, Email: ${email}, Téléphone: ${telephone || 'Non renseigné'}, Entreprise: ${entreprise || 'Non renseignée'}.`;
 
     try {
       const response = await sendPublicContact({
@@ -166,7 +194,7 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
     setContactModalOpen(false);
     setContactModalStep('choose');
     setSelectedTeam('');
-    setExpertForm({ nom: '', email: '', telephone: '', entreprise: '' });
+    setExpertForm({ nom: '', email: '', telephone: '', entreprise: '', message: '' });
     setContactError(null);
   };
 
@@ -473,11 +501,11 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                   id="starlink-modal-title"
                   className="text-xl md:text-2xl font-display font-bold text-waw-dark leading-snug"
                 >
-                  Connectivité Starlink pour vos sites stratégiques
+                  Connectivité satellitaire pour vos sites critiques
                 </h2>
                 <p className="text-sm md:text-base text-gray-700 leading-relaxed">
-                  WAW accompagne les entreprises et organisations au Sénégal pour déployer Starlink sur leurs sites
-                  distants, agences et infrastructures critiques, avec un service clé en main et un support local.
+                  WAW déploie des solutions Starlink au Sénégal pour connecter vos sites distants, agences et infrastructures stratégiques.
+                  Bénéficiez d'un déploiement clé en main, d'une intégration experte et d'un support local dédié.
                 </p>
                 <div className="mt-3 flex flex-col sm:flex-row gap-3">
                   <button
@@ -531,7 +559,7 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                         Revendeur Officiel Starlink · Sénégal
                       </div>
 
-                      <h1
+                      <h2
                         className="font-display font-black leading-[1.1] tracking-tight text-waw-dark mb-4"
                         style={{ fontSize: 'clamp(2rem, 5vw, 4rem)' }}
                       >
@@ -540,7 +568,7 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                           haut débit
                         </span>{' '}
                         partout au Sénégal
-                      </h1>
+                      </h2>
 
                       <p className="text-base md:text-lg font-medium text-waw-dark/60 mb-2 leading-snug">
                         Sites distants · Zones rurales · Infrastructures critiques
@@ -2407,6 +2435,16 @@ const HomePage2 = ({ onNavigate }: HomePage2Props) => {
                               className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 text-sm text-waw-dark placeholder:text-gray-300 focus:outline-none focus:border-waw-yellow focus:ring-2 focus:ring-waw-yellow/10 transition-all"
                             />
                           </div>
+                        </div>
+                        <div>
+                          <label className="text-xs font-semibold text-gray-500 mb-1 block">Message</label>
+                          <textarea
+                            value={expertForm.message}
+                            onChange={(e) => setExpertForm(f => ({ ...f, message: e.target.value }))}
+                            placeholder="Décrivez votre besoin..."
+                            rows={4}
+                            className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 text-sm text-waw-dark placeholder:text-gray-300 focus:outline-none focus:border-waw-yellow focus:ring-2 focus:ring-waw-yellow/10 transition-all resize-none"
+                          />
                         </div>
                       </div>
 

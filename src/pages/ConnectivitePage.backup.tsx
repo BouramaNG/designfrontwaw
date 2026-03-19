@@ -948,7 +948,7 @@ Atouts clés : performance stable, continuité de service, offres flexibles selo
                   {
                     icon: Phone,
                     title: 'Appelez-nous',
-                    desc: '+221 33 860 19 29',
+                    desc: '+221 76 929 17 17',
                     action: 'Appeler maintenant'
                   },
                   {

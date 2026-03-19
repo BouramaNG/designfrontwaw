@@ -132,8 +132,6 @@ const Footer = ({ onNavigate }: FooterProps) => {
                 <div className="flex items-center space-x-3">
                   <Phone size={18} className="text-waw-yellow flex-shrink-0" />
                   <div className="text-gray-300">
-                    <span>+221 33 860 19 29</span>
-                    <span className="mx-2">•</span>
                     <span>+221 76 929 17 17</span>
                   </div>
                 </div>

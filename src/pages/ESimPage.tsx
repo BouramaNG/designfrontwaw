@@ -33,6 +33,7 @@ import { CompatibleDevicesModal } from '../components/CompatibleDevicesModal';
 import React from 'react';
 import { useState, useEffect } from 'react';
 import type { PageType } from '../App';
+import { applySeo } from '../utils/seo';
 
 // Import user images
 import esimImg from '../assets/images/esim.png';
@@ -59,6 +60,36 @@ const ESimPage = ({ onNavigate, onNavigateWithPlan }: ESimPageProps) => {
   const { isSafari, isMobile, transitionConfig } = useDeviceOptimization();
   const { transitions } = useOptimizedTransition();
   
+  useEffect(() => {
+    applySeo({
+      title: 'eSIM Travel Sénégal | Forfaits data internationaux — WAW Telecom',
+      description:
+        'Achetez une eSIM Travel WAW Telecom : forfait data voyageur Sénégal, activation eSIM rapide à Dakar, roaming data international, eSIM entreprise Sénégal. Compatible iPhone et Android.',
+      canonicalPath: '/travel',
+      keywords:
+        'eSIM Sénégal entreprise, forfait data voyageur Sénégal, activer eSIM Dakar, roaming data international Sénégal, eSIM travel Sénégal, acheter eSIM Dakar, eSIM international Sénégal, carte SIM virtuelle Sénégal',
+      jsonLd: {
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        name: 'eSIM Travel — WAW Telecom',
+        description: 'Forfaits eSIM data internationaux pour voyageurs et entreprises, activation rapide à Dakar',
+        provider: {
+          '@type': 'Organization',
+          name: 'WAW Telecom',
+          url: 'https://www.wawtelecom.com',
+        },
+        areaServed: { '@type': 'Country', name: 'Sénégal' },
+        serviceType: 'eSIM & Mobilité internationale',
+        offers: {
+          '@type': 'AggregateOffer',
+          priceCurrency: 'XOF',
+          offerCount: '10+',
+          description: 'Forfaits data internationaux eSIM pour plus de 150 destinations',
+        },
+      },
+    });
+  }, []);
+
   // State for Compatible Devices Modal
   const [modalOpen, setModalOpen] = useState(false);
   // Hero image cycling

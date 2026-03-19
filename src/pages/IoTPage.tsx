@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { motion, Variants, Transition, easeOut, easeInOut, Easing } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import useDeviceOptimization from '../hooks/useDeviceOptimization';
@@ -32,6 +33,7 @@ import {
   Gauge
 } from 'lucide-react';
 import type { PageType } from '../App';
+import { applySeo } from '../utils/seo';
 
 interface IoTPageProps {
   onNavigate: (page: PageType) => void;
@@ -76,6 +78,30 @@ const itemVariants: Variants = {
 };
 
 const IoTPage = ({ onNavigate }: IoTPageProps) => {
+  useEffect(() => {
+    applySeo({
+      title: 'Solutions IoT Sénégal | Gestion de flotte & monitoring industriel — WAW Telecom',
+      description:
+        'WAW Telecom déploie des solutions IoT au Sénégal : gestion de flotte par satellite à Dakar, capteurs connectés pour l\'industrie minière, monitoring à distance et objets connectés pour entreprises.',
+      canonicalPath: '/iot',
+      keywords:
+        'solutions IoT Sénégal, gestion de flotte par satellite Dakar, capteurs connectés industrie minière, monitoring à distance Sénégal, objets connectés entreprise Dakar, IoT industriel Sénégal, télémétrie Sénégal',
+      jsonLd: {
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        name: 'Solutions IoT — WAW Telecom',
+        description: 'Gestion de flotte, monitoring industriel et objets connectés pour entreprises au Sénégal',
+        provider: {
+          '@type': 'Organization',
+          name: 'WAW Telecom',
+          url: 'https://www.wawtelecom.com',
+        },
+        areaServed: { '@type': 'Country', name: 'Sénégal' },
+        serviceType: 'Internet of Things (IoT)',
+      },
+    });
+  }, []);
+
   // Optimisation device
   const { isSafari, isMobile, transitionConfig } = useDeviceOptimization();
   
@@ -586,7 +612,7 @@ const IoTPage = ({ onNavigate }: IoTPageProps) => {
               <div className="grid md:grid-cols-3 gap-6 text-waw-dark/80">
                 <div className="flex items-center justify-center space-x-2">
                   <Phone size={18} />
-                  <span className="font-medium">+221 33 860 19 29</span>
+                  <span className="font-medium">+221 76 929 17 17</span>
                 </div>
                 <div className="flex items-center justify-center space-x-2">
                   <MessageCircle size={18} />

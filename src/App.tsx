@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { motion } from 'framer-motion';
 import { MessageCircle } from 'lucide-react';
 import Header from './components/Header';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import ESIMSection from './components/eSIMSection';
 import ServicesSection from './components/ServicesSection';
@@ -25,9 +26,15 @@ import StarlinkPage from './pages/StarlinkPage';
 
 export type PageType = 'home' | 'home2' | 'connectivite' | 'cloud' | 'starlink' | 'starlink-press' | 'travel' | 'iot' | 'about' | 'contact' | 'plan-details' | 'checkout' | 'confirmation' | 'login' | 'register';
 
-function App() {
-  const [currentPage, setCurrentPage] = useState<PageType>('home2');
+interface AppProps {
+  initialPage?: PageType;
+}
+
+function App({ initialPage = 'home2' }: AppProps) {
+  const [currentPage, setCurrentPage] = useState<PageType>(initialPage);
   const [selectedPlanId, setSelectedPlanId] = useState<string | undefined>(undefined);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const openWhatsApp = (message: string) => {
     const phoneNumber = '221769291717';
@@ -42,51 +49,97 @@ function App() {
     setCurrentPage(page);
   };
 
+  // Navigation hybride: on garde l'app state-based, mais on pousse l'URL
+  // uniquement pour les pages déjà routées (test: / et /starlink).
+  const onNavigate = useCallback((page: PageType) => {
+    if (page === 'home2') {
+      if (location.pathname !== '/') navigate('/', { replace: false });
+      setCurrentPage('home2');
+      return;
+    }
+    if (page === 'starlink') {
+      if (location.pathname !== '/starlink') navigate('/starlink', { replace: false });
+      setCurrentPage('starlink');
+      return;
+    }
+    if (page === 'connectivite') {
+      if (location.pathname !== '/connectivite') navigate('/connectivite', { replace: false });
+      setCurrentPage('connectivite');
+      return;
+    }
+    if (page === 'contact') {
+      if (location.pathname !== '/contact') navigate('/contact', { replace: false });
+      setCurrentPage('contact');
+      return;
+    }
+    if (page === 'travel') {
+      if (location.pathname !== '/travel') navigate('/travel', { replace: false });
+      setCurrentPage('travel');
+      return;
+    }
+    if (page === 'cloud') {
+      if (location.pathname !== '/cloud') navigate('/cloud', { replace: false });
+      setCurrentPage('cloud');
+      return;
+    }
+    if (page === 'about') {
+      if (location.pathname !== '/about') navigate('/about', { replace: false });
+      setCurrentPage('about');
+      return;
+    }
+    if (page === 'iot') {
+      if (location.pathname !== '/iot') navigate('/iot', { replace: false });
+      setCurrentPage('iot');
+      return;
+    }
+    setCurrentPage(page);
+  }, [location.pathname, navigate]);
+
   const renderPage = () => {
     switch (currentPage) {
       case 'connectivite':
-        return <ConnectivitePage onNavigate={setCurrentPage} />;
+        return <ConnectivitePage onNavigate={onNavigate} />;
       case 'cloud':
-        return <CloudPage onNavigate={setCurrentPage} />;
+        return <CloudPage onNavigate={onNavigate} />;
       case 'about':
-        return <AboutPage onNavigate={setCurrentPage} />;
+        return <AboutPage onNavigate={onNavigate} />;
       case 'travel':
-        return <ESimPage onNavigate={setCurrentPage} onNavigateWithPlan={navigateToPage} />;
+        return <ESimPage onNavigate={onNavigate} onNavigateWithPlan={navigateToPage} />;
       case 'iot':
-        return <IoTPage onNavigate={setCurrentPage} />;
+        return <IoTPage onNavigate={onNavigate} />;
       case 'home2':
-        return <HomePage2 onNavigate={setCurrentPage} />;
+        return <HomePage2 onNavigate={onNavigate} />;
       case 'plan-details':
-        return <PlanDetailsPage onNavigate={setCurrentPage} navigateToPage={navigateToPage} planId={selectedPlanId} />;
+        return <PlanDetailsPage onNavigate={onNavigate} navigateToPage={navigateToPage} planId={selectedPlanId} />;
       case 'checkout':
-        return <CheckoutPage onNavigate={setCurrentPage} selectedPlan={{
+        return <CheckoutPage onNavigate={onNavigate} selectedPlan={{
           data: selectedPlanId || '1GB',
           price: 1000,
           description: 'Forfait standard',
           country: 'Sénégal'
         }} />;
       case 'confirmation':
-        return <ConfirmationPage onNavigate={setCurrentPage} />;
+        return <ConfirmationPage onNavigate={onNavigate} />;
       case 'contact':
-        return <ContactPage onNavigate={setCurrentPage} />;
+        return <ContactPage onNavigate={onNavigate} />;
       case 'starlink':
-        return <StarlinkPage onNavigate={setCurrentPage} />;
+        return <StarlinkPage onNavigate={onNavigate} />;
       case 'starlink-press':
-        return <StarlinkPressPage onNavigate={setCurrentPage} />;
+        return <StarlinkPressPage onNavigate={onNavigate} />;
       case 'login':
-        return <LoginPage onNavigate={setCurrentPage} />;
+        return <LoginPage onNavigate={onNavigate} />;
       case 'register':
-        return <RegisterPage onNavigate={setCurrentPage} />;
+        return <RegisterPage onNavigate={onNavigate} />;
       default:
-        return <HomePage2 onNavigate={setCurrentPage} />;
+        return <HomePage2 onNavigate={onNavigate} />;
     }
   };
 
   return (
     <div className="min-h-screen">
-      <Header currentPage={currentPage} onNavigate={setCurrentPage} />
+      <Header currentPage={currentPage} onNavigate={onNavigate} />
       {renderPage()}
-      <Footer onNavigate={setCurrentPage} />
+      <Footer onNavigate={onNavigate} />
 
       {/* WhatsApp Floating Actions */}
       <motion.div

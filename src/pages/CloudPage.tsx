@@ -26,12 +26,38 @@ import {
 import VpsPlans from '../components/VpsPlans';
 import WebHostingPlans from '../components/WebHostingPlans';
 import type { PageType } from '../App';
+import { useEffect } from 'react';
+import { applySeo } from '../utils/seo';
 
 interface CloudPageProps {
   onNavigate: (page: PageType) => void;
 }
 
 const CloudPage = ({ onNavigate }: CloudPageProps) => {
+  useEffect(() => {
+    applySeo({
+      title: 'Cloud & Cybersécurité Sénégal | Hébergement souverain Dakar — WAW Telecom',
+      description:
+        'WAW Telecom propose des solutions cloud souverain au Sénégal : hébergement serveurs à Dakar, sauvegarde externalisée, migration Azure/AWS, pare-feu managé et protection DDoS pour entreprises.',
+      canonicalPath: '/cloud',
+      keywords:
+        'cloud souverain Sénégal, hébergement serveurs Dakar, sauvegarde données externalisée Sénégal, migration Cloud Azure AWS Sénégal, cybersécurité entreprise Sénégal, pare-feu managé, protection DDoS Sénégal, VPS Dakar, hébergement web Sénégal',
+      jsonLd: {
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        name: 'Cloud & Cybersécurité — WAW Telecom',
+        description: 'Hébergement cloud souverain, sauvegarde et cybersécurité pour entreprises au Sénégal',
+        provider: {
+          '@type': 'Organization',
+          name: 'WAW Telecom',
+          url: 'https://www.wawtelecom.com',
+        },
+        areaServed: { '@type': 'Country', name: 'Sénégal' },
+        serviceType: 'Cloud Computing & Cybersécurité',
+      },
+    });
+  }, []);
+
   // Optimisation device
   const { isSafari, isMobile, transitionConfig } = useDeviceOptimization();
   
@@ -809,7 +835,7 @@ const CloudPage = ({ onNavigate }: CloudPageProps) => {
                   {
                     icon: Phone,
                     title: 'Conseil Expert',
-                    desc: '+221 33 860 19 29',
+                    desc: '+221 76 929 17 17',
                     action: 'Parler à un expert'
                   },
                   {

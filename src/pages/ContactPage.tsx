@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useDeviceOptimization from '../hooks/useDeviceOptimization';
 import {
   Phone,
@@ -18,6 +18,7 @@ import {
   Zap
 } from 'lucide-react';
 import type { PageType } from '../App';
+import { applySeo } from '../utils/seo';
 
 interface ContactPageProps {
   onNavigate: (page: PageType) => void;
@@ -52,6 +53,15 @@ interface FormErrors {
 const ContactPage = ({ onNavigate }: ContactPageProps) => {
   // Optimisation device
   const { isSafari, isMobile, transitionConfig } = useDeviceOptimization();
+
+  useEffect(() => {
+    applySeo({
+      title: 'Contact | WAW Telecom Sénégal — Devis & support',
+      description:
+        'Contactez WAW Telecom (Dakar, Sénégal) pour une étude personnalisée : Starlink Business, fibre dédiée, SD‑WAN/MPLS, cloud, IoT et eSIM. Réponse rapide.',
+      canonicalPath: '/contact',
+    });
+  }, []);
   
   const [heroRef, heroInView] = useInView({
     triggerOnce: true,
@@ -128,9 +138,9 @@ const ContactPage = ({ onNavigate }: ContactPageProps) => {
     {
       icon: Phone,
       title: 'Téléphone principal',
-      value: '+221 33 860 19 29',
+      value: '+221 76 929 17 17',
       description: 'Lun-Ven: 8h-18h, Sam: 9h-13h',
-      action: 'tel:+221338601929'
+      action: 'tel:+221769291717'
     },
     {
       icon: Phone,
@@ -342,7 +352,7 @@ const ContactPage = ({ onNavigate }: ContactPageProps) => {
                 <motion.button
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.97 }}
-                  onClick={() => window.open('tel:+221338601929')}
+                  onClick={() => window.open('tel:+221769291717')}
                   className="border-2 border-gray-200 text-waw-dark font-bold px-8 py-4 rounded-xl text-lg hover:border-waw-yellow hover:bg-waw-yellow/5 transition-all flex items-center justify-center space-x-2 bg-white/60 backdrop-blur-sm"
                 >
                   <Phone size={20} />
@@ -358,7 +368,7 @@ const ContactPage = ({ onNavigate }: ContactPageProps) => {
                 {[
                   { icon: Clock, label: 'Réponse sous 24h', color: 'text-amber-600' },
                   { icon: Headphones, label: 'Support 7j/7', color: 'text-emerald-600' },
-                  { icon: Phone, label: '+221 33 860 19 29', color: 'text-blue-600' },
+                  { icon: Phone, label: '+221 76 929 17 17', color: 'text-blue-600' },
                 ].map((stat, index) => (
                   <motion.div
                     key={stat.label}
@@ -398,7 +408,7 @@ const ContactPage = ({ onNavigate }: ContactPageProps) => {
                       </div>
                       <div>
                         <p className="text-sm text-gray-500 font-medium">Téléphone</p>
-                        <p className="text-lg font-bold text-waw-dark">+221 33 860 19 29</p>
+                        <p className="text-lg font-bold text-waw-dark">+221 76 929 17 17</p>
                         <p className="text-xs text-gray-400">Lun-Ven: 8h-18h</p>
                       </div>
                     </div>

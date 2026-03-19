@@ -41,7 +41,7 @@ const ContactSection = () => {
     {
       icon: Phone,
       title: 'Téléphone',
-      details: '+221 33 860 19 29',
+      details: '+221 76 929 17 17',
       subtitle: '+221 76 929 17 17',
       color: 'from-waw-dark to-gray-800'
     },

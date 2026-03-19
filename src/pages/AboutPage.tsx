@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useDeviceOptimization from '../hooks/useDeviceOptimization';
 import jsPDF from 'jspdf';
 import VisionCommerciale from '../components/VisionCommerciale';
@@ -38,12 +38,24 @@ import {
   Router
 } from 'lucide-react';
 import type { PageType } from '../App';
+import { applySeo } from '../utils/seo';
 
 interface AboutPageProps {
   onNavigate: (page: PageType) => void;
 }
 
 const AboutPage = ({ onNavigate }: AboutPageProps) => {
+  useEffect(() => {
+    applySeo({
+      title: 'À propos de WAW Telecom | Opérateur télécom professionnel Sénégal — Dakar',
+      description:
+        'WAW Telecom, opérateur télécom professionnel basé à Dakar : notre mission, nos valeurs, notre équipe d\'ingénieurs et notre vision pour la transformation numérique des entreprises au Sénégal.',
+      canonicalPath: '/about',
+      keywords:
+        'WAW Telecom entreprise, opérateur télécom professionnel Dakar, fournisseur accès internet B2B Sénégal, transformation numérique Sénégal, équipe ingénieurs télécoms Dakar',
+    });
+  }, []);
+
   // Optimisation device
   const { isSafari, isMobile, transitionConfig } = useDeviceOptimization();
   
@@ -299,7 +311,7 @@ const AboutPage = ({ onNavigate }: AboutPageProps) => {
       // Contact
       addText('INFORMATIONS DE CONTACT', 16, true);
       yPosition += 5;
-      addText('Telephone principal: +221 33 860 19 29', 11, true);
+      addText('Telephone principal: +221 76 929 17 17', 11, true);
       addText('Mobile / WhatsApp: +221 76 929 17 17', 11, true);
       addText('Email: contact@wawtelecom.com');
       addText('Adresse: Ngor Almadies, Immeuble BIB\'S');

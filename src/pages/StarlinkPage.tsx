@@ -21,6 +21,7 @@ import ecoleImg from '../assets/images/ecole.png';
 import officeImg from '../assets/images/office.png';
 import intemperiesImg from '../assets/images/intemperies.png';
 import { sendPublicContact } from '../services/contactService';
+import { applySeo } from '../utils/seo';
 
 // Custom marker icon for Leaflet
 const customMarkerIcon = L.divIcon({
@@ -222,6 +223,54 @@ const ENTREPRISE_IMAGES = [heroImg, officeImg, hotelImg, ecoleImg];
 
 // ── Component ──
 const StarlinkPage = ({ onNavigate }: StarlinkPageProps) => {
+  useEffect(() => {
+    applySeo({
+      title: 'Starlink Business Sénégal | Revendeur agréé — WAW Telecom',
+      description:
+        'WAW Telecom, revendeur agréé Starlink au Sénégal : kit Starlink prix Dakar, abonnement Starlink Business, internet satellite pour zones reculées, Casamance, Saint-Louis, Touba. Déploiement rapide, support dédié.',
+      canonicalPath: '/starlink',
+      keywords:
+        'Acheter Starlink Sénégal, kit Starlink prix Dakar, revendeur agréé Starlink Sénégal, abonnement Starlink Business Sénégal, internet satellite Casamance, connexion internet Saint-Louis, Starlink zones reculées Sénégal, internet satellite Touba, Starlink vs Fibre Orange Sénégal, Starlink vs Canalbox, test débit Starlink Sénégal, Comment installer Starlink légalement Sénégal',
+      jsonLd: [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'Service',
+          name: 'Starlink Business Sénégal — WAW Telecom',
+          description: 'Revendeur agréé Starlink au Sénégal : kit, installation et abonnement Business pour entreprises et zones reculées',
+          provider: {
+            '@type': 'Organization',
+            name: 'WAW Telecom',
+            url: 'https://www.wawtelecom.com',
+          },
+          areaServed: { '@type': 'Country', name: 'Sénégal' },
+          serviceType: 'Internet satellite Starlink Business',
+        },
+        {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: [
+            {
+              '@type': 'Question',
+              name: 'Comment installer Starlink légalement au Sénégal ?',
+              acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'Depuis l\'autorisation officielle de février 2026, Starlink est légalement disponible au Sénégal. WAW Telecom, revendeur agréé, gère l\'ensemble des démarches administratives et l\'installation clé en main.',
+              },
+            },
+            {
+              '@type': 'Question',
+              name: 'Quel est le prix d\'un kit Starlink à Dakar ?',
+              acceptedAnswer: {
+                '@type': 'Answer',
+                text: 'Contactez WAW Telecom pour obtenir un devis personnalisé sur le prix du kit Starlink Business à Dakar, incluant l\'installation et le support local.',
+              },
+            },
+          ],
+        },
+      ],
+    });
+  }, []);
+
   const whatsappHref = `https://wa.me/221769291717?text=${encodeURIComponent(
     'Bonjour, je souhaite obtenir plus d\'informations sur les solutions Starlink B2B de WAW Telecom.'
   )}`;
@@ -241,7 +290,7 @@ const StarlinkPage = ({ onNavigate }: StarlinkPageProps) => {
   const [devisStep, setDevisStep] = useState(1);
   const [devisLocation, setDevisLocation] = useState('');
   const [devisMarkerPos, setDevisMarkerPos] = useState<[number, number] | null>(null);
-  const [devisForm, setDevisForm] = useState({ nom: '', email: '', telephone: '', entreprise: '', role: 'direct' as 'direct' | 'dsi' });
+  const [devisForm, setDevisForm] = useState({ nom: '', email: '', telephone: '', entreprise: '', role: 'direct' as 'direct' | 'dsi', message: '' });
   const [isSubmittingDevis, setIsSubmittingDevis] = useState(false);
   const [devisError, setDevisError] = useState<string | null>(null);
 
@@ -249,7 +298,7 @@ const StarlinkPage = ({ onNavigate }: StarlinkPageProps) => {
     setDevisStep(1);
     setDevisLocation('');
     setDevisMarkerPos(null);
-    setDevisForm({ nom: '', email: '', telephone: '', entreprise: '', role: 'direct' });
+    setDevisForm({ nom: '', email: '', telephone: '', entreprise: '', role: 'direct', message: '' });
     setDevisError(null);
     setDevisModalOpen(true);
   }, []);
@@ -285,7 +334,7 @@ const StarlinkPage = ({ onNavigate }: StarlinkPageProps) => {
     setDevisError(null);
     setIsSubmittingDevis(true);
     const messageDetails = [
-      'Demande de devis Starlink via page Starlink.',
+      devisForm.message?.trim() ? devisForm.message.trim() : 'Demande de devis Starlink via page Starlink.',
       `Localisation: ${devisLocation || 'Non spécifiée'}`,
       devisMarkerPos ? `Coordonnées: ${devisMarkerPos[0].toFixed(6)}, ${devisMarkerPos[1].toFixed(6)}` : 'Coordonnées: Non spécifiées',
       `Rôle: ${role === 'direct' ? 'Décideur direct' : 'DSI / Responsable IT'}`,
@@ -320,14 +369,14 @@ const StarlinkPage = ({ onNavigate }: StarlinkPageProps) => {
   // ── Modal contact Sales ──
   const [contactOpen, setContactOpen] = useState(false);
   const [contactStep, setContactStep] = useState<'form' | 'done'>('form');
-  const [contactForm, setContactForm] = useState({ nom: '', email: '', telephone: '', entreprise: '' });
+  const [contactForm, setContactForm] = useState({ nom: '', email: '', telephone: '', entreprise: '', message: '' });
   const [contactError, setContactError] = useState<string | null>(null);
   const [isSending, setIsSending] = useState(false);
 
   const openContact = useCallback(() => {
     setContactStep('form');
     setContactError(null);
-    setContactForm({ nom: '', email: '', telephone: '', entreprise: '' });
+    setContactForm({ nom: '', email: '', telephone: '', entreprise: '', message: '' });
     setOffresOpen(false);
     setContactOpen(true);
   }, []);
@@ -345,7 +394,9 @@ const StarlinkPage = ({ onNavigate }: StarlinkPageProps) => {
         company: entreprise?.trim() || undefined,
         contact_type: 'sales',
         service: 'Starlink Business',
-        message: `Demande Starlink Business — Nom: ${nom}, Tél: ${telephone || 'N/A'}, Entreprise: ${entreprise || 'N/A'}`,
+        message: contactForm.message?.trim()
+          ? contactForm.message.trim()
+          : `Demande Starlink Business — Nom: ${nom}, Tél: ${telephone || 'N/A'}, Entreprise: ${entreprise || 'N/A'}`,
         source_page: 'starlink-page',
       });
       if (res?.success) setContactStep('done');
@@ -964,6 +1015,17 @@ const StarlinkPage = ({ onNavigate }: StarlinkPageProps) => {
                         </div>
                       ))}
 
+                      <div>
+                        <label className="block text-gray-400 text-xs font-semibold mb-1.5 uppercase tracking-wide">Message</label>
+                        <textarea
+                          placeholder="Décrivez votre besoin..."
+                          rows={4}
+                          value={contactForm.message}
+                          onChange={e => setContactForm(f => ({ ...f, message: e.target.value }))}
+                          className="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3 text-white text-sm placeholder:text-gray-600 focus:outline-none focus:border-waw-yellow/50 focus:bg-white/8 transition-all resize-none"
+                        />
+                      </div>
+
                       {contactError && (
                         <p className="text-red-400 text-xs bg-red-400/10 border border-red-400/20 rounded-xl px-4 py-2">{contactError}</p>
                       )}
@@ -1507,6 +1569,17 @@ const StarlinkPage = ({ onNavigate }: StarlinkPageProps) => {
                             <input type="text" value={devisForm.entreprise} onChange={(e) => setDevisForm(f => ({ ...f, entreprise: e.target.value }))} placeholder="Nom entreprise" className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 text-sm text-waw-dark placeholder:text-gray-300 focus:outline-none focus:border-waw-yellow focus:ring-2 focus:ring-waw-yellow/10 transition-all" />
                           </div>
                         </div>
+                      </div>
+
+                      <div className="mt-3">
+                        <label className="text-xs font-semibold text-gray-500 mb-1 block">Message</label>
+                        <textarea
+                          placeholder="Décrivez votre besoin..."
+                          rows={4}
+                          value={devisForm.message}
+                          onChange={(e) => setDevisForm(f => ({ ...f, message: e.target.value }))}
+                          className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 text-sm text-waw-dark placeholder:text-gray-300 focus:outline-none focus:border-waw-yellow focus:ring-2 focus:ring-waw-yellow/10 transition-all resize-none"
+                        />
                       </div>
 
                       {devisError && <p className="mt-3 text-sm text-red-600 bg-red-50 px-3 py-2 rounded-xl">{devisError}</p>}
