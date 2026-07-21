@@ -10,6 +10,13 @@ import supportnocImg from '../assets/images/supportnoc.png';
 import technicienImg from '../assets/images/technicien.png';
 import ingenieursImg from '../assets/images/ingenieurs .png';
 import images4Img from '../assets/images/Images4.png';
+import waveLogo from '../assets/images/wave.webp';
+import ambassadeCanadaLogo from '../assets/images/ambassycanada.webp';
+import everestLogo from '../assets/images/everest.jpg';
+import impaxisLogo from '../assets/images/impaxis.jpg';
+import deltaAirlinesLogo from '../assets/images/deltaairline.png';
+import heppnerLogo from '../assets/images/hepner.jpg';
+import banqueAtlantiqueLogo from '../assets/images/banqueatlantique.webp';
 import {
   Users,
   Rocket,
@@ -43,6 +50,79 @@ import { applySeo } from '../utils/seo';
 interface AboutPageProps {
   onNavigate: (page: PageType) => void;
 }
+
+interface Partner {
+  name: string;
+  logo: string;
+}
+
+// Palette d'accent stable par partenaire (hash du nom → couleur dédiée)
+const PARTNER_ACCENTS = [
+  { text: '#FFDD33', glow: 'rgba(255,221,51,0.35)' },
+  { text: '#60A5FA', glow: 'rgba(96,165,250,0.35)' },
+  { text: '#34D399', glow: 'rgba(52,211,153,0.35)' },
+  { text: '#F472B6', glow: 'rgba(244,114,182,0.35)' },
+  { text: '#A78BFA', glow: 'rgba(167,139,250,0.35)' },
+  { text: '#FB923C', glow: 'rgba(251,146,60,0.35)' },
+  { text: '#22D3EE', glow: 'rgba(34,211,238,0.35)' },
+];
+function accentFor(name: string) {
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) >>> 0;
+  return PARTNER_ACCENTS[h % PARTNER_ACCENTS.length];
+}
+
+const PartnerCard = ({ partner }: { partner: Partner }) => {
+  const accent = accentFor(partner.name);
+  const [hovered, setHovered] = useState(false);
+  return (
+    <motion.div
+      className="group relative flex-shrink-0"
+      style={{ width: '240px', height: '168px' }}
+      whileHover={{ y: -8, scale: 1.04 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+    >
+      {/* Halo lumineux au survol, teinté par partenaire */}
+      <div
+        className="absolute -inset-2 rounded-2xl opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500"
+        style={{ background: accent.glow }}
+      />
+
+      <div className="relative w-full h-full rounded-2xl bg-white border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.25)] flex flex-col items-center justify-center gap-3 overflow-hidden p-5 transition-all duration-500">
+        {/* Reflet diagonal animé */}
+        <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none" />
+
+        {/* Logo */}
+        <div className="flex-1 flex items-center justify-center w-full min-h-0">
+          <img
+            src={partner.logo}
+            alt={`Logo ${partner.name}`}
+            className="max-h-24 max-w-full object-contain grayscale opacity-75 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500 relative z-10"
+          />
+        </div>
+
+        {/* Nom du partenaire + ligne d'accent animée */}
+        <div className="flex flex-col items-center gap-1.5 relative z-10">
+          <span
+            className="text-[13px] font-bold tracking-wide transition-colors duration-500"
+            style={{ color: hovered ? accent.text : '#9CA3AF' }}
+          >
+            {partner.name}
+          </span>
+          <motion.span
+            className="block h-[3px] rounded-full"
+            style={{ background: accent.text }}
+            initial={{ width: 0, opacity: 0.4 }}
+            animate={{ width: hovered ? 48 : 28, opacity: hovered ? 1 : 0.4 }}
+            transition={{ duration: 0.4 }}
+          />
+        </div>
+      </div>
+    </motion.div>
+  );
+};
 
 const AboutPage = ({ onNavigate }: AboutPageProps) => {
   useEffect(() => {
@@ -183,11 +263,13 @@ const AboutPage = ({ onNavigate }: AboutPageProps) => {
 
   // Partenaires
   const partners = [
-    { name: 'AFR-IX', logo: 'https://th.bing.com/th/id/OIP.k7KepE5VmbaTp6nrkv4R5QHaDG?w=295&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3' },
-    { name: 'Banque Atlantique', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Banque_Atlantique_logo.svg/200px-Banque_Atlantique_logo.svg.png' },
-    { name: 'Delta Air Lines', logo: 'https://tse4.mm.bing.net/th/id/OIP.73-rMILC_coF_Tspzo2XuQHaE7?w=1250&h=833&rs=1&pid=ImgDetMain&o=7&rm=3' },
-    { name: 'AIBD', logo: 'https://th.bing.com/th/id/OIP.jUbihA3tOKXmeAH72vg5cgHaDm?w=319&h=170&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3' },
-    { name: 'BNDE', logo: 'https://www.bnde.sn/sites/default/files/2024-06/Logo%20BNDE%20OK_Plan%20de%20travail%201.jpg' }
+    { name: 'Wave', logo: waveLogo },
+    { name: 'Ambassade du Canada', logo: ambassadeCanadaLogo },
+    { name: 'Everest Finances', logo: everestLogo },
+    { name: 'Impaxis Securities', logo: impaxisLogo },
+    { name: 'Delta Airlines', logo: deltaAirlinesLogo },
+    { name: 'Heppner', logo: heppnerLogo },
+    { name: 'Banque Atlantique', logo: banqueAtlantiqueLogo }
   ];
 
   // Zones de couverture
@@ -949,60 +1031,77 @@ Cordialement,`);
       <NosInfrastructures />
 
       {/* Nos partenaires de confiance */}
-      <section className="relative py-24 overflow-hidden bg-gradient-to-br from-white via-gray-50/80 to-amber-50/20">
+      <section className="relative py-28 overflow-hidden bg-[#0a0e1a]">
+        {/* Fond animé : aurora + grille */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute inset-0 opacity-[0.025]" style={{
-            backgroundImage: 'radial-gradient(circle, #1a1a2e 1px, transparent 1px)',
-            backgroundSize: '40px 40px'
+          <div className="absolute inset-0 opacity-[0.04]" style={{
+            backgroundImage: 'radial-gradient(circle, #FFDD33 1px, transparent 1px)',
+            backgroundSize: '32px 32px'
           }} />
+          <motion.div
+            className="absolute -top-1/2 left-1/4 w-[600px] h-[600px] rounded-full blur-[120px]"
+            style={{ background: 'radial-gradient(circle, rgba(255,221,51,0.12), transparent 70%)' }}
+            animate={{ x: [0, 80, 0], y: [0, 40, 0] }}
+            transition={{ duration: 18, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut' }}
+          />
+          <motion.div
+            className="absolute top-1/3 right-1/4 w-[500px] h-[500px] rounded-full blur-[120px]"
+            style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.10), transparent 70%)' }}
+            animate={{ x: [0, -60, 0], y: [0, -30, 0] }}
+            transition={{ duration: 22, repeat: Number.POSITIVE_INFINITY, ease: 'easeInOut' }}
+          />
         </div>
+
         <div className="container-custom relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-10"
+            className="text-center mb-16"
           >
-            <h3 className="text-2xl font-bold text-waw-dark mb-2">Nos partenaires de confiance</h3>
-            <p className="text-gray-500 text-sm">Nous collaborons avec les leaders technologiques</p>
+            <motion.span
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-waw-yellow/10 border border-waw-yellow/20 text-waw-yellow text-xs font-semibold uppercase tracking-wider mb-4"
+            >
+              <Star size={12} className="fill-waw-yellow" />
+              Ils nous font confiance
+            </motion.span>
+            <h3 className="text-3xl md:text-4xl font-bold text-white mb-3">Nos partenaires de confiance</h3>
+            <p className="text-gray-400 text-base max-w-xl mx-auto">
+              Institutions, entreprises et ambassades qui s'appuient sur notre infrastructure au quotidien.
+            </p>
           </motion.div>
-          <div className="relative overflow-hidden">
+
+          {/* Rangée 1 : défile vers la gauche */}
+          <div className="relative overflow-hidden mb-6" style={{ maskImage: 'linear-gradient(90deg, transparent, black 8%, black 92%, transparent)', WebkitMaskImage: 'linear-gradient(90deg, transparent, black 8%, black 92%, transparent)' }}>
             <motion.div
-              animate={{ x: [0, -180 * partners.length] }}
-              transition={{ duration: 20, repeat: Number.POSITIVE_INFINITY, ease: 'linear' }}
+              animate={{ x: [0, -264 * partners.length] }}
+              transition={{ duration: 26, repeat: Number.POSITIVE_INFINITY, ease: 'linear' }}
               className="flex gap-6"
               style={{ width: 'max-content' }}
             >
-              {partners.map((partner) => (
-                <div
-                  key={`first-${partner.name}`}
-                  className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm flex items-center justify-center flex-shrink-0 hover:shadow-md hover:border-waw-yellow/20 transition-all"
-                  style={{ width: '180px', height: '100px' }}
-                >
-                  <img
-                    src={partner.logo}
-                    alt={`Logo ${partner.name}`}
-                    className="max-h-14 max-w-full object-contain"
-                  />
-                </div>
-              ))}
-              {partners.map((partner) => (
-                <div
-                  key={`second-${partner.name}`}
-                  className="bg-white border border-gray-100 rounded-xl p-5 shadow-sm flex items-center justify-center flex-shrink-0 hover:shadow-md hover:border-waw-yellow/20 transition-all"
-                  style={{ width: '180px', height: '100px' }}
-                >
-                  <img
-                    src={partner.logo}
-                    alt={`Logo ${partner.name}`}
-                    className="max-h-14 max-w-full object-contain"
-                  />
-                </div>
+              {[...partners, ...partners].map((partner, i) => (
+                <PartnerCard key={`row1-${partner.name}-${i}`} partner={partner} />
               ))}
             </motion.div>
-            <div className="absolute left-0 top-0 w-24 h-full bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
-            <div className="absolute right-0 top-0 w-24 h-full bg-gradient-to-l from-gray-50/80 to-transparent z-10 pointer-events-none" />
+          </div>
+
+          {/* Rangée 2 : défile vers la droite, décalée */}
+          <div className="relative overflow-hidden" style={{ maskImage: 'linear-gradient(90deg, transparent, black 8%, black 92%, transparent)', WebkitMaskImage: 'linear-gradient(90deg, transparent, black 8%, black 92%, transparent)' }}>
+            <motion.div
+              animate={{ x: [-264 * partners.length, 0] }}
+              transition={{ duration: 30, repeat: Number.POSITIVE_INFINITY, ease: 'linear' }}
+              className="flex gap-6"
+              style={{ width: 'max-content' }}
+            >
+              {[...partners].reverse().concat([...partners].reverse()).map((partner, i) => (
+                <PartnerCard key={`row2-${partner.name}-${i}`} partner={partner} />
+              ))}
+            </motion.div>
           </div>
         </div>
       </section>
